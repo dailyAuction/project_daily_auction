@@ -16,7 +16,7 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    // 멤버 저장 메서드
+    // 멤버 저장
     public Member save(MemberDto.SignIn dto){
         verifyExistEmail(dto.getEmail());
 
@@ -29,7 +29,29 @@ public class MemberService {
         );
     }
 
-    // 존재하는 이메일 체크 메서드
+    // 정보 수정
+    public Member update(String accessToken, MemberDto.Update dto){
+        Member member = findByAccessToken(accessToken);
+        verifyPassword(member, dto.getCurrentPassword());
+//        String newPassword = passwordEncoder().encode(dto.getNewPassword())
+        member.changePassword(dto.getNewPassword());
+
+        return memberRepository.save(member);
+    }
+
+    // 비밀번호 체크
+    public void verifyPassword(Member member, String password){
+//        if (!passwordEncoder().matches(password, member.getPassword())) {
+//            throw new IllegalArgumentException();
+//        }
+
+    }
+
+//    public PasswordEncoder passwordEncoder() {
+//        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//    }
+
+    // 존재하는 이메일 체크
     public void verifyExistEmail(String email){
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         if (optionalMember.isPresent()) {
@@ -45,8 +67,4 @@ public class MemberService {
 
         return optionalMember.get();
     }
-
-
-
-
 }
