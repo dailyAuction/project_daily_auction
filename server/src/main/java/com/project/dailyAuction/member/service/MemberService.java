@@ -60,7 +60,13 @@ public class MemberService {
         }
     }
 
-    // 이메일로 멤버 찾기 메서드
+    // 액세스토큰으로 멤버 찾기
+    public Member findByAccessToken(String accessToken){
+        //todo:
+        return null;
+    }
+
+    // 이메일로 멤버 찾기
     public Member findByEmail(String email) {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         if (optionalMember.isPresent()) throw new IllegalArgumentException();
