@@ -16,4 +16,13 @@ public class MemberDto {
         private String password;
 
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Update {
+        private String currentPassword;
+        private String newPassword;
+    }
 }
