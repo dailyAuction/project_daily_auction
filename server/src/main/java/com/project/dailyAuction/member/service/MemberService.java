@@ -71,6 +71,6 @@ public class MemberService {
 
     public void delete(String token) {
         Member member = findByAccessToken(token);
-        member.changeStatus(MemberStatus.탈퇴외원);
+        member.changeStatus(MemberStatus.탈퇴회원);
     }
 }
