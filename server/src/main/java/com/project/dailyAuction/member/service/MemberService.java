@@ -17,16 +17,10 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     // 멤버 저장
-    public Member save(MemberDto.Signup dto){
-        verifyExistEmail(dto.getEmail());
+    public Member save(Member member){
+        verifyExistEmail(member.getEmail());
 
-        return memberRepository.save(Member.builder()
-                .email(dto.getEmail())
-                //todo: 패스워드 암호화 필요
-                .password(dto.getPassword())
-                .coin(0)
-                .build()
-        );
+        return memberRepository.save(member);
     }
 
     // 정보 수정
