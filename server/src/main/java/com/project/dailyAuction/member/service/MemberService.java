@@ -17,7 +17,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     // 멤버 저장
-    public Member save(MemberDto.SignIn dto){
+    public Member save(MemberDto.Signup dto){
         verifyExistEmail(dto.getEmail());
 
         return memberRepository.save(Member.builder()

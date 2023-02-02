@@ -23,7 +23,14 @@ public class Member {
     @Column
     private int coin;
 
+    @Column
+    private MemberStatus status;
+
     public void changePassword(String password){
         this.password = password;
+    }
+
+    public void changeStatus(MemberStatus status) {
+        this.status = status;
     }
 }
