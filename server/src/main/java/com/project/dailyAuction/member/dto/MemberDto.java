@@ -25,4 +25,12 @@ public class MemberDto {
         private String currentPassword;
         private String newPassword;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Email {
+        private String email;
+    }
 }

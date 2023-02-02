@@ -24,7 +24,18 @@ public class MemberController {
         memberService.save(mapper.signupDtoToMember(dto));
     }
     // post이메일 인증 - 가입한 이메일 확인 후 없으면 이메일 전송 (이메일 필요)
+    @PostMapping("/check-email")
+    @ResponseStatus(HttpStatus.OK)
+    public void checkEmail(@RequestBody MemberDto.Email dto){
+        //todo: 이메일 전송 서비스 작성
+    }
     // patch 회원 탈퇴 - 회원 상태 변경 (토큰 필요)
+    @PatchMapping("/withdrawal")
+    @ResponseStatus(HttpStatus.OK)
+    public void withdrawal(@RequestHeader(name = "Authorization") String Token){
+        memberService.delete("Authorization");
+        //todo: 이메일 전송 서비스 작성
+    }
     // patch 비밀번호 변경 - 회원 비밀번호 변경 (토큰, 기존비밀번호 필요)
     // post비밀번호 찾기 - 가입한 이메일 확인 후 있으면 이메일 전송 (이메일 필요)
     // get마이페이지(대시보드) -  이메일, 내코인 리턴 (토큰 필요)
