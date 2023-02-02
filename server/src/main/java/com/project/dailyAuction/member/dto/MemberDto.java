@@ -10,7 +10,7 @@ public class MemberDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SignIn{
+    public static class Signup{
         private String email;
         private String verifyCode;
         private String password;
