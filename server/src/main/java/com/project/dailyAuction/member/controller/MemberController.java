@@ -19,7 +19,7 @@ public class MemberController {
     private final MemberMapper mapper;
     // post 회원가입 (이메일, 비밀번호 필요)
     @PostMapping("/signup")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void postMember(@RequestBody MemberDto.Signup dto){
         memberService.save(mapper.signupDtoToMember(dto));
     }
@@ -37,9 +37,41 @@ public class MemberController {
         //todo: 이메일 전송 서비스 작성
     }
     // patch 비밀번호 변경 - 회원 비밀번호 변경 (토큰, 기존비밀번호 필요)
+    @PatchMapping("/update")
+    @ResponseStatus(HttpStatus.OK)
+    public void updatePassword(@RequestHeader(name = "Authorization") String Token,
+                               @RequestBody MemberDto.Update dto){
+        memberService.update(Token,dto);
+    }
     // post비밀번호 찾기 - 가입한 이메일 확인 후 있으면 이메일 전송 (이메일 필요)
+    @PostMapping("/find-email")
+    @ResponseStatus(HttpStatus.OK)
+    public void findEmail(@RequestBody MemberDto.Email dto){
+        //todo: 이메일 찾기 서비스 작성
+    }
     // get마이페이지(대시보드) -  이메일, 내코인 리턴 (토큰 필요)
-    // 코인 충전 - 1000원단위 충전 (토큰 필요) 변경된 코인 리턴
+    @GetMapping("/my-page")
+    @ResponseStatus(HttpStatus.OK)
+    public void getMyPage(@RequestHeader(name = "Authorization")String Token){
+        //todo: 이메일 전송 서비스 작성
+    }
+    // post코인 충전 - 1000원단위 충전 (토큰, 충전량 필요) 변경된 코인 리턴
+    @PostMapping("/add-coin")
+    @ResponseStatus(HttpStatus.OK)
+    public void addCoin(@RequestHeader(name = "Authorization")String Token,
+                        @RequestBody MemberDto.Coin coin){
+        //todo: 충전 서비스 작성
+    }
     // 등록 경매 -
+    @GetMapping("/my-auction-list")
+    @ResponseStatus(HttpStatus.OK)
+    public void getMyAuction(@RequestHeader(name = "Authorization")String Token){
+        //todo:
+    }
     // 참여 경매 -
+    @GetMapping("/participation-list")
+    @ResponseStatus(HttpStatus.OK)
+    public void getParticipation(@RequestHeader(name = "Authorization")String Token){
+        //todo:
+    }
 }

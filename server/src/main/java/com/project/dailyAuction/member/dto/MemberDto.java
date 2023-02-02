@@ -33,4 +33,12 @@ public class MemberDto {
     public static class Email {
         private String email;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Coin {
+        private int coin;
+    }
 }

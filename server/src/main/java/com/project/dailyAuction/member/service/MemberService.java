@@ -25,8 +25,8 @@ public class MemberService {
     }
 
     // 정보 수정
-    public Member update(String accessToken, MemberDto.Update dto){
-        Member member = findByAccessToken(accessToken);
+    public Member update(String token, MemberDto.Update dto){
+        Member member = findByAccessToken(token);
         verifyPassword(member, dto.getCurrentPassword());
 //        String newPassword = passwordEncoder().encode(dto.getNewPassword())
         member.changePassword(dto.getNewPassword());
@@ -56,7 +56,7 @@ public class MemberService {
     }
 
     // 액세스토큰으로 멤버 찾기
-    public Member findByAccessToken(String accessToken){
+    public Member findByAccessToken(String token){
         //todo:
         return null;
     }
@@ -69,8 +69,8 @@ public class MemberService {
         return optionalMember.get();
     }
 
-    public void delete(String Token) {
-        Member member = findByAccessToken(Token);
+    public void delete(String token) {
+        Member member = findByAccessToken(token);
         member.changeStatus(MemberStatus.탈퇴외원);
     }
 }
