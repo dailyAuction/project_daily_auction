@@ -3,7 +3,7 @@ package com.project.dailyAuction.member.service;
 
 import com.project.dailyAuction.member.dto.MemberDto;
 import com.project.dailyAuction.member.entity.Member;
-import com.project.dailyAuction.member.entity.MemberStatus;
+import com.project.dailyAuction.code.MemberStatusCode;
 import com.project.dailyAuction.member.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -71,6 +71,6 @@ public class MemberService {
 
     public void delete(String token) {
         Member member = findByAccessToken(token);
-        member.changeStatus(MemberStatus.탈퇴회원);
+        member.changeStatus(MemberStatusCode.탈퇴회원);
     }
 }

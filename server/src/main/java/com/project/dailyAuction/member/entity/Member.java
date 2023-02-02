@@ -1,6 +1,7 @@
 package com.project.dailyAuction.member.entity;
 
 
+import com.project.dailyAuction.code.MemberStatusCode;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -24,13 +25,13 @@ public class Member {
     private int coin;
 
     @Column
-    private MemberStatus status;
+    private MemberStatusCode status;
 
     public void changePassword(String password){
         this.password = password;
     }
 
-    public void changeStatus(MemberStatus status) {
+    public void changeStatus(MemberStatusCode status) {
         this.status = status;
     }
 }
