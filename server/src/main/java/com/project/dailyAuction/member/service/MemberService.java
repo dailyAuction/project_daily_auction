@@ -31,7 +31,7 @@ public class MemberService {
 //        String newPassword = passwordEncoder().encode(dto.getNewPassword())
         member.changePassword(dto.getNewPassword());
 
-        return memberRepository.save(member);
+        return member;
     }
 
     // 비밀번호 체크
