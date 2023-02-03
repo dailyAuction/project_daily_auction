@@ -2,21 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@layer base {
+  * {
+    font-family: 'Pretendard-Regular';
+  }
+}
+
 @layer components {
   .base-layout {
-    @apply flex h-full w-full min-w-[360px] sm:w-[500px]
+    @apply flex flex-col items-center h-full min-w-[360px] sm:w-[500px]
     bg-background-mobile;
-  }
-
-  @font-face {
-    font-family: 'Tenada';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2210-2@1.0/Tenada.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-  }
-
-  * {
-    font-family: 'Nanum Gothic', sans-serif;
   }
 
   img {
