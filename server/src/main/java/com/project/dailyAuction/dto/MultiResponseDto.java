@@ -1,4 +1,4 @@
-package com.project.dailyAuction.Dto;
+package com.project.dailyAuction.dto;
 
 import lombok.Getter;
 
