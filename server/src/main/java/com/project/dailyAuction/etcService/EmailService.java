@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 @Async
 public class EmailService {
     private JavaMailSender mailSender;
-    private static final String FROM_ADDRESS = "cjswo138@gmail.com";
+    private static final String FROM_ADDRESS = "yeogiyo007@gmail.com";
 
     public void verifyEmail(String address, String code) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
@@ -29,8 +29,8 @@ public class EmailService {
 
     public void findPassword(String address, String password) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
-        message.addRecipients(MimeMessage.RecipientType.TO, "cjswo138@gmail.com");
-        message.setFrom("yeogiyo007@gmail.com");
+        message.addRecipients(MimeMessage.RecipientType.TO, address);
+        message.setFrom(FROM_ADDRESS);
         message.setSubject("안녕하세요, 데일리옥션입니다.");
         message.setText("<div>임시 비밀번호는 다음과 같습니다.\n" +
                         password+
