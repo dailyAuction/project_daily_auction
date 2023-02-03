@@ -1,3 +1,12 @@
+import { RecoilRoot } from 'recoil';
+import { Router } from './router/Router';
+
 export const App = () => {
-  return <div className="text-red-400">main</div>;
+  return (
+    <div className="">
+      <RecoilRoot>
+        <Router />
+      </RecoilRoot>
+    </div>
+  );
 };

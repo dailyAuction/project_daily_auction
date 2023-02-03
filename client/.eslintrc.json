@@ -4,6 +4,15 @@
     "es6": true,
     "node": true
   },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": ["./tsconfig.json"],
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
   "extends": [
     "airbnb",
     "airbnb-typescript",
@@ -11,17 +20,6 @@
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
-
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": "tsconfig.json",
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": "latest",
-    "sourceType": "module"
-  },
-
   "rules": {
     "arrow-body-style": "off", // 화살표 함수 중괄호 적용 혹은 생략 둘 다 가능
     "comma-dangle": "off", // trailing comma 생략 가능
