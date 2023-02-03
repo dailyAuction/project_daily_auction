@@ -9,6 +9,6 @@
     "noImplicitReturns": true, // 함수 return 없으면 에러
     "moduleResolution": "node"
   },
-  "include": ["src/**/*"], // ts 적용할 경로
+  "include": ["./tailwind.config.json", "src/**/*"], // ts 적용할 경로
   "exclude": ["node_modules"] // ts 적용하지 않을 폴더
 }

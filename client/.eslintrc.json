@@ -38,7 +38,7 @@
     ],
     "no-console": "warn", // console.log 경고
     "no-nested-ternary": "off", // 중첩 삼항연산자 사용 가능
-    "no-param-reassign": ["error", {"props": false}], // 함수 매개변수 재할당 불가
+    "no-param-reassign": ["error", { "props": false }], // 함수 매개변수 재할당 불가
     "no-plusplus": "off", // 증감 연산자 사용 가능
     "no-shadow": "off", // 상위 스코프의 변수를 하위 스코프의 변수가 덮어쓸 수 있음
     "no-underscore-dangle": "off", // 언더스코어(_)를 변수명에 사용 가능
@@ -65,10 +65,7 @@
     "jsx-a11y/control-has-associated-label": ["off"], // button 등의 interactive element를 텍스트 라벨 없이 사용할 수 있음
     "jsx-a11y/no-static-element-interactions": ["off"], // span,div 등의 non-interactive element를 role 없이 사용할 수 있음
     "jsx-a11y/label-has-associated-control": ["off"], // label과 input을 연관시키지(htmlFor - id) 않아도 됨
-    "react/jsx-filename-extension": [
-      "error",
-      {"extensions": [".js", ".jsx", ".ts", ".tsx"]}
-    ], // jsx 파일 확장자 제한
+    "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx", ".ts", ".tsx"] }], // jsx 파일 확장자 제한
     "react/jsx-no-useless-fragment": ["off"], // 무의미한(자식 요소가 1개 또는 fragment가 html의 자식인 경우) fragment 사용 가능
     "react/react-in-jsx-scope": "off", // jsx를 사용하기 위해 반드시 React를 import 하지 않아도 됨
     "react/require-default-props": "off", // defaultProps를 지정하지 않아도 됨
