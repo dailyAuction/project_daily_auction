@@ -16,7 +16,29 @@ public class BoardController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void postBoard(@RequestBody BoardDto.Post postDto) {
-        long memberId = 1l; //보안토큰대신 임시 적용
-        boardService.save(memberId,postDto);
+        long memberId = 1L; //보안토큰대신 임시 적용
+        boardService.saveBoard(memberId,postDto);
     }
+
+    @GetMapping("/{board-id}")
+    @ResponseStatus(HttpStatus.OK)
+    public BoardDto.Response getBoard(@PathVariable("board-id") long boardId) {
+        long memberId = 2L;
+        BoardDto.Response response =boardService.getDetailPage(memberId,boardId);
+        return response;
+    }
+
+    @PatchMapping
+    @ResponseStatus(HttpStatus.OK)
+    private void bidBoard(@RequestBody BoardDto.Patch patchDto) {
+        long memberId = 2L;
+        boardService.bidBoard(memberId,patchDto);
+    }
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBoard(@PathVariable("board-id") long boardId) {
+        long memberId = 1L;
+        boardService.deleteBoard(memberId, boardId);
+    }
+
 }

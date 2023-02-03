@@ -21,6 +21,8 @@ public class Board {
     private String title;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
+    @Column
+    private long memberId;
     @Column(nullable = false)
     private String image;
     @Column
@@ -28,19 +30,27 @@ public class Board {
     @Column
     private String category;
     @Column
-    private int view_count;
+    private int viewCount;
     @Column
-    private int bid_count;
+    private int bidCount;
     @Column
     private LocalDateTime createdAt;
     @Column
     private LocalDateTime finishedAt;
     @Column
-    private int starting_price;
+    private int startingPrice;
     @Column
-    private int current_price;
+    private int currentPrice;
     @Column
-    private long bidder_id;
+    private long bidderId;
+    private String history;
 
-  //private String history;
+    public void changeLeadingBidder(long memberId, int newPrice) {
+        this.bidderId = memberId;
+        this.currentPrice = newPrice;
+    }
+
+    public void updateHistory(int newPrice) {
+        this.history = this.history + "," + newPrice;
+    }
 }
