@@ -17,6 +17,7 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final MemberMapper mapper;
+
     // post 회원가입 (이메일, 비밀번호 필요)
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
