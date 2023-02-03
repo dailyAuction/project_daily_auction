@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Temp } from '../components/temp/Temp';
+import { TempPage } from '../pages/TempPage';
 
 export const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Temp />} />
+        <Route path="/" element={<TempPage />} />
       </Routes>
     </BrowserRouter>
   );
