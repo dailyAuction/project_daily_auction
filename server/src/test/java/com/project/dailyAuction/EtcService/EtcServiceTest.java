@@ -35,6 +35,7 @@ public class EtcServiceTest {
         System.out.println("생성된 비밀번호는 :[" + randomPasswordService.genPassword() + "]입니다.");
     }
 
+    // yml에 메일관련 작성 필요
     @Test
     @DisplayName("이메일 전송 테스트")
     public void sendEmailTest() throws MessagingException {
