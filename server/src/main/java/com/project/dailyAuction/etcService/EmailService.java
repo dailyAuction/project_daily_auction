@@ -1,4 +1,4 @@
-package com.project.dailyAuction.service;
+package com.project.dailyAuction.etcService;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;

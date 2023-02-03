@@ -20,7 +20,7 @@ public class BoardService {
                 .title(postDto.getTitle())
                 .description(postDto.getDescription())
                 .image(postDto.getImage())
-                .status(postDto.getStatus())
+                .status("활동중")
                 .category(postDto.getCategory())
                 .createdAt(LocalDateTime.now())
                 .starting_price(postDto.getStarting_price())
