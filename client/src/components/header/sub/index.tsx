@@ -13,7 +13,7 @@ export const SubHeader = ({ children }) => {
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="currentColor"
-          className="w-6 h-6 fixed">
+          className="w-6 h-6 fixed cursor-pointer">
           <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
         </svg>
         <h1 className="text-lg font-bold w-full flex justify-center items-center">{children}</h1>
