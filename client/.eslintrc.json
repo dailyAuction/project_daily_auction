@@ -21,6 +21,7 @@
     "prettier"
   ],
   "rules": {
+    "react/jsx-curly-brace-presence": "off", //jsx 문법 중괄호 체크 해제 (템플릿 리터럴 문법 사용)
     "arrow-body-style": "off", // 화살표 함수 중괄호 적용 혹은 생략 둘 다 가능
     "comma-dangle": "off", // trailing comma 생략 가능
     "consistent-return": "off", // 함수에 return문 생략 가능
