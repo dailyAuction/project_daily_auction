@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class BoardDto {
     @Getter
@@ -25,6 +26,7 @@ public class BoardDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Response {
+        private long boardId;
         private String title;
         private String description;
         private String image;
@@ -36,7 +38,12 @@ public class BoardDto {
         private int currentPrice;
         private LocalDateTime createdAt;
         private LocalDateTime finishedAt;
+        private String[] history;
+        private int myPrice;
 
+        public void updateMyPrice(int myPrice) {
+            this.myPrice = myPrice;
+        }
     }
 
     @Getter
@@ -52,6 +59,15 @@ public class BoardDto {
         private int currentPrice;
         private LocalDateTime createdAt;
         private LocalDateTime finishedAt;
+    }
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Patch {
+        private long boardId;
+        private int newPrice;
+
 
     }
 }

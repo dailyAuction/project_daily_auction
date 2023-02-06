@@ -1,6 +1,7 @@
 package com.project.dailyAuction.member.entity;
 
 
+import com.project.dailyAuction.boardNotice.entity.Notice;
 import com.project.dailyAuction.code.MemberStatusCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,12 +32,15 @@ public class Member {
     @Column
     private String status;
 
+    @ManyToOne
+    @JoinColumn(name = "notice_id")
+    private Notice notice;
+
     public void setUserDetails(long memberId, String email, String password){
         this.memberId = memberId;
         this.email = email;
         this.password = password;
     }
-
     public void changePassword(String password){
         this.password = password;
     }

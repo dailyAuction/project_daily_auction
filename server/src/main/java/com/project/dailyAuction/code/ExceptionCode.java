@@ -7,6 +7,7 @@ public enum ExceptionCode {
     EXPIRED_TOKEN(401, "Expired Token"),
     MEMBER_NOT_FOUND(404, "Member not found"),
     MEMBER_EXISTS(409,"Member Exists"),
+    BOARD_NOT_FOUND(404, "Board not found"),
     NOT_VERIFIED(409,"Not Verified");
 
     private final int code;
