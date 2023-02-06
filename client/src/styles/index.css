@@ -17,7 +17,7 @@
 
 @layer components {
   .base-layout {
-    @apply flex flex-col items-center h-full min-w-[360px] sm:w-[500px]
+    @apply flex flex-col items-center h-full w-full sm:w-[500px]
     bg-background-mobile;
   }
 
