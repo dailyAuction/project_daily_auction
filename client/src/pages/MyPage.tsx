@@ -1,10 +1,9 @@
 import { TabBar } from '../components/TabBar';
-import { Temp } from '../components/temp/Temp';
 
-export const TempPage = () => {
+export const MyPage = () => {
   return (
     <main className="base-layout">
-      <Temp />
+      <div>My</div>
       <TabBar />
     </main>
   );
