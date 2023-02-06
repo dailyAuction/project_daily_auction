@@ -29,13 +29,13 @@ public class Member {
     private int coin;
 
     @Column
-    private MemberStatusCode status;
+    private String status;
 
     public void changePassword(String password){
         this.password = password;
     }
 
     public void changeStatus(MemberStatusCode status) {
-        this.status = status;
+        this.status = status.getStatus();
     }
 }
