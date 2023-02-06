@@ -1,17 +1,16 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
-const TAB_TITLE = ['home', 'category', 'search', 'postProduct', 'my'];
+const TAB_TITLE = ['', 'category', 'search', 'postProduct', 'my'];
 
-const TabIcon = ({ children, handleClick, idx, selectedTab }) => {
+const TabIcon = ({ children, idx }) => {
+  const location = useLocation();
   return (
     <Link
-      to={`/${idx === 0 ? '' : TAB_TITLE[idx]}`}
-      onClick={() => handleClick(idx)}
+      to={`/${TAB_TITLE[idx]}`}
       className={`text-base flex flex-col justify-center items-center cursor-pointer ${
-        selectedTab === idx && 'text-main-red'
+        location.pathname === `/${TAB_TITLE[idx]}` && 'text-main-red'
       }`}>
-      {children === 'home' && (
+      {children === '' && (
         <>
           <i>
             <svg
@@ -112,16 +111,10 @@ const TabIcon = ({ children, handleClick, idx, selectedTab }) => {
 };
 
 export const TabBar = () => {
-  const [selectedTab, setSelectedTap] = useState(0);
-
-  const handleClick = (idx: number) => {
-    setSelectedTap(idx);
-  };
-
   return (
     <nav className="flex w-full h-[75px] sticky top-[100vh] bg-white justify-between items-center px-7">
       {TAB_TITLE.map((title, idx) => (
-        <TabIcon key={title} handleClick={handleClick} idx={idx} selectedTab={selectedTab}>
+        <TabIcon key={title} idx={idx}>
           {title}
         </TabIcon>
       ))}
