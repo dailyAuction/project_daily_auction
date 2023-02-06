@@ -39,6 +39,9 @@ dependencies {
 	//메일 전송 관련
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+	//썸네일 관련
+	implementation 'net.coobird:thumbnailator:0.4.18'
+
 	//스프링시큐리티
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 

@@ -73,7 +73,7 @@ public class BoardService {
 
     public Board find(long boardId) {
         return boardRepository.findById(boardId)
-                .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getStatus(),
+                .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
                         ExceptionCode.BOARD_NOT_FOUND.getMessage(),
                         new IllegalArgumentException()));
     }

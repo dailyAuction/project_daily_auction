@@ -1,5 +1,6 @@
 package com.project.dailyAuction.board.entity;
 
+import com.project.dailyAuction.boardNotice.entity.Notice;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.*;
 
 @Getter
 @Builder
@@ -26,6 +28,8 @@ public class Board {
     @Column(nullable = false)
     private String image;
     @Column
+    private String thumbnail;
+    @Column
     private String status;
     @Column
     private String category;
@@ -43,7 +47,10 @@ public class Board {
     private int currentPrice;
     @Column
     private long bidderId;
+    @Column
     private String history;
+    @OneToMany(mappedBy = "board")
+    private List<Notice> notices = new ArrayList<>();
 
     public void changeLeadingBidder(long memberId, int newPrice) {
         this.bidderId = memberId;
