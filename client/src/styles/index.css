@@ -21,6 +21,10 @@
     bg-background-mobile;
   }
 
+  .content-layout {
+    @apply h-full px-[10px] space-y-3 overflow-y-scroll pb-[75px];
+  }
+
   img {
     -webkit-user-select: none;
     -khtml-user-select: none;
