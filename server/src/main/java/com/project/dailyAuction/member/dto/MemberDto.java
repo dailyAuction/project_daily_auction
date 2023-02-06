@@ -10,9 +10,9 @@ public class MemberDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SignIn{
+    public static class Signup{
         private String email;
-        private String verifyCode;
+        private boolean verified;
         private String password;
 
     }
@@ -24,5 +24,30 @@ public class MemberDto {
     public static class Update {
         private String currentPassword;
         private String newPassword;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Email {
+        private String email;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Coin {
+        private int coin;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyPage {
+        private String email;
+        private int coin;
     }
 }

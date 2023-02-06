@@ -4,6 +4,7 @@ package com.project.dailyAuction.member.service;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.member.dto.MemberDto;
 import com.project.dailyAuction.member.entity.Member;
+import com.project.dailyAuction.code.MemberStatusCode;
 import com.project.dailyAuction.member.repository.MemberRepository;
 import com.project.dailyAuction.security.jwt.JwtTokenizer;
 import lombok.AllArgsConstructor;
@@ -60,8 +61,7 @@ public class MemberService {
     public void verifyExistEmail(String email){
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         if (optionalMember.isPresent()) {
-            //todo: 에러 코드 작성 필요
-            throw new IllegalArgumentException();
+            new ResponseStatusException(ExceptionCode.MEMBER_EXISTS.getCode(), ExceptionCode.MEMBER_EXISTS.getMessage(), new IllegalArgumentException());
         }
     }
     public Member find(long memberId) {
@@ -102,5 +102,10 @@ public class MemberService {
         if (!optionalMember.isPresent()) return null;
 
         return optionalMember.get();
+    }
+
+    public void delete(String token) {
+        Member member = findByAccessToken(token);
+        member.changeStatus(MemberStatusCode.탈퇴회원.getCode());
     }
 }
