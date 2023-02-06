@@ -22,7 +22,7 @@ public class MemberController {
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public void postMember(@RequestBody MemberDto.Signup dto){
-        memberService.save(mapper.signupDtoToMember(dto));
+        memberService.save(mapper.signupDtoToMember(dto),dto.getPassword());
     }
 
     // post이메일 인증 - 가입한 이메일 확인 후 없으면 이메일 전송 (이메일 필요)

@@ -31,11 +31,17 @@ public class Member {
     @Column
     private String status;
 
+    public void setUserDetails(long memberId, String email, String password){
+        this.memberId = memberId;
+        this.email = email;
+        this.password = password;
+    }
+
     public void changePassword(String password){
         this.password = password;
     }
 
     public void changeStatus(MemberStatusCode status) {
-        this.status = status.getStatus();
+        this.status = status.getMessage();
     }
 }

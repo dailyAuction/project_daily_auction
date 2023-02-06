@@ -24,15 +24,10 @@ public class MemberService {
     private final JwtTokenizer jwtTokenizer;
 
     // 멤버 저장
-    public Member save(MemberDto.SignIn dto){
-        verifyExistEmail(dto.getEmail());
-
-        return memberRepository.save(Member.builder()
-                .email(dto.getEmail())
-                .password(passwordEncoder().encode(dto.getPassword()))
-                .coin(0)
-                .build()
-        );
+    public Member save(Member member, String password) {
+        verifyExistEmail(member.getEmail());
+        member.changePassword(passwordEncoder().encode(password));
+        return memberRepository.save(member);
     }
 
     // 정보 수정
@@ -66,7 +61,7 @@ public class MemberService {
     }
     public Member find(long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new ResponseStatusException(ExceptionCode.MEMBER_NOT_FOUND.getStatus(), ExceptionCode.MEMBER_NOT_FOUND.getMessage(), new IllegalArgumentException()));
+                .orElseThrow(() -> new ResponseStatusException(ExceptionCode.MEMBER_NOT_FOUND.getCode(), ExceptionCode.MEMBER_NOT_FOUND.getMessage(), new IllegalArgumentException()));
     }
 
     // 액세스토큰으로 멤버 찾기
@@ -106,6 +101,6 @@ public class MemberService {
 
     public void delete(String token) {
         Member member = findByAccessToken(token);
-        member.changeStatus(MemberStatusCode.탈퇴회원.getCode());
+        member.changeStatus(MemberStatusCode.탈퇴회원);
     }
 }

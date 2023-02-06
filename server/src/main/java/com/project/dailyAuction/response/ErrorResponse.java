@@ -28,7 +28,7 @@ public class ErrorResponse { //v1
     }
 
     public static ErrorResponse of(ExceptionCode exceptionCode) {
-        return new ErrorResponse(exceptionCode.getStatus(), exceptionCode.getMessage(), null, null);
+        return new ErrorResponse(exceptionCode.getCode(), exceptionCode.getMessage(), null, null);
     }
     public static ErrorResponse of(HttpStatus httpStatus) {
         return new ErrorResponse(httpStatus.value(), httpStatus.getReasonPhrase(), null, null);

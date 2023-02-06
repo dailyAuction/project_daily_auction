@@ -10,6 +10,6 @@ public enum MemberStatusCode {
     휴면회원(002,"휴면회원"),
     탈퇴회원(003,"탈퇴회원");
     private final int code;
-    private final String status;
+    private final String message;
 
 }

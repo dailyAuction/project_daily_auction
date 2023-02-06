@@ -98,7 +98,7 @@ public class JwtTokenizer {
         } catch (ExpiredJwtException e){
             log.info("# Expired JWT token");
             // todo: 에러코드 설정
-            throw new ResponseStatusException(ExceptionCode.EXPIRED_TOKEN.getStatus(), ExceptionCode.EXPIRED_TOKEN.getMessage(), new IllegalArgumentException());
+            throw new ResponseStatusException(ExceptionCode.EXPIRED_TOKEN.getCode(), ExceptionCode.EXPIRED_TOKEN.getMessage(), new IllegalArgumentException());
         }
     }
 
