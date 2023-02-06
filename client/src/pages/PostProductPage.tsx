@@ -1,9 +1,10 @@
 import { TabBar } from '../components/TabBar';
+import { SubHeader } from '../components/header/sub';
 
 export const PostProductPage = () => {
   return (
     <main className="base-layout">
-      <div>상품등록</div>
+      <SubHeader>상품 등록</SubHeader>
       <TabBar />
     </main>
   );
