@@ -1,10 +1,9 @@
 import { TabBar } from '../components/TabBar';
-import { Temp } from '../components/temp/Temp';
 
-export const TempPage = () => {
+export const CategoryPage = () => {
   return (
     <main className="base-layout">
-      <Temp />
+      <div>카테고리</div>
       <TabBar />
     </main>
   );

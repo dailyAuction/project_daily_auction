@@ -1,10 +1,9 @@
 import { TabBar } from '../components/TabBar';
-import { Temp } from '../components/temp/Temp';
 
-export const TempPage = () => {
+export const SearchPage = () => {
   return (
     <main className="base-layout">
-      <Temp />
+      <div>검색</div>
       <TabBar />
     </main>
   );
