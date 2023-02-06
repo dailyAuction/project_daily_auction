@@ -1,5 +1,5 @@
 import { TabBar } from '../components/TabBar';
-import { SubHeader } from '../components/header/sub';
+import { SubHeader } from '../components/Header/SubHeader';
 
 export const MyPage = () => {
   return (
