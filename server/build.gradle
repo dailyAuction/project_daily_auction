@@ -25,8 +25,12 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
+	//gson
+	implementation 'com.google.code.gson:gson'
 
 	//test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -34,6 +38,17 @@ dependencies {
 
 	//메일 전송 관련
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	//스프링시큐리티
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	//JWT 인증 관련
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly	'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	//oauth 관련
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 
 tasks.named('test') {
