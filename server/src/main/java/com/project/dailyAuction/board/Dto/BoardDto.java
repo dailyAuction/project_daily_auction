@@ -40,6 +40,10 @@ public class BoardDto {
         private LocalDateTime finishedAt;
         private String[] history;
         private int myPrice;
+
+        public void updateMyPrice(int myPrice) {
+            this.myPrice = myPrice;
+        }
     }
 
     @Getter

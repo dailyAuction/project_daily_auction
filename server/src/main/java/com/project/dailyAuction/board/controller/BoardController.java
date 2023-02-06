@@ -3,7 +3,6 @@ package com.project.dailyAuction.board.controller;
 import com.project.dailyAuction.board.Dto.BoardDto;
 import com.project.dailyAuction.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +27,13 @@ public class BoardController {
         return response;
     }
 
-    @PatchMapping
+    @PatchMapping("/bidding")
     @ResponseStatus(HttpStatus.OK)
     private void bidBoard(@RequestBody BoardDto.Patch patchDto) {
         long memberId = 2L;
         boardService.bidBoard(memberId,patchDto);
     }
-    @DeleteMapping
+    @DeleteMapping("/{board-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBoard(@PathVariable("board-id") long boardId) {
         long memberId = 1L;

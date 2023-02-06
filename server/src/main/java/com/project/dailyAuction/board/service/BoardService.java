@@ -4,19 +4,21 @@ import com.project.dailyAuction.board.Dto.BoardDto;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.code.ExceptionCode;
+import com.project.dailyAuction.member.entity.Member;
+import com.project.dailyAuction.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final MemberService memberService;
 
     public void saveBoard(long memberId, BoardDto.Post postDto) {
         Board createdBoard = Board.builder()
@@ -50,15 +52,14 @@ public class BoardService {
                 .viewCount(target.getViewCount())
                 .bidCount(target.getBidCount())
                 .history(history)
-                //.myPrice()
                 .build();
+        //todo: accessToken 작업완료 후 myPrice 추가작업
 
         return response;
     }
 
-
-
     public void deleteBoard(long memberId,long boardId) {
+        //todo: token 검증 추가예정
         Board target = find(boardId);
         boardRepository.delete(target);
     }
@@ -69,7 +70,6 @@ public class BoardService {
         board.changeLeadingBidder(memberId, patchDto.getNewPrice());
         board.updateHistory(patchDto.getNewPrice());
     }
-
 
     public Board find(long boardId) {
         return boardRepository.findById(boardId)
