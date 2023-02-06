@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 토큰 생성
         String accessToken = delegateAccessToken(member);
 
-        response.setHeader("AccessToken", "bearer " + accessToken);
+        response.setHeader("AccessToken", "earer " + accessToken);
 
         this.getSuccessHandler().onAuthenticationSuccess(request,response,authResult);
     }
