@@ -22,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -160,5 +161,12 @@ public class MemberService {
         Member member = findByAccessToken(token);
 
         return boardRepository.findBySellerId(member.getMemberId(), PageRequest.of(page-1, size));
+    }
+
+    public Page<Board> getParticipation(String token, int page, int size) {
+        Member member = findByAccessToken(token);
+
+        List<Long> participationList = member.getParticipationList();
+        return boardRepository.findAllByBoardIdIn(participationList,PageRequest.of(page-1,size));
     }
 }

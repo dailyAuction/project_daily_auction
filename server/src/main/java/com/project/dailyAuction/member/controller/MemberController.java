@@ -96,7 +96,12 @@ public class MemberController {
     // 참여 경매 -
     @GetMapping("/participation-list")
     @ResponseStatus(HttpStatus.OK)
-    public void getParticipation(@RequestHeader(name = "Authorization")String token){
-        //todo:
+    public PageDto getParticipation(@RequestHeader(name = "Authorization")String token,
+                                 @RequestParam int page,
+                                 @RequestParam int size){
+        Page<Board> boardPages = memberService.getParticipation(token,page,size);
+        List<Board> boards = boardPages.getContent();
+
+        return new PageDto(boardMapper.boardListToBoardDtoList(boards),boardPages);
     }
 }
