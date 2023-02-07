@@ -50,8 +50,8 @@ public class MemberService {
 
         String newPassword = passwordEncoder().encode(dto.getNewPassword());
         member.changePassword(newPassword);
-
-        return memberRepository.save(member);
+        return member;
+//        return memberRepository.save(member);
     }
 
     // 비밀번호 체크
