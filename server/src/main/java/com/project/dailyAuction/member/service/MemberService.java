@@ -4,6 +4,7 @@ package com.project.dailyAuction.member.service;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.etcService.EmailService;
 import com.project.dailyAuction.etcService.RandomCodeService;
+import com.project.dailyAuction.etcService.RandomPasswordService;
 import com.project.dailyAuction.member.dto.MemberDto;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.code.MemberStatusCode;
@@ -27,6 +28,7 @@ public class MemberService {
     private final JwtTokenizer jwtTokenizer;
     private final EmailService emailService;
     private final RandomCodeService randomCodeService;
+    private final RandomPasswordService randomPasswordService;
 
     // 멤버 저장
     public Member save(Member member, String password) {
@@ -77,10 +79,10 @@ public class MemberService {
 
     // 이메일로 멤버 찾기
     public Member findByEmail(String email) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        if (!optionalMember.isPresent()) throw new IllegalArgumentException();
-
-        return optionalMember.get();
+        return memberRepository.findByEmail(email)
+                .orElseThrow(
+                        ()-> new ResponseStatusException(ExceptionCode.MEMBER_NOT_FOUND.getCode(), ExceptionCode.MEMBER_NOT_FOUND.getMessage(), new IllegalArgumentException())
+                );
     }
 
     // 이메일로 멤버 수 체크
@@ -98,12 +100,8 @@ public class MemberService {
     }
 
     public Member findByEmailForOauth(String email) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        if (optionalMember.isEmpty()){
-            return null;
-        }
 
-        return optionalMember.get();
+        return memberRepository.findByEmail(email).orElse(null);
     }
 
     public void delete(String token) {
@@ -112,6 +110,7 @@ public class MemberService {
         // todo: 회원이 작성한 모든글 삭제하는 메서드 필요
     }
 
+    // 이메일이 있으면 에러 , 없으면 인증코드를 보내줌
     public String checkEmail(MemberDto.Email dto) throws MessagingException {
         String email = dto.getEmail();
         if (memberRepository.countByEmail(email)==1){
@@ -121,5 +120,18 @@ public class MemberService {
         String code = randomCodeService.genCode();
         emailService.verifyEmail(email, code);
         return code;
+    }
+
+    // 이메일이 없으면 에러 , 있으면 새로운 비밀번호를 보내줌
+    public void findPassword(MemberDto.Email dto) throws MessagingException {
+        String email = dto.getEmail();
+        if (memberRepository.countByEmail(email)==0){
+            new ResponseStatusException(ExceptionCode.MEMBER_NOT_FOUND.getCode(), ExceptionCode.MEMBER_NOT_FOUND.getMessage(), new IllegalArgumentException());
+        }
+        Member member = findByEmail(email);
+        String newPassword = randomPasswordService.genPassword();
+        emailService.findPassword(email,newPassword);
+
+        member.changePassword(passwordEncoder().encode(newPassword));
     }
 }
