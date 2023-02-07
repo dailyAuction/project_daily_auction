@@ -1,6 +1,7 @@
 package com.project.dailyAuction.member.service;
 
 
+import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.etcService.EmailService;
 import com.project.dailyAuction.etcService.RandomCodeService;
@@ -25,6 +26,7 @@ import java.util.Optional;
 @Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final BoardRepository boardRepository;
     private final JwtTokenizer jwtTokenizer;
     private final EmailService emailService;
     private final RandomCodeService randomCodeService;
@@ -107,6 +109,7 @@ public class MemberService {
     public void delete(String token) {
         Member member = findByAccessToken(token);
         member.changeStatus(MemberStatusCode.탈퇴회원);
+        boardRepository.deleteBySellerId(member.getMemberId());
         // todo: 회원이 작성한 모든글 삭제하는 메서드 필요
     }
 

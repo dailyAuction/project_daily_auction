@@ -48,4 +48,8 @@ public class Member {
     public void changeStatus(MemberStatusCode status) {
         this.status = status.getMessage();
     }
+
+    public void changeCoin(int newCoin){
+        this.coin += newCoin;
+    }
 }
