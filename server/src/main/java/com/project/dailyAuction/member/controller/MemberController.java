@@ -46,9 +46,9 @@ public class MemberController {
     // patch 비밀번호 변경 - 회원 비밀번호 변경 (토큰, 기존비밀번호 필요)
     @PatchMapping("/update-pw")
     @ResponseStatus(HttpStatus.OK)
-    public void updatePassword(@RequestHeader(name = "Authorization") String Token,
+    public void updatePassword(@RequestHeader(name = "Authorization") String token,
                                @RequestBody MemberDto.Update dto){
-        memberService.update(Token,dto);
+        memberService.update(token,dto);
     }
 
     // post비밀번호 찾기 - 가입한 이메일 확인 후 있으면 이메일 전송 (이메일 필요)
@@ -61,31 +61,31 @@ public class MemberController {
     // get마이페이지(대시보드) -  이메일, 내코인 리턴 (토큰 필요)
     @GetMapping("/my-page")
     @ResponseStatus(HttpStatus.OK)
-    public void getMyPage(@RequestHeader(name = "Authorization")String Token){
-        //todo: getmypage 작성 필요
+    public MemberDto.MyPage getMyPage(@RequestHeader(name = "Authorization")String token){
+        return memberService.getMyPage(token);
     }
 
     // post코인 충전 - 1000원단위 충전 (토큰, 충전량 필요) 변경된 코인 리턴
     @PostMapping("/add-coin")
     @ResponseStatus(HttpStatus.OK)
-    public MemberDto.Coin addCoin(@RequestHeader(name = "Authorization")String Token,
+    public MemberDto.Coin addCoin(@RequestHeader(name = "Authorization")String token,
                         @RequestBody MemberDto.Coin coin){
         return MemberDto.Coin.builder()
-                .coin(memberService.addCoin(Token,coin))
+                .coin(memberService.addCoin(token,coin))
                 .build();
     }
 
     // 등록 경매 -
     @GetMapping("/my-auction-list")
     @ResponseStatus(HttpStatus.OK)
-    public void getMyAuction(@RequestHeader(name = "Authorization")String Token){
+    public void getMyAuction(@RequestHeader(name = "Authorization")String token){
         //todo:
     }
 
     // 참여 경매 -
     @GetMapping("/participation-list")
     @ResponseStatus(HttpStatus.OK)
-    public void getParticipation(@RequestHeader(name = "Authorization")String Token){
+    public void getParticipation(@RequestHeader(name = "Authorization")String token){
         //todo:
     }
 }

@@ -110,7 +110,6 @@ public class MemberService {
         Member member = findByAccessToken(token);
         member.changeStatus(MemberStatusCode.탈퇴회원);
         boardRepository.deleteBySellerId(member.getMemberId());
-        // todo: 회원이 작성한 모든글 삭제하는 메서드 필요
     }
 
     // 이메일이 있으면 에러 , 없으면 인증코드를 보내줌
@@ -143,5 +142,14 @@ public class MemberService {
         member.changeCoin(coin.getCoin());
 
         return member.getCoin();
+    }
+
+    public MemberDto.MyPage getMyPage(String token) {
+        Member member = findByAccessToken(token);
+
+        return MemberDto.MyPage.builder()
+                .email(member.getEmail())
+                .coin(member.getCoin())
+                .build();
     }
 }
