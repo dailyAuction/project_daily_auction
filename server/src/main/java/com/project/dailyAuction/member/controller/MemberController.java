@@ -39,9 +39,8 @@ public class MemberController {
     // patch 회원 탈퇴 - 회원 상태 변경 (토큰 필요)
     @PatchMapping("/withdrawal")
     @ResponseStatus(HttpStatus.OK)
-    public void withdrawal(@RequestHeader(name = "Authorization") String Token){
-        memberService.delete("Authorization");
-        //todo: 이메일 전송 서비스 작성
+    public void withdrawal(@RequestHeader(name = "Authorization") String token){
+        memberService.delete(token);
     }
 
     // patch 비밀번호 변경 - 회원 비밀번호 변경 (토큰, 기존비밀번호 필요)

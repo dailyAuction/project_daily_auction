@@ -39,6 +39,7 @@ public class MemberService {
     public Member update(String accessToken, MemberDto.Update dto){
         Member member = findByAccessToken(accessToken);
         verifyPassword(member, dto.getCurrentPassword());
+
         String newPassword = passwordEncoder().encode(dto.getNewPassword());
         member.changePassword(newPassword);
 
@@ -48,9 +49,8 @@ public class MemberService {
     // 비밀번호 체크
     public void verifyPassword(Member member, String password){
         if (!passwordEncoder().matches(password, member.getPassword())) {
-            throw new IllegalArgumentException();
+            new ResponseStatusException(ExceptionCode.WRONG_PASSWORD.getCode(), ExceptionCode.WRONG_PASSWORD.getMessage(), new IllegalArgumentException());
         }
-
     }
 
     public PasswordEncoder passwordEncoder() {
@@ -109,6 +109,7 @@ public class MemberService {
     public void delete(String token) {
         Member member = findByAccessToken(token);
         member.changeStatus(MemberStatusCode.탈퇴회원);
+        // todo: 회원이 작성한 모든글 삭제하는 메서드 필요
     }
 
     public String checkEmail(MemberDto.Email dto) throws MessagingException {
