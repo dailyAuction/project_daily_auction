@@ -33,6 +33,14 @@
     @apply bg-white border-border-color border py-1 px-5 rounded-xl text-main-brown font-bold hover:bg-border-color transition-all;
   }
 
+  .bg-modal {
+    @apply w-full h-full bg-main-brown/[.30] absolute right-0 top-0 space-y-0 flex justify-center items-center flex-col;
+  }
+
+  .input {
+    @apply w-full outline-none px-2.5 py-1 rounded-[10px] text-base placeholder:text-border-color;
+  }
+
   img {
     -webkit-user-select: none;
     -khtml-user-select: none;
