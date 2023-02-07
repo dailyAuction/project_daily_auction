@@ -2,6 +2,8 @@ package com.project.dailyAuction.member.service;
 
 
 import com.project.dailyAuction.code.ExceptionCode;
+import com.project.dailyAuction.etcService.EmailService;
+import com.project.dailyAuction.etcService.RandomCodeService;
 import com.project.dailyAuction.member.dto.MemberDto;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.code.MemberStatusCode;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -22,6 +25,8 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtTokenizer jwtTokenizer;
+    private final EmailService emailService;
+    private final RandomCodeService randomCodeService;
 
     // 멤버 저장
     public Member save(Member member, String password) {
@@ -73,7 +78,7 @@ public class MemberService {
     // 이메일로 멤버 찾기
     public Member findByEmail(String email) {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        if (optionalMember.isPresent()) throw new IllegalArgumentException();
+        if (!optionalMember.isPresent()) throw new IllegalArgumentException();
 
         return optionalMember.get();
     }
@@ -94,7 +99,9 @@ public class MemberService {
 
     public Member findByEmailForOauth(String email) {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        if (!optionalMember.isPresent()) return null;
+        if (optionalMember.isEmpty()){
+            return null;
+        }
 
         return optionalMember.get();
     }
@@ -102,5 +109,16 @@ public class MemberService {
     public void delete(String token) {
         Member member = findByAccessToken(token);
         member.changeStatus(MemberStatusCode.탈퇴회원);
+    }
+
+    public String checkEmail(MemberDto.Email dto) throws MessagingException {
+        String email = dto.getEmail();
+        if (memberRepository.countByEmail(email)==1){
+            new ResponseStatusException(ExceptionCode.MEMBER_EXISTS.getCode(), ExceptionCode.MEMBER_EXISTS.getMessage(), new IllegalArgumentException());
+        }
+
+        String code = randomCodeService.genCode();
+        emailService.verifyEmail(email, code);
+        return code;
     }
 }

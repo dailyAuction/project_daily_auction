@@ -50,4 +50,11 @@ public class MemberDto {
         private String email;
         private int coin;
     }
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Code {
+        private String verifyCode;
+    }
 }

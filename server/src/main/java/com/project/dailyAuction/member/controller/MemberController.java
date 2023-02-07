@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
@@ -28,8 +30,10 @@ public class MemberController {
     // post이메일 인증 - 가입한 이메일 확인 후 없으면 이메일 전송 (이메일 필요)
     @PostMapping("/check-email")
     @ResponseStatus(HttpStatus.OK)
-    public void checkEmail(@RequestBody MemberDto.Email dto){
-        //todo: 이메일 전송 서비스 작성
+    public MemberDto.Code checkEmail(@RequestBody MemberDto.Email dto) throws MessagingException {
+        String code = memberService.checkEmail(dto);
+
+        return MemberDto.Code.builder().verifyCode(code).build();
     }
 
     // patch 회원 탈퇴 - 회원 상태 변경 (토큰 필요)
