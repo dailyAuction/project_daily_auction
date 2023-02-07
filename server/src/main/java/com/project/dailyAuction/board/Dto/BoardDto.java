@@ -27,6 +27,8 @@ public class BoardDto {
     @NoArgsConstructor
     public static class Response {
         private long boardId;
+        private long sellerId;
+        private long bidderId;
         private String title;
         private String description;
         private String image;
@@ -38,7 +40,7 @@ public class BoardDto {
         private int currentPrice;
         private LocalDateTime createdAt;
         private LocalDateTime finishedAt;
-        private String[] history;
+        private List<String> history;
         private int myPrice;
 
         public void updateMyPrice(int myPrice) {
