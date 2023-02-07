@@ -57,6 +57,11 @@ public class Board {
         this.currentPrice = newPrice;
     }
 
+    public List<String> getHistoryList(){
+        String[] histories = this.history.split(",");
+        return Arrays.asList(histories);
+    }
+
     public void updateHistory(int newPrice) {
         this.history = this.history + "," + newPrice;
     }
