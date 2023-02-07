@@ -8,7 +8,7 @@ export const CategoryPage = () => {
     <main className="base-layout">
       <SubHeader>카테고리</SubHeader>
       <section className=" my-4 grid grid-cols-3 gap-4">
-        {CATEGORIES.map((item) => (
+        {CATEGORIES.map((item: string) => (
           <CategoryPageBtn key={item}>{item}</CategoryPageBtn>
         ))}
       </section>
