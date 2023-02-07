@@ -1,4 +1,3 @@
-import { useRecoilState } from 'recoil';
 import { CategoryBtn } from '../components/CategoryBtn';
 import { AuctionStatus } from '../components/DetailPage/AuctionStatus';
 import { BidInformation } from '../components/DetailPage/BidInformation';
