@@ -10,7 +10,7 @@ type ModalProps = {
 
 export const ImageModal = ({ handleClose, handleMove, selectedIndex, url }: ModalProps) => {
   return (
-    <section className="w-full h-full bg-main-brown/[.30] absolute right-0 top-0 space-y-0 flex justify-center items-center flex-col">
+    <section className="bg-modal">
       <div className="bg-white/[.80] mb-2 cursor-pointer" onClick={handleClose}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
