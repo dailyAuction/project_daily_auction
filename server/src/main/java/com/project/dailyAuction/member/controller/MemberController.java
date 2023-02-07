@@ -62,15 +62,17 @@ public class MemberController {
     @GetMapping("/my-page")
     @ResponseStatus(HttpStatus.OK)
     public void getMyPage(@RequestHeader(name = "Authorization")String Token){
-        //todo: 이메일 전송 서비스 작성
+        //todo: getmypage 작성 필요
     }
 
     // post코인 충전 - 1000원단위 충전 (토큰, 충전량 필요) 변경된 코인 리턴
     @PostMapping("/add-coin")
     @ResponseStatus(HttpStatus.OK)
-    public void addCoin(@RequestHeader(name = "Authorization")String Token,
+    public MemberDto.Coin addCoin(@RequestHeader(name = "Authorization")String Token,
                         @RequestBody MemberDto.Coin coin){
-        //todo: 충전 서비스 작성
+        return MemberDto.Coin.builder()
+                .coin(memberService.addCoin(Token,coin))
+                .build();
     }
 
     // 등록 경매 -

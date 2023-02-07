@@ -134,4 +134,11 @@ public class MemberService {
 
         member.changePassword(passwordEncoder().encode(newPassword));
     }
+
+    public int addCoin(String token, MemberDto.Coin coin) {
+        Member member = findByAccessToken(token);
+        member.changeCoin(coin.getCoin());
+
+        return member.getCoin();
+    }
 }
