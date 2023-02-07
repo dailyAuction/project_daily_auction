@@ -12,6 +12,7 @@
 @layer base {
   * {
     font-family: 'Pretendard-Regular';
+    color: #4a3933;
   }
 }
 
@@ -22,7 +23,15 @@
   }
 
   .content-layout {
-    @apply h-full px-[10px] space-y-3 overflow-y-scroll pb-[75px];
+    @apply w-full h-full px-[10px] space-y-3 overflow-y-auto pb-[75px];
+  }
+
+  .red-btn {
+    @apply bg-main-red py-1 px-5 rounded-xl text-white hover:bg-main-orange transition-all;
+  }
+
+  .white-btn {
+    @apply bg-white border-border-color border py-1 px-5 rounded-xl text-main-brown font-bold hover:bg-border-color transition-all;
   }
 
   img {
