@@ -1,6 +1,7 @@
 package com.project.dailyAuction.member.service;
 
 
+import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.etcService.EmailService;
@@ -12,6 +13,8 @@ import com.project.dailyAuction.code.MemberStatusCode;
 import com.project.dailyAuction.member.repository.MemberRepository;
 import com.project.dailyAuction.security.jwt.JwtTokenizer;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -151,5 +154,11 @@ public class MemberService {
                 .email(member.getEmail())
                 .coin(member.getCoin())
                 .build();
+    }
+
+    public Page<Board> getMyAuction(String token, int page, int size) {
+        Member member = findByAccessToken(token);
+
+        return boardRepository.findBySellerId(member.getMemberId(), PageRequest.of(page-1, size));
     }
 }

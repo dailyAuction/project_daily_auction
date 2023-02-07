@@ -6,10 +6,12 @@ import com.project.dailyAuction.member.repository.MemberRepository;
 import com.project.dailyAuction.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/members")
@@ -18,13 +20,14 @@ import javax.mail.MessagingException;
 public class MemberController {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
-    private final MemberMapper mapper;
+    private final MemberMapper memberMapper;
+    private final BoardMapper boardMapper;
 
     // post 회원가입 (이메일, 비밀번호 필요)
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public void postMember(@RequestBody MemberDto.Signup dto){
-        memberService.save(mapper.signupDtoToMember(dto),dto.getPassword());
+        memberService.save(memberMapper.signupDtoToMember(dto),dto.getPassword());
     }
 
     // post이메일 인증 - 가입한 이메일 확인 후 없으면 이메일 전송 (이메일 필요)
@@ -78,8 +81,13 @@ public class MemberController {
     // 등록 경매 -
     @GetMapping("/my-auction-list")
     @ResponseStatus(HttpStatus.OK)
-    public void getMyAuction(@RequestHeader(name = "Authorization")String token){
-        //todo:
+    public PageDto getMyAuction(@RequestHeader(name = "Authorization")String token,
+                                @RequestParam int page,
+                                @RequestParam int size){
+        Page<Board> boardPages = memberService.getMyAuction(token,page,size);
+        List<Board> boards = boardPages.getContent();
+
+        return new PageDto(boardMapper.boardListToBoardDtoList(boards),boardPages);
     }
 
     // 참여 경매 -
