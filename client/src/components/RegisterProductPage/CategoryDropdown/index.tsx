@@ -10,9 +10,11 @@ export const CategoryDropdown = () => {
   };
 
   return (
-    <div className=" w-full h-screen">
+    <div className="w-full h-screen">
       <div className="relative">
-        <button type="button" className="relative flex justify-between align-middle p-2.5 w-full bg-white cursor-auto">
+        <button
+          type="button"
+          className={`relative flex justify-between align-middle p-2.5 w-full cursor-auto ${open && 'bg-white'}`}>
           카테고리
           {open ? (
             <svg
