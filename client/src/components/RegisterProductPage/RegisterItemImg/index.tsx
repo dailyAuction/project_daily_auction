@@ -12,7 +12,7 @@ export const RegisterItemImg = () => {
   };
 
   return (
-    <section className="base-layout overflow-x-scroll flex h-[200px] min-w-full">
+    <section className="base-layout overflow-x-scroll flex h-[200px] min-w-full pt-4">
       <div className="flex">
         <label onChange={addImage} htmlFor="input-file">
           <div className="w-24 h-24 bg-white border-2 border-light-gray rounded-[10px] p-1.5 mr-3">
@@ -28,7 +28,7 @@ export const RegisterItemImg = () => {
           </div>
           <input type="file" id="input-file" multiple accept="image/*" style={{ display: 'none' }} />
         </label>
-        <div className="flex align-middle">
+        <div className="flex justify-center align-middle">
           {myImage.length <= 5 &&
             myImage.map((x, i) => {
               return (
