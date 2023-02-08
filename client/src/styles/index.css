@@ -37,6 +37,10 @@
     @apply w-full h-full bg-main-brown/[.30] absolute right-0 top-0 space-y-0 flex justify-center items-center flex-col;
   }
 
+  .modal-container {
+    @apply w-96 h-96 bg-background-mobile shadow-sm rounded-md flex flex-col px-10 justify-center space-y-5;
+  }
+
   .input {
     @apply w-full outline-none px-2.5 py-1 rounded-[10px] text-base placeholder:text-border-color;
   }

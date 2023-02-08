@@ -18,7 +18,7 @@ export const BidModal = ({ handleClose }: BidModalProps) => {
   };
   return (
     <section className="bg-modal">
-      <div className="w-96 h-96 bg-background-mobile shadow-sm rounded-md flex flex-col px-10 justify-center space-y-5">
+      <div className="modal-container">
         <article className="flex flex-col space-y-1">
           <span>현재 경매가</span>
           <span className="text-xl font-bold text-main-orange">120,000 coin</span>
