@@ -4,7 +4,9 @@ import com.project.dailyAuction.board.Dto.BoardDto;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.code.ExceptionCode;
+import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
+import com.project.dailyAuction.notice.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 @Transactional
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final NoticeService noticeService;
     private final MemberService memberService;
 
     public void saveBoard(long memberId, BoardDto.Post postDto) {
@@ -27,9 +30,9 @@ public class BoardService {
                 .status("진행중")
                 .category(postDto.getCategory())
                 .createdAt(LocalDateTime.now())
-                .startingPrice(postDto.getStarting_price())
+                .startingPrice(postDto.getStartingPrice())
                 .sellerId(memberId)
-                .history(String.valueOf(postDto.getStarting_price()))
+                .history(String.valueOf(postDto.getStartingPrice()))
                 .build();
 
         boardRepository.save(createdBoard);
@@ -66,8 +69,10 @@ public class BoardService {
 
     public void bidBoard(long memberId, BoardDto.Patch patchDto) {
         Board board = find(patchDto.getBoardId());
+        Member lastBidder = memberService.find(board.getBidderId());
         board.changeLeadingBidder(memberId, patchDto.getNewPrice());
         board.updateHistory(patchDto.getNewPrice());
+        noticeService.send(lastBidder, board,3);
     }
 
     public Board find(long boardId) {
