@@ -1,6 +1,6 @@
 package com.project.dailyAuction.board.entity;
 
-import com.project.dailyAuction.boardNotice.entity.Notice;
+//import com.project.dailyAuction.boardNotice.entity.Notice;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -50,8 +50,8 @@ public class Board {
     private long bidderId;
     @Column
     private String history;
-    @OneToMany(mappedBy = "board")
-    private List<Notice> notices = new ArrayList<>();
+//    @OneToMany(mappedBy = "board")
+//    private List<Notice> notices = new ArrayList<>();
 
     public void changeLeadingBidder(long memberId, int newPrice) {
         this.bidderId = memberId;

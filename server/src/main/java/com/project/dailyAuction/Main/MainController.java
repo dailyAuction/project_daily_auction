@@ -8,6 +8,8 @@ import com.project.dailyAuction.Search.service.SearchService;
 import com.project.dailyAuction.board.Dto.BoardDto;
 import com.project.dailyAuction.board.Mapper.BoardMapper;
 import com.project.dailyAuction.board.entity.Board;
+import com.project.dailyAuction.board.service.BoardService;
+import com.project.dailyAuction.dto.MultiResponseDto;
 import com.project.dailyAuction.dto.PageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
