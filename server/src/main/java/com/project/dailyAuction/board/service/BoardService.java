@@ -25,7 +25,7 @@ public class BoardService {
                 .title(postDto.getTitle())
                 .description(postDto.getDescription())
                 .image(postDto.getImage())
-                .status("진행중")
+                .status(0)
                 .categoryId(postDto.getCategoryId())
                 .createdAt(LocalDateTime.now())
                 .startingPrice(postDto.getStarting_price())
@@ -52,7 +52,10 @@ public class BoardService {
                 .viewCount(target.getViewCount())
                 .bidCount(target.getBidCount())
                 .history(target.getHistoryList())
+                .statusId(target.getStatusId())
+                .bidderId(target.getBidderId())
                 .build();
+
         //todo: accessToken 작업완료 후 myPrice 추가작업
 
         return response;

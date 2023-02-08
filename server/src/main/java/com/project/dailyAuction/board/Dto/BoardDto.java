@@ -32,7 +32,7 @@ public class BoardDto {
         private String title;
         private String description;
         private String image;
-        private String status;
+        private long statusId;
         private long categoryId;
         private int viewCount;
         private int bidCount;

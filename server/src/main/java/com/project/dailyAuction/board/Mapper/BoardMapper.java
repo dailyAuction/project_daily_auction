@@ -29,7 +29,7 @@ public interface BoardMapper {
                     .startingPrice(board.getStartingPrice())
                     .currentPrice(board.getCurrentPrice())
                     .title(board.getTitle())
-                    .status(board.getStatus())
+                    .statusId(board.getStatusId())
                     .history(board.getHistoryList())
                     .bidCount(board.getBidCount())
                     .viewCount(board.getViewCount())
