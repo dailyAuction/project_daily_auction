@@ -1,6 +1,9 @@
 package com.project.dailyAuction.Main;
 
 import com.project.dailyAuction.Search.dto.KeywordDto;
+import com.project.dailyAuction.Search.dto.TopKeywordsDto;
+import com.project.dailyAuction.Search.entity.Keyword;
+import com.project.dailyAuction.Search.mapper.KeywordMapper;
 import com.project.dailyAuction.Search.service.SearchService;
 import com.project.dailyAuction.board.Dto.BoardDto;
 import com.project.dailyAuction.board.Mapper.BoardMapper;
@@ -21,6 +24,7 @@ import java.util.List;
 public class MainController {
     private final SearchService searchService;
     private final BoardMapper boardMapper;
+    private final KeywordMapper keywordMapper;
     // 검색
     @GetMapping("/{category-id}/search")
     @ResponseStatus(HttpStatus.OK)
@@ -37,8 +41,9 @@ public class MainController {
     // 인기검색어
     @GetMapping("/top-searched-keyword")
     @ResponseStatus(HttpStatus.OK)
-    public void getTopSearchedKeyword() {
-        //todo: 인기검색어 10개 리턴
+    public TopKeywordsDto getTopSearchedKeyword() {
+        List<Keyword> list = searchService.getTopKeyword();
+        return keywordMapper.listToDto(list);
     }
 
     // 마감임박 상품
