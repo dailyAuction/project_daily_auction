@@ -7,6 +7,7 @@ import { PostProductPage } from '../pages/PostProductPage';
 import { SearchPage } from '../pages/SearchPage';
 import { TempPage } from '../pages/TempPage';
 import { CategoryProductListPage } from '../pages/CategoryProductListPage';
+import { RegisterProductPage } from '../pages/RegisterProductPage';
 
 export const Router = () => {
   return (
@@ -20,6 +21,7 @@ export const Router = () => {
         <Route path="/my" element={<MyPage />} />
         <Route path="/notification" element={<NotificationPage />} />
         <Route path="/categoryProduct" element={<CategoryProductListPage />} />
+        <Route path="/registerProduct" element={<RegisterProductPage />} />
       </Routes>
     </BrowserRouter>
   );
