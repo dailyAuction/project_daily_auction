@@ -1,4 +1,4 @@
-package com.project.dailyAuction.Dto;
+package com.project.dailyAuction.Search.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchDto {
+public class KeywordDto {
     private String keyword;
 }
