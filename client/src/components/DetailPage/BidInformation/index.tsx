@@ -4,7 +4,18 @@ type BidModalProps = {
   handleClose: () => void;
 };
 
+// TODO: userData 아톰 만들어서 사용
+const tempUserData = {
+  memberID: 2,
+  coin: 10000,
+  email: 'test@test.com',
+};
+
 export const BidModal = ({ handleClose }: BidModalProps) => {
+  const [bidValue, setBidValue] = useState(0);
+  const onChange = (e) => {
+    setBidValue(e.target.value);
+  };
   return (
     <section className="bg-modal">
       <div className="w-96 h-96 bg-background-mobile shadow-sm rounded-md flex flex-col px-10 justify-center space-y-5">
@@ -13,7 +24,7 @@ export const BidModal = ({ handleClose }: BidModalProps) => {
           <span className="text-xl font-bold text-main-orange">120,000 coin</span>
         </article>
         <article>
-          <input placeholder="입찰가를 입력해주세요" onChange={() => console.log('hi')} className="input" />
+          <input placeholder="입찰가를 입력해주세요" onChange={onChange} value={bidValue} className="input" />
           <span className="text-xs text-main-red">현재 충전하신 코인이 부족합니다.</span>
         </article>
         <article className="flex self-end space-x-1 items-center">
@@ -33,18 +44,19 @@ export const BidModal = ({ handleClose }: BidModalProps) => {
   );
 };
 
-export const BidInformation = ({ bidCount, status, startingPrice, currentPrice, myPrice }) => {
+export const BidInformation = ({ bidCount, status, startingPrice, currentPrice, myPrice, sellerId, bidderId }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
       <section className="flex w-full justify-center bg-white px-2 py-3 space-y-4 flex-col">
         <article className="flex items-center space-x-2">
           <span className="text-lg font-bold text-main-orange">{currentPrice}</span>
-          <span className="text-sm">(시작가 : {startingPrice})</span>
+          <span className="text-sm">{myPrice ? `내 입찰가 : ${myPrice}` : `시작가 : ${startingPrice}`}</span>
         </article>
         <article className="flex w-full justify-between items-center">
           <span className="text-sm">입찰 횟수 : {bidCount}</span>
-          {status === '진행중' && (
+          {/* TODO: 로그인 여부 확인 기능 추가 */}
+          {status === 0 && sellerId !== tempUserData.memberID && (
             <button
               type="submit"
               className="red-btn"
@@ -53,6 +65,17 @@ export const BidInformation = ({ bidCount, status, startingPrice, currentPrice, 
               }}>
               입찰
             </button>
+          )}
+          {/* TODO: 로그인 여부 확인 기능 추가/ 재등록, 삭제 API 연결 */}
+          {status === 2 && sellerId === tempUserData.memberID && (
+            <article className="flex items-center space-x-2">
+              <button type="submit" className="red-btn">
+                재등록
+              </button>
+              <button type="submit" className="white-btn">
+                삭제
+              </button>
+            </article>
           )}
         </article>
       </section>
