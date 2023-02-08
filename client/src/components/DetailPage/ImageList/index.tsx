@@ -3,7 +3,7 @@ import { Increment, useClickCarousel } from './useClickCarousel';
 
 type ModalProps = {
   handleClose: () => void;
-  handleMove: <T extends Increment>(calc: T) => void;
+  handleMove: (calc: Increment) => void;
   selectedIndex: number;
   url: string[];
 };
