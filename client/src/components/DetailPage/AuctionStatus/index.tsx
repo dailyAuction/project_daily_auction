@@ -1,5 +1,5 @@
 import { ProductStatus } from '../../ProductStatus';
-import { STATUS } from '../../../constants/constants';
+import { AUCTION_STATUS } from '../../../constants/constants';
 
 type AuctionStatusProps = {
   finishedAt: string;
@@ -15,7 +15,7 @@ export const AuctionStatus = ({ finishedAt, status }: AuctionStatusProps) => {
         <span className="text-main-orange">{finishedAt}</span>
       </article>
       {/* TODO: 로그인 여부, 판매자 / 입찰자 여부 판단하여 조건부 렌더링 */}
-      <ProductStatus>{STATUS[status]}</ProductStatus>
+      <ProductStatus>{AUCTION_STATUS[status]}</ProductStatus>
     </section>
   );
 };
