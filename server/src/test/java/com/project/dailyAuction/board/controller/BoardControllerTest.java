@@ -30,7 +30,7 @@ class BoardControllerTest {
                 .startingPrice(100)
                 .title("BoardPost테스트")
                 .createdAt(LocalDateTime.now())
-                .category("잡화")
+                .categoryId(1)
                 .image("imageUrl")
                 .description("테스트입니다.")
                 .build();

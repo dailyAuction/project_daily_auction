@@ -17,7 +17,7 @@ public class BoardDto {
         private String title;
         private String description;
         private String image;
-        private String category;
+        private long categoryId;
         private int starting_price;
     }
 
@@ -33,7 +33,7 @@ public class BoardDto {
         private String description;
         private String image;
         private String status;
-        private String category;
+        private long categoryId;
         private int viewCount;
         private int bidCount;
         private int startingPrice;

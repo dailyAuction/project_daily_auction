@@ -33,7 +33,7 @@ public class Board {
     @Column
     private String status;
     @Column
-    private String category;
+    private long categoryId;
     @Column
     private int viewCount;
     @Column
