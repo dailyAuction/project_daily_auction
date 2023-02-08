@@ -7,6 +7,8 @@ import { PostProductPage } from '../pages/PostProductPage';
 import { SearchPage } from '../pages/SearchPage';
 import { TempPage } from '../pages/TempPage';
 import { CategoryProductListPage } from '../pages/CategoryProductListPage';
+import { LoginPage } from '../pages/LoginPage';
+import { SignUpPage } from '../pages/SignUpPage';
 
 export const Router = () => {
   return (
@@ -18,8 +20,10 @@ export const Router = () => {
         <Route path="/search" element={<SearchPage />} />
         <Route path="/postProduct" element={<PostProductPage />} />
         <Route path="/my" element={<MyPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/notification" element={<NotificationPage />} />
         <Route path="/categoryProduct" element={<CategoryProductListPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
       </Routes>
     </BrowserRouter>
   );
