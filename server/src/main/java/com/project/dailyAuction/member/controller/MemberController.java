@@ -34,7 +34,7 @@ public class MemberController {
     }
 
     // post이메일 인증 - 가입한 이메일 확인 후 없으면 이메일 전송 (이메일 필요)
-    @PostMapping("/check-email")
+    @PostMapping("/verification")
     @ResponseStatus(HttpStatus.OK)
     public MemberDto.Code checkEmail(@RequestBody MemberDto.Email dto) throws MessagingException {
         String code = memberService.checkEmail(dto);
@@ -50,7 +50,7 @@ public class MemberController {
     }
 
     // patch 비밀번호 변경 - 회원 비밀번호 변경 (토큰, 기존비밀번호 필요)
-    @PatchMapping("/update-pw")
+    @PatchMapping("/password")
     @ResponseStatus(HttpStatus.OK)
     public void updatePassword(@RequestHeader(name = "Authorization") String token,
                                @RequestBody MemberDto.Update dto){
@@ -58,7 +58,7 @@ public class MemberController {
     }
 
     // post비밀번호 찾기 - 가입한 이메일 확인 후 있으면 이메일 전송 (이메일 필요)
-    @PostMapping("/find-pw")
+    @PostMapping("/forgot-password")
     @ResponseStatus(HttpStatus.OK)
     public void findPassword(@RequestBody MemberDto.Email dto) throws MessagingException {
         memberService.findPassword(dto);
@@ -72,7 +72,7 @@ public class MemberController {
     }
 
     // post코인 충전 - 1000원단위 충전 (토큰, 충전량 필요) 변경된 코인 리턴
-    @PostMapping("/add-coin")
+    @PostMapping("/coin")
     @ResponseStatus(HttpStatus.OK)
     public MemberDto.Coin addCoin(@RequestHeader(name = "Authorization")String token,
                         @RequestBody MemberDto.Coin coin){

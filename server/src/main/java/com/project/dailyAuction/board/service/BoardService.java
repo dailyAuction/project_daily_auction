@@ -50,7 +50,7 @@ public class BoardService {
                 .finishedAt(target.getFinishedAt())
                 .viewCount(target.getViewCount())
                 .bidCount(target.getBidCount())
-                .history(target.getHistoryList())
+                .history(target.getHistoryArray())
                 .build();
         //todo: accessToken 작업완료 후 myPrice 추가작업
 
