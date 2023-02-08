@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 토큰 생성
         String accessToken = delegateAccessToken(member);
 
-        response.setHeader("AccessToken", "earer " + accessToken);
+        response.setHeader("AccessToken", "Bearer " + accessToken);
 
         this.getSuccessHandler().onAuthenticationSuccess(request,response,authResult);
     }
@@ -60,7 +60,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private String delegateAccessToken(Member member) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", member.getEmail());
-        claims.put("userId",member.getMemberId());
+        claims.put("memberId",member.getMemberId());
 
         String subject = member.getEmail();
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());

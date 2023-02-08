@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -24,7 +25,7 @@ public class Board {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
     @Column
-    private long memberId;
+    private long sellerId;
     @Column(nullable = false)
     private String image;
     @Column
@@ -55,6 +56,13 @@ public class Board {
     public void changeLeadingBidder(long memberId, int newPrice) {
         this.bidderId = memberId;
         this.currentPrice = newPrice;
+    }
+
+    public List<Long> getHistoryList(){
+        String[] histories = this.history.split(",");
+        return Arrays.stream(histories)
+                .mapToLong(a-> Long.parseLong(a)).boxed()
+                .collect(Collectors.toList());
     }
 
     public void updateHistory(int newPrice) {

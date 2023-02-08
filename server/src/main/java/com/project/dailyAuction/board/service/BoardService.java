@@ -4,7 +4,6 @@ import com.project.dailyAuction.board.Dto.BoardDto;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.code.ExceptionCode;
-import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class BoardService {
                 .category(postDto.getCategory())
                 .createdAt(LocalDateTime.now())
                 .startingPrice(postDto.getStarting_price())
-                .memberId(memberId)
+                .sellerId(memberId)
                 .history(String.valueOf(postDto.getStarting_price()))
                 .build();
 
@@ -51,7 +50,7 @@ public class BoardService {
                 .finishedAt(target.getFinishedAt())
                 .viewCount(target.getViewCount())
                 .bidCount(target.getBidCount())
-                .history(history)
+                .history(target.getHistoryList())
                 .build();
         //todo: accessToken 작업완료 후 myPrice 추가작업
 
