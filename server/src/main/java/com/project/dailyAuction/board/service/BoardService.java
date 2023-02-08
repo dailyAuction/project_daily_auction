@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -75,5 +76,13 @@ public class BoardService {
                 .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
                         ExceptionCode.BOARD_NOT_FOUND.getMessage(),
                         new IllegalArgumentException()));
+    }
+
+    public List<Board> getPopularItem(long categoryId) {
+        if (categoryId==0){
+            return boardRepository.findTop5ByOrderByViewCountDesc();
+        }else {
+            return boardRepository.findTop5ByCategoryIdOrderByViewCountDesc(categoryId);
+        }
     }
 }

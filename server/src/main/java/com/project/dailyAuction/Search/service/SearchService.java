@@ -48,4 +48,8 @@ public class SearchService {
     public List<Keyword> getTopKeyword() {
         return keywordRepository.findTop10ByOrderBySearchedCntDesc();
     }
+
+    public Page<Board> getAllPopularItem(int page, int size) {
+        return boardRepository.findByOrderByViewCountDesc(PageRequest.of(page - 1, size));
+    }
 }

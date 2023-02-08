@@ -22,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class MainController {
+    private final BoardService boardService;
     private final SearchService searchService;
     private final BoardMapper boardMapper;
     private final KeywordMapper keywordMapper;
@@ -56,15 +57,20 @@ public class MainController {
     // 카테고리별 인기 상품
     @GetMapping("/{category-id}/popular-item")
     @ResponseStatus(HttpStatus.OK)
-    public void getPopularItem(@PathVariable("category-id") long categoryId) {
-        //todo: 카테고리별 인기상품(조회수) 5개 리턴
+    public MultiResponseDto getPopularItem(@PathVariable("category-id") long categoryId) {
+        List<Board> boards = boardService.getPopularItem(categoryId);
+        List<BoardDto.Response> boardDtos = boardMapper.boardListToBoardDtoList(boards);
+        return new MultiResponseDto(boardDtos);
     }
 
     // 전체 인기상품
     @GetMapping("/all-popular-item")
     @ResponseStatus(HttpStatus.OK)
-    public void getAllPopularItem(@RequestParam int page,
+    public PageDto getAllPopularItem(@RequestParam int page,
                                   @RequestParam int size) {
-        //todo: 전체 인기상품(조회수) 리턴
+        Page<Board> boardPages = searchService.getAllPopularItem(page,size);
+        List<Board> boards = boardPages.getContent();
+
+        return new PageDto(boardMapper.boardListToBoardDtoList(boards), boardPages);
     }
 }
