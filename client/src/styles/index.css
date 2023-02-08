@@ -12,7 +12,6 @@
 @layer base {
   * {
     font-family: 'Pretendard-Regular';
-    color: #4a3933;
   }
 }
 
@@ -32,6 +31,22 @@
 
   .white-btn {
     @apply bg-white border-border-color border py-1 px-5 rounded-xl text-main-brown font-bold hover:bg-border-color transition-all;
+  }
+
+  .bg-modal {
+    @apply w-full h-full bg-main-brown/[.30] absolute right-0 top-0 space-y-0 flex justify-center items-center flex-col;
+  }
+
+  .modal-container {
+    @apply w-96 h-96 bg-background-mobile shadow-sm rounded-md flex flex-col px-10 justify-center space-y-5;
+  }
+
+  .input {
+    @apply w-full outline-none px-2.5 py-1 rounded-[10px] text-base placeholder:text-border-color;
+  }
+
+  .category-btn {
+    @apply bg-white rounded-[10px] mx-1 px-2.5 shadow-lg h-[23px] hover:bg-main-red hover:text-white text-xs;
   }
 
   img {

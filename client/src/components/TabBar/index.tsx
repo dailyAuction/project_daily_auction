@@ -1,4 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { loginStateAtom } from '../../atoms/loginStateAtom';
 
 const TAB_TITLE = ['', 'category', 'search', 'postProduct', 'my'];
 
@@ -111,8 +113,12 @@ const TabIcon = ({ children, idx }) => {
 };
 
 export const TabBar = () => {
+  // 로그인 상태 테스트용 console.log
+  const loginState = useRecoilValue(loginStateAtom);
+  console.log('로그인 상태 확인 : ', loginState);
+
   return (
-    <nav className="flex w-full h-[75px] sticky top-[100vh] bg-white justify-between items-center px-7">
+    <nav className="flex w-full h-[75px] sticky top-[100vh] bg-white justify-between items-center px-7 border-t">
       {TAB_TITLE.map((title, idx) => (
         <TabIcon key={title} idx={idx}>
           {title}
