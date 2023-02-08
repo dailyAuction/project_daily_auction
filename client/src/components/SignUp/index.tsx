@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 export const SignUp = () => {
   return (
-    <main className="w-full h-full flex flex-col mt-11 items-center space-y-5">
+    <main className="w-full flex flex-col mt-11 items-center space-y-5">
       <section className="space-y-7 w-3/5">
         {/* TODO : 유효성 검사 기능 추가 */}
         <form className="space-y-2 ">

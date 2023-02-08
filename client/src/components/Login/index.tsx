@@ -1,8 +1,12 @@
 import { Link } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { loginStateAtom } from '../../atoms/loginStateAtom';
 
 export const Login = () => {
+  const [loginState, setLoginState] = useRecoilState(loginStateAtom);
+
   return (
-    <main className="w-full h-full flex flex-col mt-11 items-center space-y-5">
+    <main className="w-full flex flex-col mt-11 items-center space-y-5">
       <section className="space-y-7 w-3/5">
         {/* TODO : form 태그로 변경 */}
         <form className="space-y-2">
@@ -16,11 +20,13 @@ export const Login = () => {
           </article>
         </form>
         {/* TODO : 로그인 버튼 누를 시 로직 필요 */}
-        {false ? null : <span className="text-xs text-[#FF0000]">정보가 일치하지 않습니다</span>}
+        {loginState ? null : <span className="text-xs text-[#FF0000]">정보가 일치하지 않습니다</span>}
+        <Link to="/my" onClick={() => setLoginState(true)}>
+          <button type="button" className="w-full text-base mt-4 py-1.5 bg-border-color rounded-[10px]">
+            로그인
+          </button>
+        </Link>
 
-        <button type="submit" className="w-full text-base mt-4 py-1.5 bg-border-color rounded-[10px]">
-          로그인
-        </button>
         <article className="flex flex-col justify-center items-center space-y-2 text-sm">
           <span>
             아직 회원이 아니신가요?
