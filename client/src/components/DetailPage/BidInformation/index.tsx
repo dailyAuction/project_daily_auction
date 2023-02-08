@@ -11,7 +11,7 @@ const tempUserData = {
   email: 'test@test.com',
 };
 
-export const BidModal = ({ handleClose }: BidModalProps) => {
+const BidModal = ({ handleClose }: BidModalProps) => {
   const [bidValue, setBidValue] = useState(0);
   const onChange = (e) => {
     setBidValue(e.target.value);
