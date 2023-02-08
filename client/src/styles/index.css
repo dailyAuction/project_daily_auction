@@ -45,6 +45,10 @@
     @apply w-full outline-none px-2.5 py-1 rounded-[10px] text-base placeholder:text-border-color;
   }
 
+  .category-btn {
+    @apply bg-white rounded-[10px] mx-1 px-2.5 shadow-lg h-[23px] hover:bg-main-red hover:text-white text-xs;
+  }
+
   img {
     -webkit-user-select: none;
     -khtml-user-select: none;
