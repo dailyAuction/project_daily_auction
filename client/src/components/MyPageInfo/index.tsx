@@ -32,12 +32,9 @@ const LeaveModal = ({ handleClose }: LeaveModalProps) => {
 
 export const MyPageInfo = () => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const [loginState, setLoginState] = useRecoilState(loginStateAtom);
+  const [, setLoginState] = useRecoilState(loginStateAtom);
 
   const myAuctionBtn = 'w-full bg-background-mobile p-6';
-
-  // 테스트 끝날시 삭제
-  console.log('로그인 상태 확인 : ', loginState);
 
   return (
     <main className="w-full flex flex-col items-center space-y-5 text-main-brown">
