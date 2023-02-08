@@ -4,9 +4,14 @@ import { CATEGORIES } from '../../../constants/constants';
 
 export const CategoryDropdown = () => {
   const [open, setOpen] = useState(false);
+  const [curCategory, setCurCategory] = useState('');
 
   const handlerOnClickDropdown = () => {
     setOpen(!open);
+  };
+
+  const handlerOnClickCategory = (idx) => {
+    setCurCategory(CATEGORIES[idx]);
   };
 
   return (
@@ -15,7 +20,8 @@ export const CategoryDropdown = () => {
         <button
           type="button"
           className={`relative flex justify-between align-middle p-2.5 w-full cursor-auto ${open && 'bg-white'}`}>
-          카테고리
+          <p className="">카테고리</p>
+          <div className="flex flex-1 ml-6">{curCategory}</div>
           {open ? (
             <svg
               onClick={handlerOnClickDropdown}
@@ -42,9 +48,13 @@ export const CategoryDropdown = () => {
           {}
         </button>
         {open && (
-          <div className="absolute h-20 mt-2 py-2 bg-white rounded-md z-20">
-            {CATEGORIES.map((item) => {
-              return <CategoryBtn key={item}>{item}</CategoryBtn>;
+          <div className="absolute flex flex-wrap items-center h-20 mt-2 pl-2 py-2 bg-white rounded-md z-20">
+            {CATEGORIES.map((item, idx) => {
+              return (
+                <div onClick={() => handlerOnClickCategory(idx)} key={item}>
+                  <CategoryBtn key={item}>{item}</CategoryBtn>
+                </div>
+              );
             })}
           </div>
         )}
