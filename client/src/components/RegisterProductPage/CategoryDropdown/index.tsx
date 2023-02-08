@@ -10,7 +10,7 @@ export const CategoryDropdown = () => {
   };
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full border-b-2">
       <div className="relative">
         <button
           type="button"
@@ -42,7 +42,7 @@ export const CategoryDropdown = () => {
           {}
         </button>
         {open && (
-          <div className="h-[100px] mt-2 py-2 bg-white rounded-md z-20">
+          <div className="absolute h-[100px] mt-2 py-2 bg-white rounded-md z-20">
             {CATEGORIES.map((item) => {
               return <CategoryBtn key={item}>{item}</CategoryBtn>;
             })}
