@@ -1,12 +1,12 @@
 import { TabBar } from '../components/TabBar';
 import { SubHeader } from '../components/Header/SubHeader';
-import { MyPageInfo } from '../components/MyPageInfo';
+import { Login } from '../components/Login';
 
-export const MyPage = () => {
+export const LoginPage = () => {
   return (
     <main className="base-layout">
-      <SubHeader>My</SubHeader>
-      <MyPageInfo />
+      <SubHeader>로그인</SubHeader>
+      <Login />
       <TabBar />
     </main>
   );

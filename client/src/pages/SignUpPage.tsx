@@ -1,12 +1,12 @@
 import { TabBar } from '../components/TabBar';
 import { SubHeader } from '../components/Header/SubHeader';
-import { MyPageInfo } from '../components/MyPageInfo';
+import { SignUp } from '../components/SignUp';
 
-export const MyPage = () => {
+export const SignUpPage = () => {
   return (
     <main className="base-layout">
-      <SubHeader>My</SubHeader>
-      <MyPageInfo />
+      <SubHeader>회원가입</SubHeader>
+      <SignUp />
       <TabBar />
     </main>
   );
