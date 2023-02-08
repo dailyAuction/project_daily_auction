@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { loginStateAtom } from '../../atoms/loginStateAtom';
 
@@ -45,7 +46,9 @@ export const MyPageInfo = () => {
             <span className="font-bold">email@gmail.com</span>
           </div>
           {/* TODO : 비밀번호 변경 페이지로 LINK */}
-          <span className="text-xs font-light">비밀번호 변경 &gt;</span>
+          <Link to="/editPassword">
+            <span className="text-xs font-light">비밀번호 변경 &gt;</span>
+          </Link>
         </article>
       </section>
       <section className="w-full px-[10px] py-3 bg-white">
