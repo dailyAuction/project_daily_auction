@@ -9,6 +9,7 @@ import { TempPage } from '../pages/TempPage';
 import { CategoryProductListPage } from '../pages/CategoryProductListPage';
 import { LoginPage } from '../pages/LoginPage';
 import { SignUpPage } from '../pages/SignUpPage';
+import { RegisterProductPage } from '../pages/RegisterProductPage';
 
 export const Router = () => {
   return (
@@ -24,6 +25,7 @@ export const Router = () => {
         <Route path="/notification" element={<NotificationPage />} />
         <Route path="/categoryProduct" element={<CategoryProductListPage />} />
         <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/registerProduct" element={<RegisterProductPage />} />
       </Routes>
     </BrowserRouter>
   );
