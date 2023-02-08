@@ -5,19 +5,20 @@ import { Chart } from '../components/DetailPage/Chart';
 import { ImageList } from '../components/DetailPage/ImageList';
 import { TabBar } from '../components/TabBar';
 import { SubHeader } from '../components/Header/SubHeader';
+import { CATEGORIES } from '../constants/constants';
 import { productDetail } from '../mock/productDetail';
 
 export const DetailPage = () => {
   return (
     <main className="base-layout">
       <SubHeader>상세 페이지</SubHeader>
-      <section className="content-layout">
+      <section className="content-layout relative">
         <ImageList url={productDetail.image} />
         <h1 className="text-xl font-semibold">아주 아름다운 모자 판매합니다.</h1>
-        <CategoryBtn>의류 / 잡화</CategoryBtn>
+        <CategoryBtn>{CATEGORIES[productDetail.categoryId]}</CategoryBtn>
         <article className="flex justify-between px-2">
-          <span>id : 280099</span>
-          <span>조회수 : 30</span>
+          <span>id : {productDetail.boardId}</span>
+          <span>조회수 : {productDetail.viewCount}</span>
         </article>
 
         <AuctionStatus finishedAt={productDetail.finishedAt} status={productDetail.status} />
@@ -28,6 +29,8 @@ export const DetailPage = () => {
           startingPrice={productDetail.startingPrice}
           currentPrice={productDetail.currentPrice}
           myPrice={productDetail.myPrice}
+          sellerId={productDetail.sellerId}
+          bidderId={productDetail.bidderId}
         />
         <Chart />
         <article>
