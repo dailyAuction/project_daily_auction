@@ -18,9 +18,9 @@ export const ProductItem = ({ productDetail }: ProductItemProps) => {
   const isUserSeller = isMatchUserId(authorId);
 
   const location = useLocation().pathname;
-  const page = location.includes('my-auction-list')
+  const page = location.includes('auctionList')
     ? 'register'
-    : location.includes('participation-list')
+    : location.includes('participationList')
     ? 'participation'
     : '';
 

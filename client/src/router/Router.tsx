@@ -13,6 +13,7 @@ import { RegisterProductPage } from '../pages/RegisterProductPage';
 import { SearchResultPage } from '../pages/SearchResultPage';
 import { ChargePage } from '../pages/ChargePage';
 import { MainPage } from '../pages/MainPage';
+import { MyAuctionList } from '../components/MyPage/MyAuctionList/MyAuctionList';
 
 export const Router = () => {
   return (
@@ -25,6 +26,7 @@ export const Router = () => {
         <Route path="/search/:query" element={<SearchResultPage />} />
         <Route path="/postProduct" element={<PostProductPage />} />
         <Route path="/my" element={<MyPage />} />
+        <Route path="/my/auctionList" element={<MyAuctionList />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/editPassword" element={<EditPasswordPage />} />
         <Route path="/charge" element={<ChargePage />} />
