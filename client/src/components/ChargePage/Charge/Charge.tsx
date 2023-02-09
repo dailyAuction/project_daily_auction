@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CHARGECOIN_STATUS } from '../../../constants/constants';
 
 type CheckModalProps = {
@@ -6,6 +7,8 @@ type CheckModalProps = {
 };
 
 const CheckModal = ({ handleClose }: CheckModalProps) => {
+  const navigate = useNavigate();
+
   return (
     <section className="bg-modal">
       <div className="modal-container justify-around items-center py-5">
@@ -18,7 +21,13 @@ const CheckModal = ({ handleClose }: CheckModalProps) => {
           <span className="text-2xl text-main-orange font-bold">10,000 coin</span>
         </article>
         <article className="w-full flex justify-around font-bold">
-          <button type="button" className="red-btn" onClick={handleClose}>
+          <button
+            type="button"
+            className="red-btn"
+            onClick={() => {
+              handleClose();
+              navigate(-1);
+            }}>
             확인
           </button>
         </article>
@@ -41,7 +50,7 @@ export const Charge = () => {
         <article>
           <span className="text-base">충전 금액</span>
           <div className="flex flex-row relative mt-2">
-            <input type="text" className="input bg-background-mobile" placeholder="10,000" />
+            <input type="number" pattern="[0-9]+" className="input bg-background-mobile" placeholder="10,000" />
             <span className="absolute right-4 top-1">원</span>
           </div>
         </article>
