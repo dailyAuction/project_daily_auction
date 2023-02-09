@@ -52,8 +52,10 @@ public class MainController {
     // 마감임박 상품
     @GetMapping("/imminent-item")
     @ResponseStatus(HttpStatus.OK)
-    public void getImminentItem() {
-        //todo: 마감임박 5개 리턴
+    public MultiResponseDto getImminentItem() {
+        List<Board> boards = boardService.getImminentItem();
+        List<BoardDto.Response> boardDtos = boardMapper.boardListToBoardDtoList(boards);
+        return new MultiResponseDto(boardDtos);
     }
 
     // 카테고리별 인기 상품

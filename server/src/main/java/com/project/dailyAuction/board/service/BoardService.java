@@ -6,6 +6,7 @@ import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,12 +21,12 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberService memberService;
 
-    public void saveBoard(long memberId, BoardDto.Post postDto) {
+    public Board saveBoard(long memberId, BoardDto.Post postDto) {
         Board createdBoard = Board.builder()
                 .title(postDto.getTitle())
                 .description(postDto.getDescription())
                 .image(postDto.getImage())
-                .status(0)
+                .statusId(0)
                 .categoryId(postDto.getCategoryId())
                 .createdAt(LocalDateTime.now())
                 .startingPrice(postDto.getStarting_price())
@@ -33,7 +34,7 @@ public class BoardService {
                 .history(String.valueOf(postDto.getStarting_price()))
                 .build();
 
-        boardRepository.save(createdBoard);
+        return boardRepository.save(createdBoard);
     }
 
     public  BoardDto.Response getDetailPage(long memberId, long boardId) {
@@ -82,10 +83,14 @@ public class BoardService {
     }
 
     public List<Board> getPopularItem(long categoryId) {
-        if (categoryId==0){
-            return boardRepository.findTop5ByOrderByViewCountDesc();
+        if (categoryId==1){
+            return boardRepository.findTop5ByStatusIdOrderByViewCountDesc(1);
         }else {
-            return boardRepository.findTop5ByCategoryIdOrderByViewCountDesc(categoryId);
+            return boardRepository.findTop5ByCategoryIdAndStatusIdOrderByViewCountDesc(categoryId,1);
         }
+    }
+
+    public List<Board> getImminentItem() {
+        return boardRepository.findTop5ByStatusIdOrderByCreatedAtDesc(1);
     }
 }

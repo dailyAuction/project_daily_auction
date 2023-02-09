@@ -50,6 +50,6 @@ public class SearchService {
     }
 
     public Page<Board> getAllPopularItem(int page, int size) {
-        return boardRepository.findByOrderByViewCountDesc(PageRequest.of(page - 1, size));
+        return boardRepository.findByStatusIdOrderByViewCountDesc(1,PageRequest.of(page - 1, size));
     }
 }
