@@ -43,15 +43,22 @@ public class BoardService {
         boardRepository.save(createdBoard);
     }
 
-    public  BoardDto.Response getDetailPage(long memberId, long boardId) {
+    public BoardDto.Response getDetailPage(String token, long boardId) {
         Board target = find(boardId);
+
         String[] history = target.getHistory().split(",");
+
+        //조회수 증가
+        //todo: redis로 처리하기
+        target.upViewCount();
+
         BoardDto.Response response = BoardDto.Response.builder()
                 .boardId(boardId)
                 .title(target.getTitle())
                 .description(target.getDescription())
                 .category(target.getCategory())
                 .image(target.getImage())
+                .thumbnail(target.getThumbnail())
                 .startingPrice(target.getStartingPrice())
                 .currentPrice(target.getCurrentPrice())
                 .createdAt(target.getCreatedAt())
@@ -61,6 +68,7 @@ public class BoardService {
                 .history(target.getHistoryList())
                 .statusId(target.getStatusId())
                 .bidderId(target.getBidderId())
+                .sellerId(target.getSellerId())
                 .build();
 
         if (token!=null){
@@ -71,14 +79,19 @@ public class BoardService {
         return response;
     }
 
-    public void deleteBoard(long memberId,long boardId) {
-        //todo: token 검증 추가예정
+    public void deleteBoard(String token, long boardId) {
         Board target = find(boardId);
+        if (target.getSellerId() != memberService.findByAccessToken(token).getMemberId()) {
+            new ResponseStatusException(ExceptionCode.NOT_WRITER.getCode(),
+                    ExceptionCode.NOT_WRITER.getMessage(),
+                    new IllegalArgumentException());
+        }
         boardRepository.delete(target);
     }
 
 
-    public void bidBoard(long memberId, BoardDto.Patch patchDto) {
+    public void bidBoard(String token, BoardDto.Patch patchDto) {
+        Member member = memberService.findByAccessToken(token);
         Board board = find(patchDto.getBoardId());
         board.changeLeadingBidder(memberId, patchDto.getNewPrice());
         board.updateHistory(patchDto.getNewPrice());
