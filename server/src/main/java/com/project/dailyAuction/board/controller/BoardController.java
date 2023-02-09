@@ -1,6 +1,7 @@
 package com.project.dailyAuction.board.controller;
 
 import com.project.dailyAuction.board.Dto.BoardDto;
+import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,13 +17,14 @@ public class BoardController {
     @ResponseStatus(HttpStatus.CREATED)
     public void postBoard(@RequestHeader(name = "Authorization") String token,
                           @RequestBody BoardDto.Post postDto) {
-        boardService.saveBoard(token, postDto);
+        Board board = boardService.saveBoard(token, postDto);
     }
 
     @GetMapping("/{board-id}")
     @ResponseStatus(HttpStatus.OK)
     public BoardDto.Response getBoard(@RequestHeader(name = "Authorization",required = false) String token,
                                       @PathVariable("board-id") long boardId) {
+        boardService.addViewCntToRedis(boardId);
         BoardDto.Response response = boardService.getDetailPage(token, boardId);
         return response;
     }

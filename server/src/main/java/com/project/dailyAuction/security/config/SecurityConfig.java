@@ -1,5 +1,6 @@
 package com.project.dailyAuction.security.config;
 
+import com.project.dailyAuction.cache.SingleVisitInterceptor;
 import com.project.dailyAuction.member.service.MemberService;
 import com.project.dailyAuction.security.filter.JwtAuthenticationFilter;
 import com.project.dailyAuction.security.filter.JwtVerificationFilter;
@@ -26,6 +27,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,9 +38,10 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer {
     private final JwtTokenizer jwtTokenizer;
     private final MemberService memberService;
+    private final SingleVisitInterceptor singleVisitInterceptor;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -147,6 +151,11 @@ public class SecurityConfig {
             builder
                     .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
         }
+    }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(singleVisitInterceptor)
+                .addPathPatterns("/mylocation/**");
     }
 }
 

@@ -52,6 +52,9 @@ dependencies {
 
 	//oauth 관련
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	//redis 관련
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {

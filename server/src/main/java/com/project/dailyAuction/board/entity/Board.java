@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Board {
+public class Board implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long boardId;
@@ -75,5 +75,9 @@ public class Board {
 
     public void upViewCount() {
         this.viewCount++;
+    }
+
+    public void changeStatus(long statusId){
+        this.statusId = statusId;
     }
 }

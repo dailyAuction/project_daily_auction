@@ -9,21 +9,30 @@ import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberService memberService;
     private final BoardMemberRepository boardMemberRepository;
+    private final RedisTemplate redisTemplate;
 
-    public void saveBoard(String token, BoardDto.Post postDto) {
+    public Board saveBoard(String token, BoardDto.Post postDto) {
         Member member = memberService.findByAccessToken(token);
         Board createdBoard = Board.builder()
                 .title(postDto.getTitle())
@@ -40,7 +49,7 @@ public class BoardService {
                 .history(String.valueOf(postDto.getStarting_price()))
                 .build();
 
-        boardRepository.save(createdBoard);
+        return boardRepository.save(createdBoard);
     }
 
     public BoardDto.Response getDetailPage(String token, long boardId) {
@@ -77,6 +86,21 @@ public class BoardService {
             response.updateMyPrice(findMyPrice(member, target));
         }
         return response;
+    }
+
+//    @Cacheable(value = "board")
+    public void addViewCntToRedis(long boardId){
+        String key = "productViewCnt::"+boardId;
+        //hint 캐시에 값이 없으면 레포지토리에서 조회 있으면 값을 증가시킨다.
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        if(valueOperations.get(key)==null)
+            valueOperations.set(
+                    key,
+                    String.valueOf(boardRepository.findViewCountByBoardId(boardId)),
+                    Duration.ofMinutes(5));
+        else
+            valueOperations.increment(key);
+        log.info("value:{}",valueOperations.get(key));
     }
 
     public void deleteBoard(String token, long boardId) {
