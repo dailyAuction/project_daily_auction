@@ -1,7 +1,7 @@
 export const ToList = () => {
   return (
-    <div className="base-layout my-4">
-      <div className="flex flex-row justify-center gap-2 cursor-pointer hover:opacity-80">
+    <div className="base-layout w-[96%] my-3 py-1 rounded-[10px]">
+      <div className="flex flex-row justify-center items-center gap-2 cursor-pointer hover:opacity-80">
         <div className="text-base">목록으로 이동</div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -9,7 +9,7 @@ export const ToList = () => {
           viewBox="0 0 24 24"
           strokeWidth={2.5}
           stroke="currentColor"
-          className="w-5 h-5">
+          className="w-5 h-5 flex">
           <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
         </svg>
       </div>

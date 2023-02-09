@@ -2,7 +2,7 @@ import { ProductItemImg } from '../../_common/ProductItemImg/ProductItemImg';
 
 export const ClosingProduct = ({ closingProductDetail }) => {
   return (
-    <div className=" w-full min-h-1/5">
+    <div className=" w-full my-4">
       <div className="flex items-center">
         <h1 className="text-lg m-2 mr-1 font-bold">마감 임박</h1>
         <svg
@@ -11,7 +11,7 @@ export const ClosingProduct = ({ closingProductDetail }) => {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="red"
-          className="w-6 h-6">
+          className="w-5 h-5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>

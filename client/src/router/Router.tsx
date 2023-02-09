@@ -12,6 +12,7 @@ import { EditPasswordPage } from '../pages/EditPasswordPage';
 import { RegisterProductPage } from '../pages/RegisterProductPage';
 import { SearchResultPage } from '../pages/SearchResultPage';
 import { ChargePage } from '../pages/ChargePage';
+import { MainPage } from '../pages/MainPage';
 
 export const Router = () => {
   return (

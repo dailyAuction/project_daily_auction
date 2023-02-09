@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 export const MainHeader = ({ children }) => {
   return (
-    <header className="h-14 w-full sticky bg-main-brown">
+    <header className="h-14 w-full sticky bg-main-brown py-3">
       <div className="h-full mx-3 text-white flex justify-between items-center">
         <h1 className="font-bold text-lg">{children}</h1>
         <div className="flex gap-3">

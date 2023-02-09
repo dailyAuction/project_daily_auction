@@ -22,42 +22,44 @@ export const Banner = () => {
   }, [currSlide]);
 
   return (
-    <div className="base-layout h-1/5 relative overflow-hidden">
-      <div className="h-40 flex" ref={slideRef}>
-        <img className="duration-700 ease-in-out" src="/testImg/test1.jpeg" alt="1" />
-        <img className="duration-700 ease-in-out" src="/testImg/test2.jpg" alt="2" />
-      </div>
-      <div>
-        <button type="button" className="absolute top-16 left-3" onClick={handlerClickPrevBtn}>
-          <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/40 hover:bg-white/60 ">
-            <svg
-              aria-hidden="true"
-              className="w-6 h-6 text-white dark:text-gray-800"
-              fill="none"
-              stroke="black"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7">
-                {''}
-              </path>
-            </svg>
-          </span>
-        </button>
-        <button type="button" className="absolute top-16 right-3" onClick={handlerClickNextBtn}>
-          <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/40 hover:bg-white/60 ">
-            <svg
-              aria-hidden="true"
-              className="w-6 h-6 text-white dark:text-gray-800"
-              fill="none"
-              stroke="black"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7">
-                {''}
-              </path>
-            </svg>
-          </span>
-        </button>
+    <div className="base-layout my-2">
+      <div className="base-layout relative overflow-hidden">
+        <div className="h-56 flex" ref={slideRef}>
+          <img className="duration-700 ease-in-out" src="/testImg/test1.jpeg" alt="1" />
+          <img className="duration-700 ease-in-out" src="/testImg/test2.jpg" alt="2" />
+        </div>
+        <div>
+          <button type="button" className="absolute top-20 left-3" onClick={handlerClickPrevBtn}>
+            <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/40 hover:bg-white/60 ">
+              <svg
+                aria-hidden="true"
+                className="w-6 h-6 text-white dark:text-gray-800"
+                fill="none"
+                stroke="black"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7">
+                  {''}
+                </path>
+              </svg>
+            </span>
+          </button>
+          <button type="button" className="absolute top-20 right-3" onClick={handlerClickNextBtn}>
+            <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/40 hover:bg-white/60 ">
+              <svg
+                aria-hidden="true"
+                className="w-6 h-6 text-white dark:text-gray-800"
+                fill="none"
+                stroke="black"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7">
+                  {''}
+                </path>
+              </svg>
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   );
