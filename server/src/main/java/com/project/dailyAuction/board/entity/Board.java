@@ -30,7 +30,7 @@ public class Board {
     @Column
     private String thumbnail;
     @Column
-    private String status;
+    private long statusId;
     @Column
     private String category;
     @Column
