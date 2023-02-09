@@ -1,7 +1,7 @@
-import { TabBar } from '../components/TabBar';
-import { SubHeader } from '../components/Header/SubHeader';
-import { SearchQuery } from '../components/SearchQuery';
-import { TopSearchKeywords } from '../components/SearchPage/TopSearchKeywords';
+import { TabBar } from '../components/_common/TabBar/TabBar';
+import { SubHeader } from '../components/_common/Header/SubHeader/SubHeader';
+import { SearchQuery } from '../components/_common/SearchQuery/SearchQuery';
+import { TopSearchKeywords } from '../components/SearchPage/TopSearchKeywords/TopSearchKeywords';
 import { topSearchedKeywordsResp } from '../mock/topSearchedKeywordResp';
 
 export const SearchPage = () => {

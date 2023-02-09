@@ -1,10 +1,10 @@
-import { CategoryBtn } from '../components/CategoryBtn';
-import { AuctionStatus } from '../components/DetailPage/AuctionStatus';
-import { BidInformation } from '../components/DetailPage/BidInformation';
-import { Chart } from '../components/DetailPage/Chart';
-import { ImageList } from '../components/DetailPage/ImageList';
-import { TabBar } from '../components/TabBar';
-import { SubHeader } from '../components/Header/SubHeader';
+import { CategoryBtn } from '../components/_common/CategoryBtn/CategoryBtn';
+import { AuctionStatus } from '../components/DetailPage/AuctionStatus/AuctionStatus';
+import { BidInformation } from '../components/DetailPage/BidInformation/BidInformation';
+import { Chart } from '../components/DetailPage/Chart/Chart';
+import { ImageList } from '../components/DetailPage/ImageList/ImageList';
+import { TabBar } from '../components/_common/TabBar/TabBar';
+import { SubHeader } from '../components/_common/Header/SubHeader/SubHeader';
 import { CATEGORIES } from '../constants/constants';
 import { productDetail } from '../mock/productDetail';
 

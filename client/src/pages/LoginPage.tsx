@@ -1,6 +1,6 @@
-import { TabBar } from '../components/TabBar';
-import { SubHeader } from '../components/Header/SubHeader';
-import { Login } from '../components/Login';
+import { TabBar } from '../components/_common/TabBar/TabBar';
+import { SubHeader } from '../components/_common/Header/SubHeader/SubHeader';
+import { Login } from '../components/LoginPage/Login/Login';
 
 export const LoginPage = () => {
   return (

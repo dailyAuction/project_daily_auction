@@ -1,6 +1,6 @@
-import { TabBar } from '../components/TabBar';
-import { SubHeader } from '../components/Header/SubHeader';
-import { EditPassword } from '../components/EditPassword';
+import { TabBar } from '../components/_common/TabBar/TabBar';
+import { SubHeader } from '../components/_common/Header/SubHeader/SubHeader';
+import { EditPassword } from '../components/EditPasswordPage/EditPassword/EditPassword';
 
 export const EditPasswordPage = () => {
   return (
