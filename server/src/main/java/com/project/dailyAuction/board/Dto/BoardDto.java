@@ -18,7 +18,7 @@ public class BoardDto {
         private String description;
         private String image;
         private String category;
-        private int starting_price;
+        private int startingPrice;
     }
 
     @Getter

@@ -8,20 +8,26 @@ import com.project.dailyAuction.boardMember.repository.BoardMemberRepository;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
+import com.project.dailyAuction.notice.Notice;
+import com.project.dailyAuction.notice.NoticeRepository;
+import com.project.dailyAuction.notice.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final NoticeService noticeService;
     private final MemberService memberService;
     private final BoardMemberRepository boardMemberRepository;
+    private final NoticeRepository noticeRepository;
 
     public void saveBoard(String token, BoardDto.Post postDto) {
         Member member = memberService.findByAccessToken(token);
@@ -35,9 +41,10 @@ public class BoardService {
                 .category(postDto.getCategory())
                 .createdAt(LocalDateTime.now())
                 .finishedAt(LocalDateTime.now().plusDays(1))
-                .startingPrice(postDto.getStarting_price())
                 .sellerId(member.getMemberId())
-                .history(String.valueOf(postDto.getStarting_price()))
+                .startingPrice(postDto.getStartingPrice())
+                .sellerId(member.getMemberId())
+                .history(String.valueOf(postDto.getStartingPrice()))
                 .build();
 
         boardRepository.save(createdBoard);
@@ -45,7 +52,6 @@ public class BoardService {
 
     public BoardDto.Response getDetailPage(String token, long boardId) {
         Board target = find(boardId);
-
         String[] history = target.getHistory().split(",");
 
         //조회수 증가
@@ -75,6 +81,16 @@ public class BoardService {
             Member member = memberService.findByAccessToken(token);
             //내 가격 업데이트
             response.updateMyPrice(findMyPrice(member, target));
+
+            //유저가 board상세페이지에 접속하려고하면 알림의 상태를 읽음으로 바꾼다.
+            List<Notice> notices = noticeRepository.findAllByReceiverAndBoard(member, target);
+            if(!notices.isEmpty()) {
+                notices.forEach(
+                        notice -> {
+                            notice.read();
+                        }
+                );
+            }
         }
         return response;
     }
@@ -99,6 +115,9 @@ public class BoardService {
             Member lastMember = memberService.find(board.getBidderId());
             //코인 증가
             lastMember.changeCoin(currentPrice);
+            
+            //알림 발송
+            noticeService.send(lastBidder, board, 3);
         }
         //코인이 부족하면 에러
         if (member.getCoin() < newPrice) {
