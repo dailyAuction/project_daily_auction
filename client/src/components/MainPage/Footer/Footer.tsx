@@ -11,9 +11,9 @@ export const Footer = () => {
               <p>Front-End</p>
             </div>
             <div className="flex gap-2">
-              <a href="/">박혜정</a>
-              <a href="/">정희찬</a>
-              <a href="/">김재훈</a>
+              <a href="https://github.com/hyejj19">박혜정</a>
+              <a href="https://github.com/raon9401">정희찬</a>
+              <a href="https://github.com/halmokme">김재훈</a>
             </div>
           </div>
           <div className="flex flex-col my-3 align-baseline">
@@ -22,8 +22,8 @@ export const Footer = () => {
               <p>Back-End</p>
             </div>
             <div className="flex gap-2">
-              <a href="/">강병재</a>
-              <a href="/">조성웅</a>
+              <a href="https://github.com/casava840">강병재</a>
+              <a href="https://github.com/woong-sung">조성웅</a>
             </div>
           </div>
         </div>
@@ -36,10 +36,10 @@ export const Footer = () => {
             </div>
           </div>
           <div className="flex flex-col gap-5">
-            <a href="/">
+            <a href="https://galvanized-gecko-b10.notion.site/Daily-Auction-d180ab58cea74a9f9ad2592ba7a91db9">
               <img className="w-5" src="https://img.icons8.com/color/48/null/notion--v1.png" alt="" />
             </a>
-            <a href="/">
+            <a href="https://github.com/dailyAuction/project_daily_auction">
               <img className="w-5" src="https://img.icons8.com/ios-glyphs/60/null/github.png" alt="" />
             </a>
           </div>
