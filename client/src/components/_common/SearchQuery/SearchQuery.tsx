@@ -16,8 +16,8 @@ export const SearchQuery = () => {
   };
 
   return (
-    <section className="mt-6">
-      <article className="relative mb-3">
+    <section className="pt-6">
+      <article className="relative pb-3">
         <input
           placeholder="검색어를 입력해 주세요."
           className="input bg-background-mobile p-2 pr-12"
@@ -49,8 +49,8 @@ export const SearchQuery = () => {
           {CATEGORIES.map((category, idx) => (
             <button
               type="submit"
-              className={`category-btn focus:bg-main-red focus:text-white active:bg-red-600 ${
-                idx === searchCategory && 'bg-main-red'
+              className={`category-btn active:bg-red-600 ${
+                idx === searchCategory && 'bg-main-red text-white pointer-events-none'
               }`}
               key={category}
               onClick={() => setSearchCategory(idx)}>
