@@ -11,3 +11,5 @@ export const NOTIFICATION_STATUS_MSG = [
   '해당 물품이 상회입찰 되었습니다.',
   '해당 물품의 마감이 얼마 남지 않았습니다.',
 ];
+
+export const CHARGECOIN_STATUS = ['50,000원', '30,000원', '10,000원', '5,000원'];
