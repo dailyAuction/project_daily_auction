@@ -32,7 +32,7 @@ export const ProductItem = ({ productDetail }: ProductItemProps) => {
           <ProductItemImg thumbnail={thumbnail} />
         </div>
         <div className="flex-1 px-0.5">
-          {statusId === 1 && (
+          {!isUserSeller && statusId === 1 && (
             <div className="text-xs font-bold py-2">
               <p>판매자 이메일</p>
               <p>:aaaa@aaaa.com</p>
@@ -47,7 +47,7 @@ export const ProductItem = ({ productDetail }: ProductItemProps) => {
             </div>
           </div>
           <div className="absolute top-2 right-2">
-            <ProductStatus>{statusId === 0 ? AUCTION_STATUS[statusId] : ''}</ProductStatus>
+            <ProductStatus>{AUCTION_STATUS[statusId]}</ProductStatus>
           </div>
         </div>
       </div>
