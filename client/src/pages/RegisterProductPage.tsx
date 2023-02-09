@@ -1,8 +1,8 @@
-import { CategoryDropdown } from '../components/RegisterProductPage/CategoryDropdown';
-import { RegisterItemImg } from '../components/RegisterProductPage/RegisterItemImg';
-import { SubHeader } from '../components/Header/SubHeader/index';
-import { RegisterProductInfo } from '../components/RegisterProductPage/RegisterProductInfo';
-import { TabBar } from '../components/TabBar';
+import { CategoryDropdown } from '../components/RegisterProductPage/CategoryDropdown/CategoryDropdown';
+import { RegisterItemImg } from '../components/RegisterProductPage/RegisterItemImg/RegisterItemImg';
+import { SubHeader } from '../components/_common/Header/SubHeader/SubHeader';
+import { RegisterProductInfo } from '../components/RegisterProductPage/RegisterProductInfo/RegisterProductInfo';
+import { TabBar } from '../components/_common/TabBar/TabBar';
 
 export const RegisterProductPage = () => {
   return (

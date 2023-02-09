@@ -1,12 +1,10 @@
-import { TabBar } from '../components/TabBar';
-import { Temp } from '../components/temp/Temp';
-import { MainHeader } from '../components/Header/MainHeader';
+import { TabBar } from '../components/_common/TabBar/TabBar';
+import { MainHeader } from '../components/_common/Header/MainHeader/MainHeader';
 
 export const TempPage = () => {
   return (
     <main className="base-layout">
       <MainHeader>Daily Auction</MainHeader>
-      <Temp />
       <TabBar />
     </main>
   );

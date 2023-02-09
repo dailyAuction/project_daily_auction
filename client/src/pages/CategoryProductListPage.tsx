@@ -1,6 +1,6 @@
-import { TabBar } from '../components/TabBar';
-import { MainHeader } from '../components/Header/MainHeader';
-import { CategoryList } from '../components/CategoryList';
+import { TabBar } from '../components/_common/TabBar/TabBar';
+import { MainHeader } from '../components/_common/Header/MainHeader/MainHeader';
+import { CategoryList } from '../components/_common/CategoryList/CategoryList';
 
 export const CategoryProductListPage = () => {
   return (

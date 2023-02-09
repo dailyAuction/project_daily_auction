@@ -1,6 +1,6 @@
-import { TabBar } from '../components/TabBar';
-import { SubHeader } from '../components/Header/SubHeader';
-import { Notification } from '../components/NotificationPage/Notification';
+import { TabBar } from '../components/_common/TabBar/TabBar';
+import { SubHeader } from '../components/_common/Header/SubHeader/SubHeader';
+import { Notification } from '../components/NotificationPage/Notification/Notification';
 import { notificationResp } from '../mock/notificationResp';
 
 export const NotificationPage = () => {

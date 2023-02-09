@@ -10,7 +10,8 @@ import { CategoryProductListPage } from '../pages/CategoryProductListPage';
 import { LoginPage } from '../pages/LoginPage';
 import { SignUpPage } from '../pages/SignUpPage';
 import { RegisterProductPage } from '../pages/RegisterProductPage';
-import { EditPassword } from '../components/EditPassword';
+import { EditPassword } from '../components/EditPasswordPage/EditPassword/EditPassword';
+import { SearchResultPage } from '../pages/SearchResultPage';
 
 export const Router = () => {
   return (
@@ -20,6 +21,7 @@ export const Router = () => {
         <Route path="/detail/:id" element={<DetailPage />} />
         <Route path="/category" element={<CategoryPage />} />
         <Route path="/search" element={<SearchPage />} />
+        <Route path="/search/:query" element={<SearchResultPage />} />
         <Route path="/postProduct" element={<PostProductPage />} />
         <Route path="/my" element={<MyPage />} />
         <Route path="/login" element={<LoginPage />} />

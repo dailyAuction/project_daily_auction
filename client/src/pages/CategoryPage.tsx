@@ -1,6 +1,6 @@
-import { TabBar } from '../components/TabBar';
-import { SubHeader } from '../components/Header/SubHeader';
-import { CategoryPageBtn } from '../components/CategoryPageBtn';
+import { TabBar } from '../components/_common/TabBar/TabBar';
+import { SubHeader } from '../components/_common/Header/SubHeader/SubHeader';
+import { CategoryPageBtn } from '../components/CategoryPage/CategoryPageBtn/CategoryPageBtn';
 import { CATEGORIES } from '../constants/constants';
 
 export const CategoryPage = () => {
