@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { CATEGORIES } from '../../../constants/constants';
+import { useGetQueryString } from '../../../hooks/useGetQueryString';
 import { useSearchQuery } from './useSearchQuery';
 
 export const SearchQuery = () => {
@@ -9,7 +9,7 @@ export const SearchQuery = () => {
   const { handleSearch } = useSearchQuery();
 
   // 현재 페이지가 검색 결과 페이지인지 queryString 여부로 판단할 수 있습니다.
-  const queryString = useLocation().pathname.slice(7);
+  const queryString = useGetQueryString();
 
   const handleClick = () => {
     handleSearch(searchCategory, searchKeyword);
