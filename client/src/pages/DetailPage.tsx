@@ -21,15 +21,15 @@ export const DetailPage = () => {
           <span>조회수 : {productDetail.viewCount}</span>
         </article>
 
-        <AuctionStatus finishedAt={productDetail.finishedAt} status={productDetail.status} />
+        <AuctionStatus finishedAt={productDetail.finishedAt} statusId={productDetail.statusId} />
 
         <BidInformation
           bidCount={productDetail.bidCount}
-          status={productDetail.status}
+          statusId={productDetail.statusId}
           startingPrice={productDetail.startingPrice}
           currentPrice={productDetail.currentPrice}
           myPrice={productDetail.myPrice}
-          sellerId={productDetail.sellerId}
+          authorId={productDetail.authorId}
           bidderId={productDetail.bidderId}
         />
         <Chart />

@@ -1,14 +1,9 @@
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { userInfoAtom } from '../../../atoms/user';
 
 type BidModalProps = {
   handleClose: () => void;
-};
-
-// TODO: userData 아톰 만들어서 사용
-const tempUserData = {
-  memberID: 2,
-  coin: 10000,
-  email: 'test@test.com',
 };
 
 const BidModal = ({ handleClose }: BidModalProps) => {
@@ -16,6 +11,7 @@ const BidModal = ({ handleClose }: BidModalProps) => {
   const onChange = (e) => {
     setBidValue(e.target.value);
   };
+
   return (
     <section className="bg-modal">
       <div className="modal-container">
@@ -44,8 +40,11 @@ const BidModal = ({ handleClose }: BidModalProps) => {
   );
 };
 
-export const BidInformation = ({ bidCount, status, startingPrice, currentPrice, myPrice, sellerId, bidderId }) => {
+export const BidInformation = ({ bidCount, statusId, startingPrice, currentPrice, myPrice, authorId, bidderId }) => {
   const [isModalOpen, setModalOpen] = useState(false);
+
+  const userInfo = useRecoilValue(userInfoAtom);
+
   return (
     <>
       <section className="flex w-full justify-center bg-white px-2 py-3 space-y-4 flex-col">
@@ -56,7 +55,7 @@ export const BidInformation = ({ bidCount, status, startingPrice, currentPrice, 
         <article className="flex w-full justify-between items-center">
           <span className="text-sm">입찰 횟수 : {bidCount}</span>
           {/* TODO: 로그인 여부 확인 기능 추가 */}
-          {status === 0 && sellerId !== tempUserData.memberID && (
+          {statusId === 0 && authorId !== userInfo.memberId && (
             <button
               type="submit"
               className="red-btn"
@@ -67,7 +66,7 @@ export const BidInformation = ({ bidCount, status, startingPrice, currentPrice, 
             </button>
           )}
           {/* TODO: 로그인 여부 확인 기능 추가/ 재등록, 삭제 API 연결 */}
-          {status === 2 && sellerId === tempUserData.memberID && (
+          {statusId === 2 && authorId === userInfo.memberId && (
             <article className="flex items-center space-x-2">
               <button type="submit" className="red-btn">
                 재등록
