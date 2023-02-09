@@ -1,10 +1,11 @@
+import { useNavigate } from 'react-router-dom';
+
 export const useSearchQuery = () => {
-  const handleSearch = (categoryId, keyWord) => {
-    const url = `/${categoryId}/search/?page=1&size=10`;
-    // TODO: API post 요청 보내는 로직 작성
-    // keyword 는 request body로 보낸다.
-    // search 후 검색 결과를 토대로 검색 결과 리스트로 이동필요
-    console.log(url, keyWord);
+  const navigate = useNavigate();
+  const handleSearch = (categoryId: number, keyWord: string) => {
+    // categoryId와 keyWord를 파라미터를 통해 검색 결과 페이지로 전달
+    // 검색 결과 페이지에서 파라미터를 추출해 직접 요청한다.
+    navigate(`/search/${categoryId}_${keyWord}`);
   };
 
   return { handleSearch };

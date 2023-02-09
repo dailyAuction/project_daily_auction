@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import { loginStateAtom } from '../../../atoms/loginStateAtom';
+import { loginStateAtom } from '../../../atoms/user';
 
 type LeaveModalProps = {
   handleClose: () => void;
