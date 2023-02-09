@@ -49,9 +49,7 @@ export const SearchQuery = () => {
           {CATEGORIES.map((category, idx) => (
             <button
               type="submit"
-              className={`category-btn focus:bg-main-red focus:text-white active:bg-red-600 ${
-                idx === searchCategory && 'bg-main-red'
-              }`}
+              className={`category-btn focus:bg-main-red focus:text-white  ${idx === searchCategory && 'bg-main-red'}`}
               key={category}
               onClick={() => setSearchCategory(idx)}>
               {category}

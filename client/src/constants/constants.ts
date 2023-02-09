@@ -13,3 +13,5 @@ export const NOTIFICATION_STATUS_MSG = [
 ];
 
 export const CHARGECOIN_STATUS = ['50,000원', '30,000원', '10,000원', '5,000원'];
+
+export const CATEGORIE_SORT_STATUS = ['마감 임박', 'TOP 입찰', 'TOP 조회', '높은 가격', '낮은 가격'];
