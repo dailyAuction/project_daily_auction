@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import { loginStateAtom } from '../../../atoms/loginStateAtom';
+import { loginStateAtom } from '../../../atoms/user';
 
 type LeaveModalProps = {
   handleClose: () => void;
@@ -57,9 +57,11 @@ export const MyPageInfo = () => {
           {/* TODO : 데이터에 따라 코인 수 변경 */}
           <span className="text-xl font-bold text-main-orange">10,000 coin</span>
           {/* TODO : 모달 추가하기 */}
-          <button type={'button'} className="red-btn text-sm font-bold">
-            충전하기
-          </button>
+          <Link to="/charge">
+            <button type={'button'} className="red-btn text-sm font-bold">
+              충전하기
+            </button>
+          </Link>
         </article>
         <article className="w-full flex flex-row mt-4">
           {/* TODO : 각 페이지로 링크 작업 */}

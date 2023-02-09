@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { NOTIFICATION_STATUS, NOTIFICATION_STATUS_MSG } from '../../../constants/constants';
+import { getShortString } from '../../../utils/getShortString';
 import { useNotification } from './useNotification';
 
 type NotificationProps = {
@@ -39,8 +40,8 @@ export const Notification = ({ noticeId, boardId, boardTitle, image, status, con
 
         <article className="flex items-center space-x-2 relative">
           <img src={image} alt="상품 썸네일 이미지" className="w-10 h-10 rounded-md" />
-          {/* TODO:  20글자 이상 넘어가면 ...으로 표시 */}
-          <span className="text-sm">{boardTitle.length > 20 ? boardTitle.slice(0, 20) + '...' : boardTitle}</span>
+
+          <span className="text-sm">{getShortString(boardTitle, 20)}</span>
           <i>
             <svg
               xmlns="http://www.w3.org/2000/svg"

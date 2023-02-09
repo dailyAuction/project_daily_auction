@@ -8,10 +8,10 @@ import { SearchPage } from '../pages/SearchPage';
 import { CategoryProductListPage } from '../pages/CategoryProductListPage';
 import { LoginPage } from '../pages/LoginPage';
 import { SignUpPage } from '../pages/SignUpPage';
+import { EditPasswordPage } from '../pages/EditPasswordPage';
 import { RegisterProductPage } from '../pages/RegisterProductPage';
-import { EditPassword } from '../components/EditPasswordPage/EditPassword/EditPassword';
 import { SearchResultPage } from '../pages/SearchResultPage';
-import { MainPage } from '../pages/MainPage';
+import { ChargePage } from '../pages/ChargePage';
 
 export const Router = () => {
   return (
@@ -25,7 +25,8 @@ export const Router = () => {
         <Route path="/postProduct" element={<PostProductPage />} />
         <Route path="/my" element={<MyPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/editPassword" element={<EditPassword />} />
+        <Route path="/editPassword" element={<EditPasswordPage />} />
+        <Route path="/charge" element={<ChargePage />} />
         <Route path="/notification" element={<NotificationPage />} />
         <Route path="/categoryProduct" element={<CategoryProductListPage />} />
         <Route path="/signup" element={<SignUpPage />} />
