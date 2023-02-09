@@ -74,7 +74,7 @@ public class BoardService {
         if (token!=null){
             Member member = memberService.findByAccessToken(token);
             //내 가격 업데이트
-            response.updateMyPrice(findMyPrice(member.getMemberId(), boardId));
+            response.updateMyPrice(findMyPrice(member, target));
         }
         return response;
     }
@@ -95,8 +95,11 @@ public class BoardService {
         Board board = find(patchDto.getBoardId());
         int currentPrice = board.getCurrentPrice();
         int newPrice = patchDto.getNewPrice();
-        Member lastMember = memberService.find(board.getBidderId());
-
+        if (board.getBidderId()!=0){
+            Member lastMember = memberService.find(board.getBidderId());
+            //코인 증가
+            lastMember.changeCoin(currentPrice);
+        }
         //코인이 부족하면 에러
         if (member.getCoin() < newPrice) {
             new ResponseStatusException(ExceptionCode.NOT_ENOUGH_COIN.getCode(),
@@ -125,9 +128,6 @@ public class BoardService {
 
         //코인 감소
         member.changeCoin(-newPrice);
-
-        //코인 증가
-        lastMember.changeCoin(currentPrice);
     }
 
     public Board find(long boardId) {
@@ -137,8 +137,8 @@ public class BoardService {
                         new IllegalArgumentException()));
     }
 
-    public int findMyPrice(long memberId, long boardId) {
-        BoardMember boardMember = boardMemberRepository.findByBoardIdAndMemberId(boardId, memberId);
+    public int findMyPrice(Member member, Board board) {
+        BoardMember boardMember = boardMemberRepository.findByBoardAndMember(board, member);
         return boardMember.getMyPrice();
     }
 }
