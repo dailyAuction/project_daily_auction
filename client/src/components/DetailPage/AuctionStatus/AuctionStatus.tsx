@@ -3,10 +3,10 @@ import { AUCTION_STATUS } from '../../../constants/constants';
 
 type AuctionStatusProps = {
   finishedAt: string;
-  status: number;
+  statusId: number;
 };
 
-export const AuctionStatus = ({ finishedAt, status }: AuctionStatusProps) => {
+export const AuctionStatus = ({ finishedAt, statusId }: AuctionStatusProps) => {
   return (
     <section className="flex h-9 w-full justify-between items-center px-2 bg-white">
       <article className="space-x-2">
@@ -15,7 +15,7 @@ export const AuctionStatus = ({ finishedAt, status }: AuctionStatusProps) => {
         <span className="text-main-orange">{finishedAt}</span>
       </article>
       {/* TODO: 로그인 여부, 판매자 / 입찰자 여부 판단하여 조건부 렌더링 */}
-      <ProductStatus>{AUCTION_STATUS[status]}</ProductStatus>
+      <ProductStatus>{AUCTION_STATUS[statusId]}</ProductStatus>
     </section>
   );
 };

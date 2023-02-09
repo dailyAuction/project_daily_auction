@@ -44,7 +44,7 @@ const BidModal = ({ handleClose }: BidModalProps) => {
   );
 };
 
-export const BidInformation = ({ bidCount, status, startingPrice, currentPrice, myPrice, sellerId, bidderId }) => {
+export const BidInformation = ({ bidCount, statusId, startingPrice, currentPrice, myPrice, sellerId, bidderId }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
@@ -56,7 +56,7 @@ export const BidInformation = ({ bidCount, status, startingPrice, currentPrice, 
         <article className="flex w-full justify-between items-center">
           <span className="text-sm">입찰 횟수 : {bidCount}</span>
           {/* TODO: 로그인 여부 확인 기능 추가 */}
-          {status === 0 && sellerId !== tempUserData.memberID && (
+          {statusId === 0 && sellerId !== tempUserData.memberID && (
             <button
               type="submit"
               className="red-btn"
@@ -67,7 +67,7 @@ export const BidInformation = ({ bidCount, status, startingPrice, currentPrice, 
             </button>
           )}
           {/* TODO: 로그인 여부 확인 기능 추가/ 재등록, 삭제 API 연결 */}
-          {status === 2 && sellerId === tempUserData.memberID && (
+          {statusId === 2 && sellerId === tempUserData.memberID && (
             <article className="flex items-center space-x-2">
               <button type="submit" className="red-btn">
                 재등록
