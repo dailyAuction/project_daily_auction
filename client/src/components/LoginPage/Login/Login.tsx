@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import { loginStateAtom } from '../../../atoms/loginStateAtom';
+import { loginStateAtom } from '../../../atoms/user';
 
 export const Login = () => {
   const [loginState, setLoginState] = useRecoilState(loginStateAtom);

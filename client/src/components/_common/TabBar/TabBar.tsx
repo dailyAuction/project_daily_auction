@@ -1,6 +1,4 @@
 import { Link, useLocation } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { loginStateAtom } from '../../../atoms/loginStateAtom';
 
 const TAB_TITLE = ['', 'category', 'search', 'postProduct', 'my'];
 
