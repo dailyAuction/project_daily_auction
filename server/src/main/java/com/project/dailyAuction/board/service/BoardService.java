@@ -55,8 +55,11 @@ public class BoardService {
                 .bidderId(target.getBidderId())
                 .build();
 
-        //todo: accessToken 작업완료 후 myPrice 추가작업
-
+        if (token!=null){
+            Member member = memberService.findByAccessToken(token);
+            //내 가격 업데이트
+            response.updateMyPrice(findMyPrice(member.getMemberId(), boardId));
+        }
         return response;
     }
 
