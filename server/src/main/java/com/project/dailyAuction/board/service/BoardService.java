@@ -95,6 +95,7 @@ public class BoardService {
         Board board = find(patchDto.getBoardId());
         int currentPrice = board.getCurrentPrice();
         int newPrice = patchDto.getNewPrice();
+        Member lastMember = memberService.find(board.getBidderId());
 
         //코인이 부족하면 에러
         if (member.getCoin() < newPrice) {
@@ -124,6 +125,9 @@ public class BoardService {
 
         //코인 감소
         member.changeCoin(-newPrice);
+
+        //코인 증가
+        lastMember.changeCoin(currentPrice);
     }
 
     public Board find(long boardId) {
