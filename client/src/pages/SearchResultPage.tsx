@@ -4,6 +4,7 @@ import { MainHeader } from '../components/_common/Header/MainHeader/MainHeader';
 import { SearchResultList } from '../components/SearchResultPage/SearchResultList/SearchResultList';
 
 export const SearchResultPage = () => {
+  const isLoginUser = true;
   return (
     <main className="base-layout">
       <MainHeader>{`"크라라의 훈장..." 검색 결과`}</MainHeader>
