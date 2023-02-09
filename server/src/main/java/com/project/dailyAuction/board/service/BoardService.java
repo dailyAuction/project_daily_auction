@@ -109,13 +109,15 @@ public class BoardService {
     public void bidBoard(String token, BoardDto.Patch patchDto) {
         Member member = memberService.findByAccessToken(token);
         Board board = find(patchDto.getBoardId());
-        Member lastBidder = memberService.find(board.getBidderId());
         int currentPrice = board.getCurrentPrice();
         int newPrice = patchDto.getNewPrice();
         if (board.getBidderId()!=0){
             Member lastMember = memberService.find(board.getBidderId());
             //코인 증가
             lastMember.changeCoin(currentPrice);
+            
+            //알림 발송
+            noticeService.send(lastBidder, board, 3);
         }
         //코인이 부족하면 에러
         if (member.getCoin() < newPrice) {
@@ -145,9 +147,6 @@ public class BoardService {
 
         //코인 감소
         member.changeCoin(-newPrice);
-
-        //알림 발송
-        noticeService.send(lastBidder, board,3);
     }
 
     public Board find(long boardId) {
