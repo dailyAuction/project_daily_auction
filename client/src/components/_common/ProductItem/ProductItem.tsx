@@ -1,13 +1,17 @@
 import { useLocation } from 'react-router-dom';
+import { ProductDetailResp } from '../../../types/product.type';
 import { ProductItemImg } from '../ProductItemImg/ProductItemImg';
 import { ProductStatus } from '../ProductStatus/ProductStatus';
 
 type ProductItemProps = {
-  isLoginUser: boolean;
-  status: number;
+  productDetail: ProductDetailResp;
 };
 
-export const ProductItem = ({ isLoginUser, status }: ProductItemProps) => {
+export const ProductItem = ({ productDetail }: ProductItemProps) => {
+  const { boardId, thumbnail, title, currentPrice, statusId, createdAt, finishedAt } = productDetail;
+
+  const isLoginUser = true;
+
   const location = useLocation().pathname;
   const page = location.includes('my-auction-list')
     ? 'register'
@@ -21,7 +25,7 @@ export const ProductItem = ({ isLoginUser, status }: ProductItemProps) => {
         <ProductItemImg />
       </div>
       <div className="flex-1 px-0.5">
-        {status === 1 && (
+        {statusId === 1 && (
           <div className="text-xs font-bold py-2">
             <p>판매자 이메일</p>
             <p>:aaaa@aaaa.com</p>
@@ -32,14 +36,14 @@ export const ProductItem = ({ isLoginUser, status }: ProductItemProps) => {
           엄청난 야구모자를 파는 경매를 진행 하고 있는 이 경매는 정말 엄 ...엄청난 야구모자를 파는 경매를 진행 하고
         </p>
         <div className="pb-2 pt-3 text-xs">
-          {isLoginUser && status !== 0 ? '' : page === 'register' ? '시작가 10000 coin' : '입찰가 10000 coin'}
+          {isLoginUser && statusId !== 0 ? '' : page === 'register' ? '시작가 10000 coin' : '입찰가 10000 coin'}
           <div className="flex items-center gap-0.5">
-            {isLoginUser && status === 0 ? '현재가' : ''}
+            {isLoginUser && statusId === 0 ? '현재가' : ''}
             <p className="text-base text-main-orange">150,000 coin</p>
           </div>
         </div>
         <div className="absolute top-2 right-2">
-          <ProductStatus>{status === 0 ? status : ''}</ProductStatus>
+          <ProductStatus>{statusId === 0 ? statusId : ''}</ProductStatus>
         </div>
       </div>
     </div>
