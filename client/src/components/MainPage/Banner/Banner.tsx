@@ -4,7 +4,7 @@ export const Banner = () => {
   const [currSlide, setCurrSlide] = useState(0);
   const slideRef = useRef(null);
 
-  const TOTAL_SLIDES = 2;
+  const TOTAL_SLIDES = 1;
 
   const handlerClickPrevBtn = () => {
     if (currSlide === 0) setCurrSlide(TOTAL_SLIDES);
@@ -22,7 +22,7 @@ export const Banner = () => {
   }, [currSlide]);
 
   return (
-    <div className="base-layout relative overflow-hidden">
+    <div className="base-layout h-1/5 relative overflow-hidden">
       <div className="h-40 flex" ref={slideRef}>
         <img className="duration-700 ease-in-out" src="/testImg/test1.jpeg" alt="1" />
         <img className="duration-700 ease-in-out" src="/testImg/test2.jpg" alt="2" />
