@@ -1,10 +1,12 @@
 package com.project.dailyAuction.notice;
 
 import com.project.dailyAuction.board.entity.Board;
+import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.transaction.Transactional;
@@ -17,22 +19,17 @@ import java.util.Map;
 public class NoticeService {
     private final MemberService memberService;
     private final EmitterRepository emitterRepository;
-    private final NoticeRepository notificationRepository;
+    private final NoticeRepository noticeRepository;
 
-    public SseEmitter subscribe(Long memberId, String lastEventId) {
+    public SseEmitter subscribe(Long memberId) {
         String emitterId = makeTimeIncludeId(memberId);
-        SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(60000l));
+        SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(86400000l));//timeout:24시간
         emitter.onCompletion(() -> emitterRepository.deleteById(emitterId));
         emitter.onTimeout(() -> emitterRepository.deleteById(emitterId));
 
         // 503 에러를 방지하기 위한 더미 이벤트 전송
         String eventId = makeTimeIncludeId(memberId);
         sendNotification(emitter, eventId, emitterId, "EventStream Created. [userId=" + memberId + "]");
-
-        // 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
-        if (hasLostData(lastEventId)) {
-            sendLostData(lastEventId, memberId, emitterId, emitter);
-        }
 
         return emitter;
     }
@@ -51,19 +48,8 @@ public class NoticeService {
         }
     }
 
-    private boolean hasLostData(String lastEventId) {
-        return !lastEventId.isEmpty();
-    }
-
-    private void sendLostData(String lastEventId, Long memberId, String emitterId, SseEmitter emitter) {
-        Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByMemberId(String.valueOf(memberId));
-        eventCaches.entrySet().stream()
-                .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-                .forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, entry.getValue()));
-    }
-
     public void send(Member receiver, Board board, long status) {
-        Notice notice = notificationRepository.save(createNotice(receiver, board, status));
+        Notice notice = noticeRepository.save(createNotice(receiver, board, status));
 
         String receiverId = String.valueOf(receiver.getMemberId());
         String eventId = receiverId + "_" + System.currentTimeMillis();
@@ -84,5 +70,19 @@ public class NoticeService {
                 .status(status)
                 .isRead(false)
                 .build();
+    }
+
+    public void deleteNotice(String token, long noticeId) {
+        Member receiver = memberService.findByAccessToken(token);
+        Notice notice = find(noticeId);
+        if (notice.getReceiver().getMemberId() != receiver.getMemberId()) {
+            throw new ResponseStatusException(ExceptionCode.NOT_VERIFIED.getCode(), ExceptionCode.NOT_VERIFIED.getMessage(), new IllegalArgumentException());
+        }
+        noticeRepository.deleteById(noticeId);
+    }
+
+    public Notice find(long noticeId) {
+        return noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new ResponseStatusException(ExceptionCode.NOTICE_NOT_FOUND.getCode(), ExceptionCode.NOTICE_NOT_FOUND.getMessage(), new IllegalArgumentException()));
     }
 }

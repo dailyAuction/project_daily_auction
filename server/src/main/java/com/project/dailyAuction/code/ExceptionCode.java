@@ -12,7 +12,8 @@ public enum ExceptionCode {
     NOT_ENOUGH_COIN(409,"Coin not enough"),
     LESS_THAN_CURRENT(409,"Less than current price"),
     NOT_WRITER(401,"Not writer"),
-    NOT_VERIFIED(409,"Not Verified");
+    NOT_VERIFIED(409,"Not Verified"),
+    NOTICE_NOT_FOUND(404, "Notice not found");
 
     private final int code;
     private final String message;

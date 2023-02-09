@@ -46,4 +46,7 @@ public class Notice extends BaseTimeEntity {
         this.board = board;
         this.contact = contact;
     }
+    public void read() {
+        this.isRead = Boolean.TRUE;
+    }
 }
