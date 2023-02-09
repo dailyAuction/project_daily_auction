@@ -14,6 +14,7 @@ import { SearchResultPage } from '../pages/SearchResultPage';
 import { ChargePage } from '../pages/ChargePage';
 import { MainPage } from '../pages/MainPage';
 import { MyAuctionList } from '../components/MyPage/MyAuctionList/MyAuctionList';
+import { MyJoinList } from '../components/MyPage/MyJoinList/MyJoinList';
 
 export const Router = () => {
   return (
@@ -27,6 +28,7 @@ export const Router = () => {
         <Route path="/postProduct" element={<PostProductPage />} />
         <Route path="/my" element={<MyPage />} />
         <Route path="/my/auctionList" element={<MyAuctionList />} />
+        <Route path="/my/participationList" element={<MyJoinList />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/editPassword" element={<EditPasswordPage />} />
         <Route path="/charge" element={<ChargePage />} />
