@@ -3,7 +3,10 @@ package com.project.dailyAuction.board.service;
 import com.project.dailyAuction.board.Dto.BoardDto;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
+import com.project.dailyAuction.boardMember.entity.BoardMember;
+import com.project.dailyAuction.boardMember.repository.BoardMemberRepository;
 import com.project.dailyAuction.code.ExceptionCode;
+import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,17 +21,22 @@ import java.time.LocalDateTime;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberService memberService;
+    private final BoardMemberRepository boardMemberRepository;
 
-    public void saveBoard(long memberId, BoardDto.Post postDto) {
+    public void saveBoard(String token, BoardDto.Post postDto) {
+        Member member = memberService.findByAccessToken(token);
         Board createdBoard = Board.builder()
                 .title(postDto.getTitle())
                 .description(postDto.getDescription())
+                //todo: 이미지 변환 필요, 썸네일 생성 필요
                 .image(postDto.getImage())
+                .thumbnail("")
                 .statusId(0)
                 .category(postDto.getCategory())
                 .createdAt(LocalDateTime.now())
+                .finishedAt(LocalDateTime.now().plusDays(1))
                 .startingPrice(postDto.getStarting_price())
-                .sellerId(memberId)
+                .sellerId(member.getMemberId())
                 .history(String.valueOf(postDto.getStarting_price()))
                 .build();
 
