@@ -19,7 +19,7 @@ export const ClosingProduct = ({ closingProductDetail }) => {
         {closingProductDetail.map((el) => {
           return (
             <div key={el.boardId} className="flex flex-col ml-2 min-w-[120px] w-[120px]">
-              <ProductItemImg thumbnail={el.thumbnail} />
+              <ProductItemImg thumbnail={el.thumbnail} statusId={el.statusId} />
               <p className="text-xs line-clamp-1">{el.title}</p>
               <p className="text-base text-main-orange">{el.currentPrice} coin</p>
             </div>
@@ -28,7 +28,7 @@ export const ClosingProduct = ({ closingProductDetail }) => {
         {closingProductDetail.map((el) => {
           return (
             <div key={el.boardId} className="flex flex-col ml-2 min-w-[120px] w-[120px]">
-              <ProductItemImg thumbnail={el.thumbnail} />
+              <ProductItemImg thumbnail={el.thumbnail} statusId={el.statusId} />
               <p className="text-xs line-clamp-1">{el.title}</p>
               <p className="text-base text-main-orange">{el.currentPrice} coin</p>
             </div>
