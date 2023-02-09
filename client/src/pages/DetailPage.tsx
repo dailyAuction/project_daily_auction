@@ -29,7 +29,7 @@ export const DetailPage = () => {
           startingPrice={productDetail.startingPrice}
           currentPrice={productDetail.currentPrice}
           myPrice={productDetail.myPrice}
-          sellerId={productDetail.sellerId}
+          authorId={productDetail.authorId}
           bidderId={productDetail.bidderId}
         />
         <Chart />
