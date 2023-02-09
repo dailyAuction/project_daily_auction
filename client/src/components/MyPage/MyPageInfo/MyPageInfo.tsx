@@ -69,7 +69,7 @@ export const MyPageInfo = () => {
             <Link to="/my/auctionList">내가 등록한 경매</Link>
           </button>
           <button className={myAuctionBtn} type="button">
-            내가 참여한 경매
+            <Link to="/my/joinList">내가 참여한 경매</Link>
           </button>
         </article>
       </section>
