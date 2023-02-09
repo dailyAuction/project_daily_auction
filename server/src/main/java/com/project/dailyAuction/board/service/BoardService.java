@@ -93,8 +93,37 @@ public class BoardService {
     public void bidBoard(String token, BoardDto.Patch patchDto) {
         Member member = memberService.findByAccessToken(token);
         Board board = find(patchDto.getBoardId());
-        board.changeLeadingBidder(memberId, patchDto.getNewPrice());
-        board.updateHistory(patchDto.getNewPrice());
+        int currentPrice = board.getCurrentPrice();
+        int newPrice = patchDto.getNewPrice();
+
+        //코인이 부족하면 에러
+        if (member.getCoin() < newPrice) {
+            new ResponseStatusException(ExceptionCode.NOT_ENOUGH_COIN.getCode(),
+                    ExceptionCode.NOT_ENOUGH_COIN.getMessage(),
+                    new IllegalArgumentException());
+        }
+
+        //입찰가보다 낮거나 같으면 에러
+        if (currentPrice >= newPrice) {
+            new ResponseStatusException(ExceptionCode.LESS_THAN_CURRENT.getCode(),
+                    ExceptionCode.LESS_THAN_CURRENT.getMessage(),
+                    new IllegalArgumentException());
+        }
+        board.changeLeadingBidder(member.getMemberId(), newPrice);
+        //bid count 증가
+        board.upBidCount();
+        //히스토리 추가
+        board.updateHistory(newPrice);
+
+        //기록용 남기기
+        boardMemberRepository.save(BoardMember.builder()
+                .board(board)
+                .member(member)
+                .myPrice(newPrice)
+                .build());
+
+        //코인 감소
+        member.changeCoin(-newPrice);
     }
 
     public Board find(long boardId) {
@@ -102,5 +131,10 @@ public class BoardService {
                 .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
                         ExceptionCode.BOARD_NOT_FOUND.getMessage(),
                         new IllegalArgumentException()));
+    }
+
+    public int findMyPrice(long memberId, long boardId) {
+        BoardMember boardMember = boardMemberRepository.findByBoardIdAndMemberId(boardId, memberId);
+        return boardMember.getMyPrice();
     }
 }
