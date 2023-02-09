@@ -15,7 +15,16 @@ export const ClosingProduct = ({ closingProductDetail }) => {
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
-      <div className="flex gap-2 overflow-x-auto w-full">
+      <div className="flex gap-2 overflow-x-auto scrollbar-hide w-full">
+        {closingProductDetail.map((el) => {
+          return (
+            <div key={el.boardId} className="flex flex-col ml-2 min-w-[120px] w-[120px]">
+              <ProductItemImg thumbnail={el.thumbnail} />
+              <p className="text-xs line-clamp-1">{el.title}</p>
+              <p className="text-base text-main-orange">{el.currentPrice} coin</p>
+            </div>
+          );
+        })}
         {closingProductDetail.map((el) => {
           return (
             <div key={el.boardId} className="flex flex-col ml-2 min-w-[120px] w-[120px]">
