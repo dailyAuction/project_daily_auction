@@ -12,6 +12,7 @@ import { SignUpPage } from '../pages/SignUpPage';
 import { RegisterProductPage } from '../pages/RegisterProductPage';
 import { EditPassword } from '../components/EditPasswordPage/EditPassword/EditPassword';
 import { SearchResultPage } from '../pages/SearchResultPage';
+import { ChargePage } from '../pages/ChargePage';
 
 export const Router = () => {
   return (
@@ -26,6 +27,7 @@ export const Router = () => {
         <Route path="/my" element={<MyPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/editPassword" element={<EditPassword />} />
+        <Route path="/charge" element={<ChargePage />} />
         <Route path="/notification" element={<NotificationPage />} />
         <Route path="/categoryProduct" element={<CategoryProductListPage />} />
         <Route path="/signup" element={<SignUpPage />} />
