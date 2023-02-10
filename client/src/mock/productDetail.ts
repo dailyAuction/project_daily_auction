@@ -10,7 +10,7 @@ export const productDetail = {
   ],
   thumbnail:
     'https://images.unsplash.com/photo-1521369909029-2afed882baee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-  authorId: 1,
+  authorId: 3,
   bidderId: 2,
   title: '아주 아름다운 모자 판매합니다.',
   description:
@@ -20,7 +20,7 @@ export const productDetail = {
   currentPrice: '120,000',
   statusId: 0,
   createdAt: '2023-02-06T01:02:00',
-  finishedAt: '2023-02-07T01:02:00',
+  finishedAt: '2023-02-10T20:00:00',
   viewCount: '30',
   bidCount: '3',
   history: [100, 200, 300],
