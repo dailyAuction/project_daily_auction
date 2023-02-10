@@ -6,6 +6,7 @@ export const useHandleIsLogin = () => {
   const loginState = useRecoilValue(loginStateAtom);
   const navigate = useNavigate();
 
+  // 로그인이 되어 있는 경우에 실행시키고 싶은 함수를 콜백으로 전달할 수 있습니다.
   const handleIsLogin = (callback?: () => void) => {
     if (!loginState) {
       // eslint-disable-next-line
