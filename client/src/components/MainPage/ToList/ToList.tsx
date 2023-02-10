@@ -1,6 +1,6 @@
 export const ToList = () => {
   return (
-    <div className="base-layout w-[96%] my-3 py-1 rounded-[10px]">
+    <div className="base-layout w-full my-4 py-1">
       <div className="flex flex-row justify-center items-center gap-2 cursor-pointer hover:opacity-80">
         <div className="text-base">목록으로 이동</div>
         <svg
