@@ -27,6 +27,4 @@ export const useInterval = (callback: () => void, delay: number, shouldContinue?
     // eslint-disable-next-line
     else return () => null;
   }, [delay]);
-
-  // 주입된 종료 조건에 따라 interval을 종료한다.
 };

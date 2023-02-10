@@ -12,17 +12,10 @@ export const useGetTimeRemain = (finishedAt: string) => {
   const seconds = Math.floor((timeDiff / 1000) % 60);
 
   // 현재 시간을 1초마다 업데이트
-  useInterval(
-    () => {
-      setRealTime(new Date());
-    },
-    1000,
-    timeDiff >= 0
-  );
-
   // 업데이트된 시간을 바탕으로 시,분,초 업데이트
   useInterval(
     () => {
+      setRealTime(new Date());
       setTimeRemain(`${hours} : ${minutes} : ${seconds}`);
     },
     1000,
