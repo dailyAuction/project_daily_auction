@@ -5,6 +5,7 @@ import { ClosingProduct } from '../components/MainPage/ClosingProduct/ClosingPro
 import { Footer } from '../components/MainPage/Footer/Footer';
 import { ToList } from '../components/MainPage/ToList/ToList';
 import { MainHeader } from '../components/_common/Header/MainHeader/MainHeader';
+import { ScrollToTopBtn } from '../components/_common/ScrollToTopBtn/ScrollToTopBtn';
 import { TabBar } from '../components/_common/TabBar/TabBar';
 import { products } from '../mock/product';
 
@@ -23,6 +24,7 @@ export const MainPage = () => {
       <div className="fixed bottom-0 sm:w-[500px] w-screen">
         <TabBar />
       </div>
+      <ScrollToTopBtn />
     </main>
   );
 };
