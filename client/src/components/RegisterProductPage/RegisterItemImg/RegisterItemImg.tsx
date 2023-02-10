@@ -12,7 +12,7 @@ export const RegisterItemImg = () => {
   };
 
   return (
-    <section className="base-layout overflow-x-auto flex items-start justify-center h-1/5 border-b-2">
+    <section className="base-layout overflow-x-auto scrollbar-hide flex items-start justify-center h-1/5 border-b-2">
       <div className="flex px-2">
         <label onChange={addImage} htmlFor="input-file">
           <div className="w-24 h-24 bg-white border-2 border-light-gray rounded-[10px] p-1.5 mr-3">

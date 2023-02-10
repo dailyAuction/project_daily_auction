@@ -5,7 +5,6 @@ import { MyPage } from '../pages/MyPage';
 import { NotificationPage } from '../pages/NoficationPage';
 import { PostProductPage } from '../pages/PostProductPage';
 import { SearchPage } from '../pages/SearchPage';
-import { TempPage } from '../pages/TempPage';
 import { CategoryProductListPage } from '../pages/CategoryProductListPage';
 import { LoginPage } from '../pages/LoginPage';
 import { SignUpPage } from '../pages/SignUpPage';
@@ -13,12 +12,13 @@ import { EditPasswordPage } from '../pages/EditPasswordPage';
 import { RegisterProductPage } from '../pages/RegisterProductPage';
 import { SearchResultPage } from '../pages/SearchResultPage';
 import { ChargePage } from '../pages/ChargePage';
+import { MainPage } from '../pages/MainPage';
 
 export const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<TempPage />} />
+        <Route path="/" element={<MainPage />} />
         <Route path="/detail/:id" element={<DetailPage />} />
         <Route path="/category" element={<CategoryPage />} />
         <Route path="/search" element={<SearchPage />} />
