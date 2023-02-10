@@ -14,7 +14,7 @@ export const MainPage = () => {
   const [bestProductDetail] = useState(products);
 
   return (
-    <main className="base-layout bg-white">
+    <main className="base-layout bg-white relative">
       <MainHeader>Daily Auction</MainHeader>
       <Banner />
       <ClosingProduct closingProductDetail={closingProductDetail} />

@@ -15,7 +15,6 @@ export const ScrollToTopBtn = () => {
       if (window.scrollY > 50) setShowBtn(true);
       else setShowBtn(false);
     };
-    console.log(window.scrollY);
     window.addEventListener('scroll', handleShowbtn);
     return () => {
       window.removeEventListener('scroll', handleShowbtn);
@@ -23,10 +22,11 @@ export const ScrollToTopBtn = () => {
   }, []);
 
   return (
-    <>
+    <div className="sticky w-full flex justify-end px-2 bottom-60">
       {showBtn && (
         <div
-          className="fixed top-[530px] right-5 flex justify-center items-center w-10 h-10 bg-background-mobile rounded-full cursor-pointer border border-[#ababab] hover:opacity-80 z-1000 "
+          // className="fixed top-[530px] right-5 flex justify-center items-center w-10 h-10 bg-background-mobile rounded-full cursor-pointer border border-[#ababab] hover:opacity-80 z-1000 "
+          className="flex justify-center items-center w-10 h-10 bg-background-mobile rounded-full cursor-pointer border border-[#ababab] hover:opacity-80 z-1000 "
           onClick={handlerMoveToTop}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -39,6 +39,6 @@ export const ScrollToTopBtn = () => {
           </svg>
         </div>
       )}
-    </>
+    </div>
   );
 };
