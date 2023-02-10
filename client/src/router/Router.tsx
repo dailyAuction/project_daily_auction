@@ -33,7 +33,7 @@ export const Router = () => {
         <Route path="/editPassword" element={<EditPasswordPage />} />
         <Route path="/charge" element={<ChargePage />} />
         <Route path="/notification" element={<NotificationPage />} />
-        <Route path="/categoryProduct" element={<CategoryProductListPage />} />
+        <Route path="/categoryProduct/:id" element={<CategoryProductListPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/registerProduct" element={<RegisterProductPage />} />
       </Routes>
