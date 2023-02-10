@@ -3,13 +3,12 @@ import { CategoryPage } from '../pages/CategoryPage';
 import { DetailPage } from '../pages/DetailPage';
 import { MyPage } from '../pages/MyPage';
 import { NotificationPage } from '../pages/NoficationPage';
-import { PostProductPage } from '../pages/PostProductPage';
 import { SearchPage } from '../pages/SearchPage';
 import { CategoryProductListPage } from '../pages/CategoryProductListPage';
 import { LoginPage } from '../pages/LoginPage';
 import { SignUpPage } from '../pages/SignUpPage';
 import { EditPasswordPage } from '../pages/EditPasswordPage';
-import { RegisterProductPage } from '../pages/RegisterProductPage';
+import { PostProductPage } from '../pages/PostProductPage';
 import { SearchResultPage } from '../pages/SearchResultPage';
 import { ChargePage } from '../pages/ChargePage';
 import { MainPage } from '../pages/MainPage';
@@ -35,7 +34,6 @@ export const Router = () => {
         <Route path="/notification" element={<NotificationPage />} />
         <Route path="/categoryProduct" element={<CategoryProductListPage />} />
         <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/registerProduct" element={<RegisterProductPage />} />
       </Routes>
     </BrowserRouter>
   );
