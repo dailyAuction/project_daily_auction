@@ -10,8 +10,8 @@ export const TopSearchKeywords = ({ keywords }: TopSearchKeywordsProps) => {
       <h2 className="text-lg font-bold mb-3">인기 검색어</h2>
       <article className="flex flex-col space-y-2">
         {keywords.map((keyword, idx) => (
-          <Link to={`/search/0_${keyword}`}>
-            <div key={keyword} className="flex cursor-pointer">
+          <Link to={`/search/0_${keyword}`} key={keyword}>
+            <div className="flex cursor-pointer">
               <span className="block w-9">{idx + 1}</span>
               <span>{keyword}</span>
             </div>
