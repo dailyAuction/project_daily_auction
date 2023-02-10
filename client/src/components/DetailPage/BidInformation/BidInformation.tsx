@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { userInfoAtom } from '../../../atoms/user';
+import { useHandleIsLogin } from '../../../hooks/useHandleIsLogin';
 
 type BidModalProps = {
   handleClose: () => void;
@@ -43,6 +44,12 @@ const BidModal = ({ handleClose }: BidModalProps) => {
 export const BidInformation = ({ bidCount, statusId, startingPrice, currentPrice, myPrice, authorId, bidderId }) => {
   const [isModalOpen, setModalOpen] = useState(false);
 
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const { handleIsLogin } = useHandleIsLogin();
+
   const userInfo = useRecoilValue(userInfoAtom);
 
   return (
@@ -60,7 +67,7 @@ export const BidInformation = ({ bidCount, statusId, startingPrice, currentPrice
               type="submit"
               className="red-btn"
               onClick={() => {
-                setModalOpen(true);
+                handleIsLogin(handleOpenModal);
               }}>
               입찰
             </button>

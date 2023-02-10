@@ -10,7 +10,7 @@ export const productDetail = {
   ],
   thumbnail:
     'https://images.unsplash.com/photo-1521369909029-2afed882baee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-  authorId: 1,
+  authorId: 3,
   bidderId: 2,
   title: '아주 아름다운 모자 판매합니다.',
   description:
