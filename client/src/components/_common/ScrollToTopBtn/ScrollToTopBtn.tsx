@@ -1,6 +1,15 @@
 export const ScrollToTopBtn = () => {
+  const handlerMoveToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
   return (
-    <div className="fixed top-[530px] right-5 flex justify-center items-center w-10 h-10 bg-background-mobile rounded-full cursor-pointer border border-[#ababab] hover:opacity-80 z-1000 ">
+    <div
+      className="fixed top-[530px] right-5 flex justify-center items-center w-10 h-10 bg-background-mobile rounded-full cursor-pointer border border-[#ababab] hover:opacity-80 z-1000 "
+      onClick={handlerMoveToTop}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
