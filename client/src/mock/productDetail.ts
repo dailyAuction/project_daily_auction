@@ -20,7 +20,7 @@ export const productDetail = {
   currentPrice: '120,000',
   statusId: 0,
   createdAt: '2023-02-06T01:02:00',
-  finishedAt: '2023-02-07T01:02:00',
+  finishedAt: '2023-02-10T20:00:00',
   viewCount: '30',
   bidCount: '3',
   history: [100, 200, 300],
