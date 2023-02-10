@@ -18,21 +18,17 @@ export const ProductItem = ({ productDetail }: ProductItemProps) => {
   const isUserSeller = isMatchUserId(authorId);
 
   const location = useLocation().pathname;
-  const page = location.includes('my-auction-list')
-    ? 'register'
-    : location.includes('participation-list')
-    ? 'participation'
-    : '';
+  const page = location.includes('auctionList') ? 'register' : location.includes('joinList') ? 'participation' : '';
 
   return (
     <Link to={`/detail/${boardId}`}>
       <div className="flex justify-center items-end relative w-full rounded-[10px] bg-background-mobile cursor-pointer">
         <div className="p-[6px] flex-2">
           {/* TODO: 남은 시간 데이터 props 전달 */}
-          <ProductItemImg thumbnail={thumbnail} />
+          <ProductItemImg thumbnail={thumbnail} statusId={statusId} />
         </div>
         <div className="flex-1 px-0.5">
-          {statusId === 1 && (
+          {!isUserSeller && statusId === 1 && (
             <div className="text-xs font-bold py-2">
               <p>판매자 이메일</p>
               <p>:aaaa@aaaa.com</p>
@@ -47,7 +43,7 @@ export const ProductItem = ({ productDetail }: ProductItemProps) => {
             </div>
           </div>
           <div className="absolute top-2 right-2">
-            <ProductStatus>{statusId === 0 ? AUCTION_STATUS[statusId] : ''}</ProductStatus>
+            <ProductStatus>{AUCTION_STATUS[statusId]}</ProductStatus>
           </div>
         </div>
       </div>
