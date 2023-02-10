@@ -16,7 +16,7 @@ export const MyAuctionBtn = ({ status, setStatus }) => {
   };
 
   return (
-    <div className="flex gap-2 py-4">
+    <div className="flex gap-2 py-4 w-full px-2.5">
       {buttonList.map((el, i) => {
         return (
           <button
