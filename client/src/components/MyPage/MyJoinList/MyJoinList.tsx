@@ -10,7 +10,7 @@ export const MyJoinList = () => {
   const [details] = useState(products);
 
   return (
-    <div className="base-layout">
+    <div className="base-layout bg-white">
       <SubHeader>내가 참여한 경매</SubHeader>
       <MyAuctionBtn status={status} setStatus={setStatus} />
       <MyAuctionContent details={details} status={status} />
