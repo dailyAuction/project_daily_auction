@@ -10,16 +10,12 @@ import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Service
@@ -30,7 +26,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberService memberService;
     private final BoardMemberRepository boardMemberRepository;
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
     public Board saveBoard(String token, BoardDto.Post postDto) {
         Member member = memberService.findByAccessToken(token);
@@ -52,14 +48,12 @@ public class BoardService {
         return boardRepository.save(createdBoard);
     }
 
-    public BoardDto.Response getDetailPage(String token, long boardId) {
+    //    @Cacheable(key = "#boardId", value = "findBoard")
+    public BoardDto.Response getDetailPage(String token, long boardId, int viewCount) {
         Board target = find(boardId);
 
         String[] history = target.getHistory().split(",");
 
-        //조회수 증가
-        //todo: redis로 처리하기
-        target.upViewCount();
 
         BoardDto.Response response = BoardDto.Response.builder()
                 .boardId(boardId)
@@ -72,7 +66,8 @@ public class BoardService {
                 .currentPrice(target.getCurrentPrice())
                 .createdAt(target.getCreatedAt())
                 .finishedAt(target.getFinishedAt())
-                .viewCount(target.getViewCount())
+                //조회수 증가
+                .viewCount(viewCount)
                 .bidCount(target.getBidCount())
                 .history(target.getHistoryList())
                 .statusId(target.getStatusId())
@@ -80,7 +75,7 @@ public class BoardService {
                 .sellerId(target.getSellerId())
                 .build();
 
-        if (token!=null){
+        if (token != null) {
             Member member = memberService.findByAccessToken(token);
             //내 가격 업데이트
             response.updateMyPrice(findMyPrice(member, target));
@@ -88,19 +83,88 @@ public class BoardService {
         return response;
     }
 
-//    @Cacheable(value = "board")
-    public void addViewCntToRedis(long boardId){
-        String key = "productViewCnt::"+boardId;
-        //hint 캐시에 값이 없으면 레포지토리에서 조회 있으면 값을 증가시킨다.
-        ValueOperations valueOperations = redisTemplate.opsForValue();
-        if(valueOperations.get(key)==null)
+    public int addViewCntToRedis(long boardId) {
+        String key = "boardViewCount::" + boardId;
+        //캐시에 값이 없으면 레포지토리에서 조회 & 있으면 값을 증가시킨다.
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        if (valueOperations.get(key) == null) {
+            Board board = boardRepository.findById(boardId)
+                    .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
+                            ExceptionCode.BOARD_NOT_FOUND.getMessage(),
+                            new IllegalArgumentException()));
+
             valueOperations.set(
                     key,
-                    String.valueOf(boardRepository.findViewCountByBoardId(boardId)),
-                    Duration.ofMinutes(5));
-        else
+                    String.valueOf(board.getViewCount() + 1));
+            log.info("value:{}", valueOperations.get(key));
+            return Integer.parseInt(valueOperations.get(key));
+        } else {
             valueOperations.increment(key);
-        log.info("value:{}",valueOperations.get(key));
+            log.info("value:{}", valueOperations.get(key));
+            return Integer.parseInt(valueOperations.get(key));
+        }
+    }
+
+    public int addBidCountToRedis(long boardId) {
+        String key = "boardBidCount::" + boardId;
+        //캐시에 값이 없으면 레포지토리에서 조회 & 있으면 값을 증가시킨다.
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        if (valueOperations.get(key) == null) {
+            Board board = boardRepository.findById(boardId)
+                    .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
+                            ExceptionCode.BOARD_NOT_FOUND.getMessage(),
+                            new IllegalArgumentException()));
+
+            valueOperations.set(
+                    key,
+                    String.valueOf(board.getBidCount() + 1));
+            log.info("value:{}", valueOperations.get(key));
+            return Integer.parseInt(valueOperations.get(key));
+        } else {
+            valueOperations.increment(key);
+            log.info("value:{}", valueOperations.get(key));
+            return Integer.parseInt(valueOperations.get(key));
+        }
+    }
+
+    private void addHistoryToRedis(long boardId,int newPrice) {
+        String key = "boardHistory::" + boardId;
+        //캐시에 값이 없으면 레포지토리에서 조회 & 있으면 히스토리에 추가.
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        if (valueOperations.get(key) == null) {
+            Board board = boardRepository.findById(boardId)
+                    .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
+                            ExceptionCode.BOARD_NOT_FOUND.getMessage(),
+                            new IllegalArgumentException()));
+
+            valueOperations.set(
+                    key,
+                    String.valueOf(board.getHistory())+","+newPrice);
+            log.info("value:{}", valueOperations.get(key));
+        } else {
+            String lastHistory = valueOperations.get(key);
+            valueOperations.set(key,lastHistory+","+newPrice);
+            log.info("value:{}", valueOperations.get(key));
+        }
+    }
+    private void changeLeadingBidderToRedis(long boardId,long bidderId) {
+        String key = "boardLeadingBidder::" + boardId;
+        //캐시에 값이 없으면 레포지토리에서 조회 & 있으면 값을 변경시킨다.
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        if (valueOperations.get(key) == null) {
+            Board board = boardRepository.findById(boardId)
+                    .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
+                            ExceptionCode.BOARD_NOT_FOUND.getMessage(),
+                            new IllegalArgumentException()));
+
+            valueOperations.set(
+                    key,
+                    String.valueOf(bidderId));
+            log.info("value:{}", valueOperations.get(key));
+        } else {
+            valueOperations.set(key,String.valueOf(bidderId));
+            log.info("value:{}", valueOperations.get(key));
+        }
     }
 
     public void deleteBoard(String token, long boardId) {
@@ -119,7 +183,7 @@ public class BoardService {
         Board board = find(patchDto.getBoardId());
         int currentPrice = board.getCurrentPrice();
         int newPrice = patchDto.getNewPrice();
-        if (board.getBidderId()!=0){
+        if (board.getBidderId() != 0) {
             Member lastMember = memberService.find(board.getBidderId());
             //코인 증가
             lastMember.changeCoin(currentPrice);
@@ -137,11 +201,14 @@ public class BoardService {
                     ExceptionCode.LESS_THAN_CURRENT.getMessage(),
                     new IllegalArgumentException());
         }
-        board.changeLeadingBidder(member.getMemberId(), newPrice);
+        //리딩비더 변경
+//        board.changeLeadingBidder(member.getMemberId(), newPrice);
+        changeLeadingBidderToRedis(board.getBoardId(), member.getMemberId());
         //bid count 증가
-        board.upBidCount();
+        addBidCountToRedis(board.getBoardId());
         //히스토리 추가
-        board.updateHistory(newPrice);
+        addHistoryToRedis(board.getBoardId(),newPrice);
+//        board.updateHistory(newPrice);
 
         //기록용 남기기
         boardMemberRepository.save(BoardMember.builder()

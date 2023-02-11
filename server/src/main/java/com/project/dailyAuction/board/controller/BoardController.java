@@ -22,10 +22,10 @@ public class BoardController {
 
     @GetMapping("/{board-id}")
     @ResponseStatus(HttpStatus.OK)
-    public BoardDto.Response getBoard(@RequestHeader(name = "Authorization",required = false) String token,
+    public BoardDto.Response getBoard(@RequestHeader(name = "Authorization", required = false) String token,
                                       @PathVariable("board-id") long boardId) {
-        boardService.addViewCntToRedis(boardId);
-        BoardDto.Response response = boardService.getDetailPage(token, boardId);
+        int viewCount = boardService.addViewCntToRedis(boardId);
+        BoardDto.Response response = boardService.getDetailPage(token, boardId, viewCount);
         return response;
     }
 
