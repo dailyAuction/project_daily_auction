@@ -1,6 +1,5 @@
 package com.project.dailyAuction.security.config;
 
-import com.project.dailyAuction.cache.SingleVisitInterceptor;
 import com.project.dailyAuction.member.service.MemberService;
 import com.project.dailyAuction.security.filter.JwtAuthenticationFilter;
 import com.project.dailyAuction.security.filter.JwtVerificationFilter;
@@ -41,8 +40,6 @@ import java.util.stream.Collectors;
 public class SecurityConfig implements WebMvcConfigurer {
     private final JwtTokenizer jwtTokenizer;
     private final MemberService memberService;
-    private final SingleVisitInterceptor singleVisitInterceptor;
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -151,11 +148,6 @@ public class SecurityConfig implements WebMvcConfigurer {
             builder
                     .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
         }
-    }
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(singleVisitInterceptor)
-                .addPathPatterns("/mylocation/**");
     }
 }
 
