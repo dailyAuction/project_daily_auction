@@ -10,7 +10,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,7 +29,7 @@ class BoardControllerTest {
                 .startingPrice(100)
                 .title("BoardPost테스트")
                 .createdAt(LocalDateTime.now())
-                .category("잡화")
+                .categoryId(1)
                 .image("imageUrl")
                 .description("테스트입니다.")
                 .build();
