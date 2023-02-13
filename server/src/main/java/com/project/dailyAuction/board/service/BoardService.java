@@ -110,9 +110,9 @@ public class BoardService {
     }
 
 
-    public void bidBoard(String token, BoardDto.Patch patchDto) {
+    public void bidBoard(String token, long boardId, BoardDto.Patch patchDto) {
         Member member = memberService.findByAccessToken(token);
-        Board board = find(patchDto.getBoardId());
+        Board board = find(boardId);
         int currentPrice = board.getCurrentPrice();
         int newPrice = patchDto.getNewPrice();
         if (board.getBidderId() != 0) {
