@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { userIdPassword } from '../../../mock/userIdPassword';
+import { FindPasswordModal } from '../FindPasswordModal/FindPasswordModal';
 
 interface LoginData {
   email: string;
@@ -11,6 +12,7 @@ interface LoginData {
 
 export const Login = () => {
   const [isCorrect, setIsCorrect] = useState(true);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const {
@@ -99,7 +101,7 @@ export const Login = () => {
               회원가입
             </Link>
           </span>
-          <button type="button" className="hover:text-main-red">
+          <button type="button" className="hover:text-main-red" onClick={() => setModalOpen(true)}>
             비밀번호를 잊어버렸어요 &gt;
           </button>
         </article>
@@ -108,6 +110,7 @@ export const Login = () => {
         <img src="/socialLogin/google_login.png" alt="google_login" className="h-10 cursor-pointer" />
         <img src="/socialLogin/kakao_login.png" alt="kakao_login" className="h-10 cursor-pointer" />
       </section>
+      <section>{isModalOpen && <FindPasswordModal handleClose={() => setModalOpen(false)} />}</section>
     </main>
   );
 };
