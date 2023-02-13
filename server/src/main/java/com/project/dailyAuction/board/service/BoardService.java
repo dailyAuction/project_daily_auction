@@ -18,6 +18,9 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -50,10 +53,11 @@ public class BoardService {
     }
 
     //    @Cacheable(key = "#boardId", value = "findBoard")
-    public BoardDto.Response getDetailPage(String token, long boardId, int viewCount) {
+    public BoardDto.Response getDetailPage(String token, long boardId, int viewCount, int bidCount, long bidderId, String history) {
         Board target = find(boardId);
 
-        String[] history = target.getHistory().split(",");
+        List<Integer> histories = Arrays.stream(history.split(","))
+                .mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
 
 
         BoardDto.Response response = BoardDto.Response.builder()
@@ -69,10 +73,10 @@ public class BoardService {
                 .finishedAt(target.getFinishedAt())
                 //조회수 증가
                 .viewCount(viewCount)
-                .bidCount(target.getBidCount())
-                .history(target.getHistoryList())
+                .bidCount(bidCount)
+                .history(histories)
                 .statusId(target.getStatusId())
-                .bidderId(target.getBidderId())
+                .bidderId(bidderId)
                 .sellerId(target.getSellerId())
                 .build();
 
@@ -165,6 +169,45 @@ public class BoardService {
         } else {
             valueOperations.set(key,String.valueOf(bidderId));
             log.info("value:{}", valueOperations.get(key));
+        }
+    }
+    public int getBidCountInRedis(long boardId) {
+        String key = "boardBidCount::" + boardId;
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        if (valueOperations.get(key) == null) {
+            Board board = boardRepository.findById(boardId)
+                    .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
+                            ExceptionCode.BOARD_NOT_FOUND.getMessage(),
+                            new IllegalArgumentException()));
+            return board.getBidCount();
+        } else {
+            return Integer.parseInt(valueOperations.get(key));
+        }
+    }
+    public long getBidderInRedis(long boardId) {
+        String key = "boardLeadingBidder::" + boardId;
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        if (valueOperations.get(key) == null) {
+            Board board = boardRepository.findById(boardId)
+                    .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
+                            ExceptionCode.BOARD_NOT_FOUND.getMessage(),
+                            new IllegalArgumentException()));
+            return board.getBidderId();
+        } else {
+            return Long.parseLong(valueOperations.get(key));
+        }
+    }
+    public String getHistoryInRedis(long boardId) {
+        String key = "boardHistory::" + boardId;
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        if (valueOperations.get(key) == null) {
+            Board board = boardRepository.findById(boardId)
+                    .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
+                            ExceptionCode.BOARD_NOT_FOUND.getMessage(),
+                            new IllegalArgumentException()));
+            return board.getHistory();
+        } else {
+            return valueOperations.get(key);
         }
     }
     public void setFinishedTimeToRedis(long boardId, LocalDateTime finishedTime) {

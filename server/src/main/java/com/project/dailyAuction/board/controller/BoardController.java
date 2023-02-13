@@ -26,7 +26,10 @@ public class BoardController {
     public BoardDto.Response getBoard(@RequestHeader(name = "Authorization", required = false) String token,
                                       @PathVariable("board-id") long boardId) {
         int viewCount = boardService.addViewCntToRedis(boardId);
-        BoardDto.Response response = boardService.getDetailPage(token, boardId, viewCount);
+        int bidCount = boardService.getBidCountInRedis(boardId);
+        long bidderId = boardService.getBidderInRedis(boardId);
+        String history = boardService.getHistoryInRedis(boardId);
+        BoardDto.Response response = boardService.getDetailPage(token, boardId, viewCount,bidCount,bidderId,history);
         return response;
     }
 
