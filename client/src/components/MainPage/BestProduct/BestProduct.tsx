@@ -1,9 +1,22 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { ProductItem } from '../../_common/\bProductItem/ProductItem';
-import { CategoryList } from '../../_common/CategoryList/CategoryList';
 import { CategoryBtn } from '../../_common/CategoryBtn/CategoryBtn';
 import { CATEGORIES } from '../../../constants/constants';
 
-export const Bestproduct = ({ bestProductDetail }) => {
+export const Bestproduct = () => {
+  const [bestProduct, setBestProduct] = useState([]);
+  const [categoryId, setCategoryId] = useState(0);
+
+  const getBestProduct = async () => {
+    const path = categoryId ? `${categoryId}/popular-item` : 'all-popular-item';
+    await axios.get(`${process.env.REACT_APP_URL}/${path}`).then((res) => setBestProduct(res.data));
+  };
+
+  useEffect(() => {
+    getBestProduct();
+  }, [categoryId]);
+
   return (
     <div className="w-full">
       <div className="flex items-center">
@@ -29,13 +42,17 @@ export const Bestproduct = ({ bestProductDetail }) => {
       </div>
       <div className="p-2 pb-4 overflow-x-scroll scrollbar-hide">
         <section className="w-max space-x-3">
-          {CATEGORIES.map((el) => {
-            return <CategoryBtn key={el}>{el}</CategoryBtn>;
+          {CATEGORIES.map((el, i) => {
+            return (
+              <CategoryBtn key={el}>
+                <div onClick={() => setCategoryId(i)}>{el}</div>
+              </CategoryBtn>
+            );
           })}
         </section>
       </div>
       <div className="flex flex-col gap-2 items-center">
-        {bestProductDetail.map((el) => {
+        {bestProduct.map((el) => {
           return (
             <div key={el.boardId} className="w-[96%]">
               <ProductItem productDetail={el} />
