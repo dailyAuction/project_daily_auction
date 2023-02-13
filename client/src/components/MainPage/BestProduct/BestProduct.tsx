@@ -44,9 +44,11 @@ export const Bestproduct = () => {
         <section className="w-max space-x-3">
           {CATEGORIES.map((el, i) => {
             return (
-              <CategoryBtn key={el}>
-                <div onClick={() => setCategoryId(i)}>{el}</div>
-              </CategoryBtn>
+              <span key={el} onClick={() => setCategoryId(i)}>
+                <button type="button" className={`category-btn ${categoryId === i && 'bg-main-red text-white'}`}>
+                  {el}
+                </button>
+              </span>
             );
           })}
         </section>
