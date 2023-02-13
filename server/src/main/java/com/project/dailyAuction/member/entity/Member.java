@@ -1,6 +1,8 @@
 package com.project.dailyAuction.member.entity;
 
 
+
+//import com.project.dailyAuction.boardNotice.entity.Notice;
 import com.project.dailyAuction.code.MemberStatusCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
