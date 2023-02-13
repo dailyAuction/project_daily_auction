@@ -34,5 +34,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     List<Board> findTop5ByStatusIdOrderByCreatedAtDesc(long statusId);
     Page<Board> getBoardsByCreatedAtAfter(LocalDateTime time, Pageable pageable);
-    Page<Board> findBoardsByCategoryId(long categoryId, Pageable pageable);
+    Page<Board> findBoardsByCategoryIdAndCreatedAt(long categoryId, LocalDateTime time, Pageable pageable);
 }

@@ -179,25 +179,25 @@ public class BoardService {
 
     public Page<Board> findBoardPage(long categoryId, int page, int size, int sort) {
         Sort defaultSort = Sort.by("").descending();
-        if (sort == 0) {
+        if (sort == 0) {//기본 정렬
             defaultSort = Sort.by("boardId").ascending();
-        } else if (sort == 1) {
+        } else if (sort == 1) {//마감임박순 정렬
             defaultSort = Sort.by("createdAt").ascending();
-        } else if (sort == 2) {
+        } else if (sort == 2) {//입찰수 기준 정렬
             defaultSort = Sort.by("bidCount").descending();
-        } else if (sort == 3) {
+        } else if (sort == 3) {//조회수 기준 정렬
             defaultSort = Sort.by("viewCount").descending();
-        } else if (sort == 4) {
+        } else if (sort == 4) {//높은 현재가 기준 정렬
             defaultSort = Sort.by("currentPrice").descending();
-        } else if (sort == 5) {
+        } else if (sort == 5) {//낮은 현재가 기준 정렬
             defaultSort = Sort.by("currentPrice").ascending();
         }
         // 전체 리스트 조회
-        if (categoryId == 0) {
+        if (categoryId == 0) {//최근 하루의 모든 경매 조회
             return boardRepository.getBoardsByCreatedAtAfter(LocalDateTime.now().minusDays(1), PageRequest.of(page, size, defaultSort));
-        } else {
-            return boardRepository.findBoardsByCategoryId(categoryId,
-                    PageRequest.of(page, size, defaultSort));
+        } else {//카테고리면 최근 하루의 경매 조회
+            return boardRepository.findBoardsByCategoryIdAndCreatedAt(categoryId,
+                    LocalDateTime.now().minusDays(1), PageRequest.of(page, size, defaultSort));
         }
     }
 }
