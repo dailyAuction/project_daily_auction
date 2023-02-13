@@ -3,12 +3,10 @@ package com.project.dailyAuction.board.controller;
 import com.project.dailyAuction.board.Dto.BoardDto;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.Mapper.BoardMapper;
-import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.service.BoardService;
 import com.project.dailyAuction.dto.PageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
