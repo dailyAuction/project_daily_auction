@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -58,11 +57,11 @@ public class Board {
         this.currentPrice = newPrice;
     }
 
-    public List<Long> getHistoryList(){
+    public Long[] getHistoryArray(){
         String[] histories = this.history.split(",");
         return Arrays.stream(histories)
-                .mapToLong(a-> Long.parseLong(a)).boxed()
-                .collect(Collectors.toList());
+                .mapToLong(a -> Long.parseLong(a)).boxed()
+                .toArray(Long[]::new);
     }
 
     public void updateHistory(int newPrice) {

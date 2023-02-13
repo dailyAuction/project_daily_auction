@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class BoardDto {
     @Getter
@@ -41,7 +40,7 @@ public class BoardDto {
         private int currentPrice;
         private LocalDateTime createdAt;
         private LocalDateTime finishedAt;
-        private List<Long> history;
+        private Long[] history;
         private int myPrice;
 
         public void updateMyPrice(int myPrice) {
