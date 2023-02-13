@@ -1,5 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { userIdPassword } from '../../../mock/userIdPassword';
 
 type LeaveModalProps = {
   handleClose: () => void;
@@ -8,15 +10,10 @@ type LeaveModalProps = {
 type EmailData = {
   email: string;
 };
-/* 
-  TODO
-  1. email 유효성 검사
-  2. email이 회원 가입된 아이디인지 확인.
-     a. 안되어 있을 경우 회원가입 되어있지 않습니다 안내.
-     b. 되어있을 경우 이메일로 비밀번호 전달.
-*/
 
 export const FindPasswordModal = ({ handleClose }: LeaveModalProps) => {
+  const [isUser, setIsUser] = useState(true);
+
   const {
     register,
     handleSubmit,
@@ -25,8 +22,20 @@ export const FindPasswordModal = ({ handleClose }: LeaveModalProps) => {
 
   // TODO : 이메일 전송 이벤트 추가.
   const onSubmit = handleSubmit((data: EmailData) => {
+    /* 
+      TODO
+      1. email 유효성 검사
+      2. email이 회원 가입된 아이디인지 확인.
+        a. 안되어 있을 경우 회원가입 되어있지 않습니다 안내.
+        b. 되어있을 경우 이메일로 비밀번호 전달.
+    */
     console.log(data);
-    handleClose();
+    // 테스트용 전송 이벤트
+    if (userIdPassword.email !== data.email) {
+      setIsUser(false);
+    } else {
+      handleClose();
+    }
   });
 
   return (
@@ -53,6 +62,7 @@ export const FindPasswordModal = ({ handleClose }: LeaveModalProps) => {
             <p className="text-xs m-1 text-[#FF0000]">
               {errors.email?.type === 'required' && '이메일을 입력해주세요'}
               {errors.email?.type === 'pattern' && errors.email?.message}
+              {!isUser && '가입되어 있지 않은 이메일 입니다.'}
             </p>
             <div className="flex flex-col justify-center items-center space-y-3 mt-7">
               <button type="submit" className="white-btn w-fit">
