@@ -67,7 +67,6 @@ public class BoardDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Patch {
-        private long boardId;
         private int newPrice;
 
 
