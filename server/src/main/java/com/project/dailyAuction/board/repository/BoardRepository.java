@@ -23,4 +23,12 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Modifying
     @Query(value = "update board set bid_count =:bidCnt where board_id =:boardId", nativeQuery = true)
     void updateBidCnt(Long boardId, int bidCnt);
+
+    @Modifying
+    @Query(value = "update board set bidder_id =:bidderId where board_id =:boardId", nativeQuery = true)
+    void updateBidCnt(Long boardId, long bidderId);
+
+    @Modifying
+    @Query(value = "update board set history =:history where board_id =:boardId", nativeQuery = true)
+    void updateHistory(Long boardId, String history);
 }

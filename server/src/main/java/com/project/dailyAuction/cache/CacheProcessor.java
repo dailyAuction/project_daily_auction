@@ -32,9 +32,9 @@ public class CacheProcessor {
             boardRepository.updateViews(boardId, viewCnt);
         }
     }
-    //mysql에 조회수를 넘겨주는 메서드
+    //bidding 관련
     @Transactional
-    public void updateBidCntToMySql(){
+    public void updateBiddingToMySql(){
         Set<String> redisKeys = redisTemplate.keys("boardBidCount*");
         Iterator<String> it = redisKeys.iterator();
         while (it.hasNext()) {
@@ -42,6 +42,24 @@ public class CacheProcessor {
             Long boardId = Long.parseLong(data.split("::")[1]);
             int bidCnt = Integer.parseInt(redisTemplate.opsForValue().get(data));
             boardRepository.updateBidCnt(boardId, bidCnt);
+        }
+
+        redisKeys = redisTemplate.keys("boardLeadingBidder*");
+        it = redisKeys.iterator();
+        while (it.hasNext()) {
+            String data = it.next();
+            Long boardId = Long.parseLong(data.split("::")[1]);
+            long bidderId = Long.parseLong(redisTemplate.opsForValue().get(data));
+            boardRepository.updateBidCnt(boardId, bidderId);
+        }
+
+        redisKeys = redisTemplate.keys("boardHistory*");
+        it = redisKeys.iterator();
+        while (it.hasNext()) {
+            String data = it.next();
+            Long boardId = Long.parseLong(data.split("::")[1]);
+            String history = redisTemplate.opsForValue().get(data);
+            boardRepository.updateHistory(boardId, history);
         }
     }
 
