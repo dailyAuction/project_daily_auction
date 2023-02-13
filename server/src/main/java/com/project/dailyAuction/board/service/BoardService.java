@@ -8,10 +8,14 @@ import com.project.dailyAuction.boardMember.repository.BoardMemberRepository;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
+import com.project.dailyAuction.notice.Notice;
+import com.project.dailyAuction.notice.NoticeRepository;
+import com.project.dailyAuction.notice.NoticeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -28,9 +32,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final NoticeService noticeService;
     private final MemberService memberService;
     private final BoardMemberRepository boardMemberRepository;
     private final RedisTemplate<String, String> redisTemplate;
+    private final NoticeRepository noticeRepository;
 
     public Board saveBoard(String token, BoardDto.Post postDto) {
         Member member = memberService.findByAccessToken(token);
@@ -41,12 +47,13 @@ public class BoardService {
                 .image(postDto.getImage())
                 .thumbnail("")
                 .statusId(0)
-                .category(postDto.getCategory())
+                .categoryId(postDto.getCategoryId())
                 .createdAt(LocalDateTime.now())
                 .finishedAt(LocalDateTime.now().plusDays(1))
-                .startingPrice(postDto.getStarting_price())
                 .sellerId(member.getMemberId())
-                .history(String.valueOf(postDto.getStarting_price()))
+                .startingPrice(postDto.getStartingPrice())
+                .sellerId(member.getMemberId())
+                .history(String.valueOf(postDto.getStartingPrice()))
                 .build();
 
         return boardRepository.save(createdBoard);
@@ -64,7 +71,7 @@ public class BoardService {
                 .boardId(boardId)
                 .title(target.getTitle())
                 .description(target.getDescription())
-                .category(target.getCategory())
+                .categoryId(target.getCategoryId())
                 .image(target.getImage())
                 .thumbnail(target.getThumbnail())
                 .startingPrice(target.getStartingPrice())
@@ -84,6 +91,16 @@ public class BoardService {
             Member member = memberService.findByAccessToken(token);
             //내 가격 업데이트
             response.updateMyPrice(findMyPrice(member, target));
+
+            //유저가 board상세페이지에 접속하려고하면 알림의 상태를 읽음으로 바꾼다.
+            List<Notice> notices = noticeRepository.findAllByReceiverAndBoard(member, target);
+            if(!notices.isEmpty()) {
+                notices.forEach(
+                        notice -> {
+                            notice.read();
+                        }
+                );
+            }
         }
         return response;
     }
@@ -251,6 +268,9 @@ public class BoardService {
             Member lastMember = memberService.find(board.getBidderId());
             //코인 증가
             lastMember.changeCoin(currentPrice);
+
+            //알림 발송
+            noticeService.send(lastMember, board, 3);
         }
         //코인이 부족하면 에러
         if (member.getCoin() < newPrice) {
@@ -290,6 +310,18 @@ public class BoardService {
                 .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
                         ExceptionCode.BOARD_NOT_FOUND.getMessage(),
                         new IllegalArgumentException()));
+    }
+
+    public List<Board> getPopularItem(long categoryId) {
+        if (categoryId==1){
+            return boardRepository.findTop5ByStatusIdOrderByViewCountDesc(1);
+        }else {
+            return boardRepository.findTop5ByCategoryIdAndStatusIdOrderByViewCountDesc(categoryId,1);
+        }
+    }
+
+    public List<Board> getImminentItem() {
+        return boardRepository.findTop5ByStatusIdOrderByCreatedAtDesc(1);
     }
 
     public int findMyPrice(Member member, Board board) {

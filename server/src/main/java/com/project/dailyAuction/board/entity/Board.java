@@ -10,7 +10,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -34,7 +33,7 @@ public class Board implements Serializable {
     @Column
     private long statusId;
     @Column
-    private String category;
+    private long categoryId;
     @Column
     private int viewCount;
     @Column
@@ -59,11 +58,11 @@ public class Board implements Serializable {
 //        this.currentPrice = newPrice;
 //    }
 
-    public List<Long> getHistoryList(){
+    public Long[] getHistoryArray(){
         String[] histories = this.history.split(",");
         return Arrays.stream(histories)
-                .mapToLong(a-> Long.parseLong(a)).boxed()
-                .collect(Collectors.toList());
+                .mapToLong(a -> Long.parseLong(a)).boxed()
+                .toArray(Long[]::new);
     }
 
 //    public void updateHistory(int newPrice) {
