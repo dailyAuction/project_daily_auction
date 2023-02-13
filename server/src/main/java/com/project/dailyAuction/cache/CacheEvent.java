@@ -17,7 +17,9 @@ public class CacheEvent {
     @PostConstruct
     public void initCache(){
         cacheProcessor.updateViewToMySql();
-        cacheProcessor.flushRedis();
+        cacheProcessor.updateBiddingToMySql();
+        cacheProcessor.deleteRedisPerHour();
+        log.info("조회수, 입찰 관련 반영-init");
     }
 
     // 순서별 정리
@@ -27,13 +29,24 @@ public class CacheEvent {
     //4. 일(1-31)
     //5. 월(1-12)
     //6. 요일(0-7)
+
+    //10분마다 실행
     //    @Scheduled(cron = "*/10 * * * * ?")
+
     // 한시간 마다 실행
     @Scheduled(cron = "0 0 0/1 * * ?")
-    public void scheduleCache() {
+    public void schedulePerHourCache() {
         // +
         cacheProcessor.updateViewToMySql();
-        cacheProcessor.flushRedis();
-        log.info("플러시 레디스");
+        cacheProcessor.updateBiddingToMySql();
+        cacheProcessor.deleteRedisPerHour();
+        log.info("조회수, 입찰 관련 반영-10분");
+    }
+
+    //    1분마다 실행
+    @Scheduled(cron = "0 0/1 * * * ?")
+    public void schedulePerMinuteCache() {
+        cacheProcessor.updateBoardStatusToMySql();
+        log.info("게시글 상태 체크-1분");
     }
 }

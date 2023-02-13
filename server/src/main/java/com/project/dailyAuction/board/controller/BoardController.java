@@ -18,6 +18,7 @@ public class BoardController {
     public void postBoard(@RequestHeader(name = "Authorization") String token,
                           @RequestBody BoardDto.Post postDto) {
         Board board = boardService.saveBoard(token, postDto);
+        boardService.setFinishedTimeToRedis(board.getBoardId(),board.getFinishedAt());
     }
 
     @GetMapping("/{board-id}")
