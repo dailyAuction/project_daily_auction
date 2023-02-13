@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
@@ -54,4 +55,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Modifying
     @Query(value = "update board set status_id =:statusId where board_id =:boardId", nativeQuery = true)
     void updateStatus(Long boardId, long statusId);
+
+    Page<Board> getBoardsByCreatedAtAfter(LocalDateTime time, Pageable pageable);
+
+    Page<Board> findBoardsByCategoryIdAndCreatedAt(long categoryId, LocalDateTime time, Pageable pageable);
 }
