@@ -27,10 +27,11 @@ public class CacheEvent {
     //4. 일(1-31)
     //5. 월(1-12)
     //6. 요일(0-7)
-//    @Scheduled(cron = "0 0 0/1 * * ?")
-    @Scheduled(cron = "*/10 * * * * ?")
+    //    @Scheduled(cron = "*/10 * * * * ?")
+    // 한시간 마다 실행
+    @Scheduled(cron = "0 0 0/1 * * ?")
     public void scheduleCache() {
-
+        // +
         cacheProcessor.updateViewToMySql();
         cacheProcessor.flushRedis();
         log.info("플러시 레디스");
