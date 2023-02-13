@@ -1,16 +1,39 @@
-import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useQuery } from 'react-query';
 import { ProductItemImg } from '../../_common/ProductItemImg/ProductItemImg';
 
-export const ClosingProduct = () => {
-  const [closingProduct, setClosingProduct] = useState([]);
-  const getClosingProduct = async () => {
-    await axios.get(`${process.env.REACT_APP_URL}/imminent-item`).then((res) => setClosingProduct(res.data));
-  };
+interface ClosingProductResp {
+  boardId: string;
+  image: string[];
+  thumbnail: string;
+  authorId: number;
+  bidderId: number;
+  title: string;
+  description: string;
+  categoryId: number;
+  startingPrice: string;
+  currentPrice: string;
+  statusId: number;
+  createdAt: string;
+  finishedAt: string;
+  viewCount: string;
+  bidCount: string;
+  history: number[];
+  myPrice?: string;
+}
 
-  useEffect(() => {
-    getClosingProduct();
-  }, []);
+const getClosingProduct = async () => {
+  const { data } = await axios.get<ClosingProductResp[]>(`${process.env.REACT_APP_URL}/imminent-item`);
+  return data;
+};
+
+export const ClosingProduct = () => {
+  const {
+    data: closingProduct,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<ClosingProductResp[], Error>('closingProduct', getClosingProduct);
 
   return (
     <div className=" w-full my-4">
@@ -27,7 +50,7 @@ export const ClosingProduct = () => {
         </svg>
       </div>
       <div className="flex gap-2 overflow-x-auto scrollbar-hide w-full">
-        {closingProduct.map((el) => {
+        {closingProduct?.map((el) => {
           return (
             <div key={el.boardId} className="flex flex-col ml-2 min-w-[120px] w-[120px]">
               <ProductItemImg thumbnail={el.thumbnail} statusId={el.statusId} />
