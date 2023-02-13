@@ -68,4 +68,12 @@ public class Board {
     public void updateHistory(int newPrice) {
         this.history = this.history + "," + newPrice;
     }
+
+    public void upBidCount(){
+        this.bidCount++;
+    }
+
+    public void upViewCount() {
+        this.viewCount++;
+    }
 }

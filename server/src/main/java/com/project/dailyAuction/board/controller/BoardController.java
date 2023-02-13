@@ -14,30 +14,31 @@ public class BoardController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void postBoard(@RequestBody BoardDto.Post postDto) {
-        long memberId = 1L; //보안토큰대신 임시 적용
-        boardService.saveBoard(memberId,postDto);
+    public void postBoard(@RequestHeader(name = "Authorization") String token,
+                          @RequestBody BoardDto.Post postDto) {
+        boardService.saveBoard(token, postDto);
     }
 
     @GetMapping("/{board-id}")
     @ResponseStatus(HttpStatus.OK)
-    public BoardDto.Response getBoard(@PathVariable("board-id") long boardId) {
-        long memberId = 2L;
-        BoardDto.Response response =boardService.getDetailPage(memberId,boardId);
+    public BoardDto.Response getBoard(@RequestHeader(name = "Authorization",required = false) String token,
+                                      @PathVariable("board-id") long boardId) {
+        BoardDto.Response response = boardService.getDetailPage(token, boardId);
         return response;
     }
 
     @PatchMapping("/bidding")
     @ResponseStatus(HttpStatus.OK)
-    private void bidBoard(@RequestBody BoardDto.Patch patchDto) {
-        long memberId = 2L;
-        boardService.bidBoard(memberId,patchDto);
+    private void bidBoard(@RequestHeader(name = "Authorization") String token,
+                          @RequestBody BoardDto.Patch patchDto) {
+        boardService.bidBoard(token, patchDto);
     }
+
     @DeleteMapping("/{board-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBoard(@PathVariable("board-id") long boardId) {
-        long memberId = 1L;
-        boardService.deleteBoard(memberId, boardId);
+    public void deleteBoard(@RequestHeader(name = "Authorization") String token,
+                            @PathVariable("board-id") long boardId) {
+        boardService.deleteBoard(token, boardId);
     }
 
 }

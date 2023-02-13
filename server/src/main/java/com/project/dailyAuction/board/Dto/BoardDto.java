@@ -18,7 +18,7 @@ public class BoardDto {
         private String description;
         private String image;
         private long categoryId;
-        private int starting_price;
+        private int startingPrice;
     }
 
     @Getter
@@ -32,6 +32,7 @@ public class BoardDto {
         private String title;
         private String description;
         private String image;
+        private String thumbnail;
         private long statusId;
         private long categoryId;
         private int viewCount;
