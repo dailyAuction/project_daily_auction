@@ -21,9 +21,7 @@ public interface BoardMapper {
                     .bidderId(board.getBidderId())
                     .description(board.getDescription())
                     .categoryId(board.getCategoryId())
-                    //todo : 썸네일도 필요
-                    //todo : 이미지 리스트로 변경필요
-                    .image(board.getImage())
+                    //todo: 썸네일
                     .thumbnail(board.getThumbnail())
                     .createdAt(board.getCreatedAt())
                     .finishedAt(board.getFinishedAt())
@@ -31,9 +29,6 @@ public interface BoardMapper {
                     .currentPrice(board.getCurrentPrice())
                     .title(board.getTitle())
                     .statusId(board.getStatusId())
-                    .history(board.getHistoryList())
-                    .bidCount(board.getBidCount())
-                    .viewCount(board.getViewCount())
                     .build();
 
             responses.add(response);

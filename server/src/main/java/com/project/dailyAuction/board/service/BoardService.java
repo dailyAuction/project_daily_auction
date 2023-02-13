@@ -63,8 +63,8 @@ public class BoardService {
     public BoardDto.Response getDetailPage(String token, long boardId, int viewCount, int bidCount, long bidderId, String history) {
         Board target = find(boardId);
 
-        List<Integer> histories = Arrays.stream(history.split(","))
-                .mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
+        Integer[] histories = (Integer[]) Arrays.stream(history.split(","))
+                .mapToInt(Integer::parseInt).boxed().toArray();
 
 
         BoardDto.Response response = BoardDto.Response.builder()
