@@ -31,7 +31,7 @@ public interface BoardMapper {
                     .currentPrice(board.getCurrentPrice())
                     .title(board.getTitle())
                     .statusId(board.getStatusId())
-                    .history(board.getHistoryList())
+                    .history(board.getHistoryArray())
                     .bidCount(board.getBidCount())
                     .viewCount(board.getViewCount())
                     .build();

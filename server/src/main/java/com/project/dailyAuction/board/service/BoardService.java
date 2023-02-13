@@ -12,6 +12,9 @@ import com.project.dailyAuction.notice.Notice;
 import com.project.dailyAuction.notice.NoticeRepository;
 import com.project.dailyAuction.notice.NoticeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -72,20 +75,20 @@ public class BoardService {
                 .finishedAt(target.getFinishedAt())
                 .viewCount(target.getViewCount())
                 .bidCount(target.getBidCount())
-                .history(target.getHistoryList())
+                .history(target.getHistoryArray())
                 .statusId(target.getStatusId())
                 .bidderId(target.getBidderId())
                 .sellerId(target.getSellerId())
                 .build();
 
-        if (token!=null){
+        if (token != null) {
             Member member = memberService.findByAccessToken(token);
             //내 가격 업데이트
             response.updateMyPrice(findMyPrice(member, target));
 
             //유저가 board상세페이지에 접속하려고하면 알림의 상태를 읽음으로 바꾼다.
             List<Notice> notices = noticeRepository.findAllByReceiverAndBoard(member, target);
-            if(!notices.isEmpty()) {
+            if (!notices.isEmpty()) {
                 notices.forEach(
                         notice -> {
                             notice.read();
@@ -112,13 +115,13 @@ public class BoardService {
         Board board = find(patchDto.getBoardId());
         int currentPrice = board.getCurrentPrice();
         int newPrice = patchDto.getNewPrice();
-        if (board.getBidderId()!=0){
+        if (board.getBidderId() != 0) {
             Member lastMember = memberService.find(board.getBidderId());
             //코인 증가
             lastMember.changeCoin(currentPrice);
-            
+
             //알림 발송
-            noticeService.send(lastBidder, board, 3);
+            noticeService.send(lastMember, board, 3);
         }
         //코인이 부족하면 에러
         if (member.getCoin() < newPrice) {
@@ -156,7 +159,7 @@ public class BoardService {
                         ExceptionCode.BOARD_NOT_FOUND.getMessage(),
                         new IllegalArgumentException()));
     }
-    
+
     public List<Board> getPopularItem(long categoryId) {
         if (categoryId==1){
             return boardRepository.findTop5ByStatusIdOrderByViewCountDesc(1);
@@ -172,5 +175,29 @@ public class BoardService {
     public int findMyPrice(Member member, Board board) {
         BoardMember boardMember = boardMemberRepository.findByBoardAndMember(board, member);
         return boardMember.getMyPrice();
+    }
+
+    public Page<Board> findBoardPage(long categoryId, int page, int size, int sort) {
+        Sort defaultSort = Sort.by("").descending();
+        if (sort == 0) {//기본 정렬
+            defaultSort = Sort.by("boardId").ascending();
+        } else if (sort == 1) {//마감임박순 정렬
+            defaultSort = Sort.by("createdAt").ascending();
+        } else if (sort == 2) {//입찰수 기준 정렬
+            defaultSort = Sort.by("bidCount").descending();
+        } else if (sort == 3) {//조회수 기준 정렬
+            defaultSort = Sort.by("viewCount").descending();
+        } else if (sort == 4) {//높은 현재가 기준 정렬
+            defaultSort = Sort.by("currentPrice").descending();
+        } else if (sort == 5) {//낮은 현재가 기준 정렬
+            defaultSort = Sort.by("currentPrice").ascending();
+        }
+        // 전체 리스트 조회
+        if (categoryId == 0) {//최근 하루의 모든 경매 조회
+            return boardRepository.getBoardsByCreatedAtAfter(LocalDateTime.now().minusDays(1), PageRequest.of(page, size, defaultSort));
+        } else {//카테고리면 최근 하루의 경매 조회
+            return boardRepository.findBoardsByCategoryIdAndCreatedAt(categoryId,
+                    LocalDateTime.now().minusDays(1), PageRequest.of(page, size, defaultSort));
+        }
     }
 }
