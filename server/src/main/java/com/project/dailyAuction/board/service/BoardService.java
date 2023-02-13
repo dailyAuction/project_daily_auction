@@ -173,22 +173,9 @@ public class BoardService {
     }
     private void changeLeadingBidderToRedis(long boardId,long bidderId) {
         String key = "boardLeadingBidder::" + boardId;
-        //캐시에 값이 없으면 레포지토리에서 조회 & 있으면 값을 변경시킨다.
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        if (valueOperations.get(key) == null) {
-            Board board = boardRepository.findById(boardId)
-                    .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
-                            ExceptionCode.BOARD_NOT_FOUND.getMessage(),
-                            new IllegalArgumentException()));
-
-            valueOperations.set(
-                    key,
-                    String.valueOf(bidderId));
-            log.info("value:{}", valueOperations.get(key));
-        } else {
             valueOperations.set(key,String.valueOf(bidderId));
             log.info("value:{}", valueOperations.get(key));
-        }
     }
     public int getBidCountInRedis(long boardId) {
         String key = "boardBidCount::" + boardId;
@@ -231,7 +218,6 @@ public class BoardService {
     }
     public void setFinishedTimeToRedis(long boardId, LocalDateTime finishedTime) {
         String key = "finishedTime::" + boardId;
-        //캐시에 값이 없으면 레포지토리에서 조회 & 있으면 값 조회.
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         if (valueOperations.get(key) == null) {
             Board board = boardRepository.findById(boardId)
@@ -241,11 +227,11 @@ public class BoardService {
             String parsedFinishedAt = board.getFinishedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             valueOperations.set(
                     key,
-                    String.valueOf(parsedFinishedAt));
+                    parsedFinishedAt);
             log.info("value:{}", valueOperations.get(key));
         } else {
             String parsedFinishedAt = finishedTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            valueOperations.set(key,String.valueOf(parsedFinishedAt));
+            valueOperations.set(key,parsedFinishedAt);
             log.info("value:{}", valueOperations.get(key));
         }
     }

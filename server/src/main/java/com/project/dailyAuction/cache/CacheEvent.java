@@ -40,6 +40,7 @@ public class CacheEvent {
         cacheProcessor.updateViewToMySql();
         cacheProcessor.updateBiddingToMySql();
         cacheProcessor.deleteRedisPerHour();
+        cacheProcessor.updateTopKeywordToMySql();
         log.info("조회수, 입찰 관련 반영-10분");
     }
 

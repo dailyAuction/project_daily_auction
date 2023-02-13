@@ -14,7 +14,9 @@ public enum ExceptionCode {
     NOT_WRITER(401,"Not writer"),
     NOT_VERIFIED(409,"Not Verified"),
     CANT_BID_SLEF(409, "Can't bid self"),
-    NOTICE_NOT_FOUND(404, "Notice not found");
+    NOTICE_NOT_FOUND(404, "Notice not found"),
+    KEYWORD_NOT_FOUND(404,"Keyword not found")
+    ;
 
     private final int code;
     private final String message;

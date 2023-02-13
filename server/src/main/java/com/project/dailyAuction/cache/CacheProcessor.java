@@ -1,5 +1,6 @@
 package com.project.dailyAuction.cache;
 
+import com.project.dailyAuction.Search.repository.KeywordRepository;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.Set;
 public class CacheProcessor {
     private final RedisTemplate<String, String> redisTemplate;
     private final BoardRepository boardRepository;
+    private final KeywordRepository keywordRepository;
 
     // 보드 상태 업데이트
     @Transactional
@@ -79,6 +81,17 @@ public class CacheProcessor {
             boardRepository.updateViews(boardId, viewCnt);
         }
     }
+    @Transactional
+    public void updateTopKeywordToMySql() {
+        Set<String> redisKeys = redisTemplate.keys("SearchedCount*");
+        Iterator<String> it = redisKeys.iterator();
+        while (it.hasNext()) {
+            String data = it.next();
+            String keyword = data.split("::")[1];
+            int searchedCnt = Integer.parseInt(redisTemplate.opsForValue().get(data));
+            keywordRepository.updateSearchedCnt(keyword, searchedCnt);
+        }
+    }
 
     //bidding 관련
     @Transactional
@@ -131,7 +144,8 @@ public class CacheProcessor {
                         "boardHistory*",
                         "boardBidCount*",
                         "boardLeadingBidder*",
-                        "boardViewCount*"));
+                        "boardViewCount*",
+                        "SearchedCount*"));
                 return null;
             }
         });
