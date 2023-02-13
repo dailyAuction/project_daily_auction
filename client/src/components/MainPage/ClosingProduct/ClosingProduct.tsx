@@ -1,6 +1,17 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { ProductItemImg } from '../../_common/ProductItemImg/ProductItemImg';
 
-export const ClosingProduct = ({ closingProductDetail }) => {
+export const ClosingProduct = () => {
+  const [closingProduct, setClosingProduct] = useState([]);
+  const getClosingProduct = async () => {
+    await axios.get(`${process.env.REACT_APP_URL}/imminent-item`).then((res) => setClosingProduct(res.data));
+  };
+
+  useEffect(() => {
+    getClosingProduct();
+  }, []);
+
   return (
     <div className=" w-full my-4">
       <div className="flex items-center">
@@ -16,16 +27,7 @@ export const ClosingProduct = ({ closingProductDetail }) => {
         </svg>
       </div>
       <div className="flex gap-2 overflow-x-auto scrollbar-hide w-full">
-        {closingProductDetail.map((el) => {
-          return (
-            <div key={el.boardId} className="flex flex-col ml-2 min-w-[120px] w-[120px]">
-              <ProductItemImg thumbnail={el.thumbnail} statusId={el.statusId} />
-              <p className="text-xs line-clamp-1">{el.title}</p>
-              <p className="text-base text-main-orange">{el.currentPrice} coin</p>
-            </div>
-          );
-        })}
-        {closingProductDetail.map((el) => {
+        {closingProduct.map((el) => {
           return (
             <div key={el.boardId} className="flex flex-col ml-2 min-w-[120px] w-[120px]">
               <ProductItemImg thumbnail={el.thumbnail} statusId={el.statusId} />
