@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
@@ -31,4 +33,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Page<Board> findByStatusIdOrderByViewCountDesc(long statusId, PageRequest of);
 
     List<Board> findTop5ByStatusIdOrderByCreatedAtDesc(long statusId);
+    Page<Board> getBoardsByCreatedAtAfter(LocalDateTime time, Pageable pageable);
+    Page<Board> findBoardsByCategoryId(long categoryId, Pageable pageable);
 }
