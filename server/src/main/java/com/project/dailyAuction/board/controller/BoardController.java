@@ -1,13 +1,12 @@
 package com.project.dailyAuction.board.controller;
 
 import com.project.dailyAuction.board.Dto.BoardDto;
-import com.project.dailyAuction.board.Mapper.BoardMapper;
 import com.project.dailyAuction.board.entity.Board;
+import com.project.dailyAuction.board.Mapper.BoardMapper;
 import com.project.dailyAuction.board.service.BoardService;
 import com.project.dailyAuction.dto.PageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,14 +23,19 @@ public class BoardController {
     @ResponseStatus(HttpStatus.CREATED)
     public void postBoard(@RequestHeader(name = "Authorization") String token,
                           @RequestBody BoardDto.Post postDto) {
-        boardService.saveBoard(token, postDto);
+        Board board = boardService.saveBoard(token, postDto);
+        boardService.setFinishedTimeToRedis(board.getBoardId(),board.getFinishedAt());
     }
 
     @GetMapping("/{board-id}")
     @ResponseStatus(HttpStatus.OK)
-    public BoardDto.Response getBoard(@RequestHeader(name = "Authorization",required = false) String token,
+    public BoardDto.Response getBoard(@RequestHeader(name = "Authorization", required = false) String token,
                                       @PathVariable("board-id") long boardId) {
-        BoardDto.Response response = boardService.getDetailPage(token, boardId);
+        int viewCount = boardService.addViewCntToRedis(boardId);
+        int bidCount = boardService.getBidCountInRedis(boardId);
+        long bidderId = boardService.getBidderInRedis(boardId);
+        String history = boardService.getHistoryInRedis(boardId);
+        BoardDto.Response response = boardService.getDetailPage(token, boardId, viewCount,bidCount,bidderId,history);
         return response;
     }
 

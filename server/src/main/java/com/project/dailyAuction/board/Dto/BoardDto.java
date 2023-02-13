@@ -40,7 +40,7 @@ public class BoardDto {
         private int currentPrice;
         private LocalDateTime createdAt;
         private LocalDateTime finishedAt;
-        private Long[] history;
+        private Integer[] history;
         private int myPrice;
 
         public void updateMyPrice(int myPrice) {
