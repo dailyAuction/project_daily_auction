@@ -1,21 +1,50 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
+import { useQuery } from 'react-query';
 import { ProductItem } from '../../_common/\bProductItem/ProductItem';
-import { CategoryBtn } from '../../_common/CategoryBtn/CategoryBtn';
 import { CATEGORIES } from '../../../constants/constants';
 
+interface BestProductResp {
+  boardId: string;
+  image: string[];
+  thumbnail: string;
+  authorId: number;
+  bidderId: number;
+  title: string;
+  description: string;
+  categoryId: number;
+  startingPrice: string;
+  currentPrice: string;
+  statusId: number;
+  createdAt: string;
+  finishedAt: string;
+  viewCount: string;
+  bidCount: string;
+  history: number[];
+  myPrice?: string;
+}
+
 export const Bestproduct = () => {
-  const [bestProduct, setBestProduct] = useState([]);
   const [categoryId, setCategoryId] = useState(0);
 
   const getBestProduct = async () => {
     const path = categoryId ? `${categoryId}/popular-item` : 'all-popular-item';
-    await axios.get(`${process.env.REACT_APP_URL}/${path}`).then((res) => setBestProduct(res.data));
+    const { data } = await axios.get<BestProductResp[]>(`${process.env.REACT_APP_URL}/${path}`);
+    return data;
   };
 
-  useEffect(() => {
-    getBestProduct();
-  }, [categoryId]);
+  const {
+    data: bestProduct,
+    isLoading,
+    isError,
+  } = useQuery<BestProductResp[], Error>('bestProduct', getBestProduct, {
+    staleTime: 1000 * 20,
+    retry: 0,
+    onError: (e) => console.log(e.message),
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>카테고리별 인기상품이 없습니다.</div>;
 
   return (
     <div className="w-full">
@@ -54,7 +83,7 @@ export const Bestproduct = () => {
         </section>
       </div>
       <div className="flex flex-col gap-2 items-center">
-        {bestProduct.map((el) => {
+        {bestProduct?.map((el) => {
           return (
             <div key={el.boardId} className="w-[96%]">
               <ProductItem productDetail={el} />
