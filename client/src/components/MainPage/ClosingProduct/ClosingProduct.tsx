@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useQuery } from 'react-query';
+import { Link } from 'react-router-dom';
 import { ProductItemImg } from '../../_common/ProductItemImg/ProductItemImg';
 
 interface ClosingProductResp {
@@ -52,11 +53,13 @@ export const ClosingProduct = () => {
       <div className="flex gap-2 overflow-x-auto scrollbar-hide w-full">
         {closingProduct?.map((el) => {
           return (
-            <div key={el.boardId} className="flex flex-col ml-2 min-w-[120px] w-[120px]">
-              <ProductItemImg thumbnail={el.thumbnail} statusId={el.statusId} />
-              <p className="text-xs line-clamp-1">{el.title}</p>
-              <p className="text-base text-main-orange">{el.currentPrice} coin</p>
-            </div>
+            <Link key={el.boardId} to={`/detail/${el.boardId}`}>
+              <div className="flex flex-col ml-2 min-w-[120px] w-[120px]">
+                <ProductItemImg thumbnail={el.thumbnail} statusId={el.statusId} />
+                <p className="text-xs line-clamp-1">{el.title}</p>
+                <p className="text-base text-main-orange">{el.currentPrice} coin</p>
+              </div>
+            </Link>
           );
         })}
       </div>
