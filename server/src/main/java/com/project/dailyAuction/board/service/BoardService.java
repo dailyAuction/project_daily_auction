@@ -264,6 +264,14 @@ public class BoardService {
     public void bidBoard(String token, BoardDto.Patch patchDto) {
         Member member = memberService.findByAccessToken(token);
         Board board = find(patchDto.getBoardId());
+
+        // 자기글에 입찰 불가
+        if (member.getMemberId() == board.getSellerId()) {
+            new ResponseStatusException(ExceptionCode.CANT_BID_SLEF.getCode(),
+                    ExceptionCode.CANT_BID_SLEF.getMessage(),
+                    new IllegalArgumentException());
+        }
+
         int currentPrice = board.getCurrentPrice();
         int newPrice = patchDto.getNewPrice();
         if (board.getBidderId() != 0) {
