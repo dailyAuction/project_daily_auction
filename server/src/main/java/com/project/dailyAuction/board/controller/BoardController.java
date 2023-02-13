@@ -42,8 +42,6 @@ public class BoardController {
                                       @PathVariable("sort") int sort,
                                       @RequestParam int page,
                                       @RequestParam int size) {
-
-
         Page<Board> boardPage = boardService.findBoardPage(categoryId, page - 1, size, sort);
         List<Board> boards = boardPage.getContent();
         List<BoardDto.Response> responses = boardMapper.boardListToBoardDtoList(boards);
@@ -51,11 +49,12 @@ public class BoardController {
         return new PageDto(responses, boardPage);
     }
 
-    @PatchMapping("/bidding")
+    @PatchMapping("/{board-id}/bidding")
     @ResponseStatus(HttpStatus.OK)
     private void bidBoard(@RequestHeader(name = "Authorization") String token,
+                          @PathVariable("board-id") long boardId,
                           @RequestBody BoardDto.Patch patchDto) {
-        boardService.bidBoard(token, patchDto);
+        boardService.bidBoard(token, boardId, patchDto);
     }
 
     @DeleteMapping("/{board-id}")
