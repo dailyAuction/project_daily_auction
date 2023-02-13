@@ -33,11 +33,16 @@ export const ClosingProduct = () => {
     data: closingProduct,
     isLoading,
     isError,
-    error,
-  } = useQuery<ClosingProductResp[], Error>('closingProduct', getClosingProduct);
+  } = useQuery<ClosingProductResp[], Error>('closingProduct', getClosingProduct, {
+    retry: 0,
+    onError: (e) => console.log(e.message),
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>마감 임박 상품이 없습니다.</div>;
 
   return (
-    <div className=" w-full my-4">
+    <div className=" w-full my-4 px-2">
       <div className="flex items-center">
         <h1 className="text-lg m-2 mr-1 font-bold">마감 임박</h1>
         <svg
