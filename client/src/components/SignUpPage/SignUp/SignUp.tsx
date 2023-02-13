@@ -29,6 +29,7 @@ export const SignUp = () => {
     if (data.password !== data.confirmPassword) {
       setIsConfirm(false);
     } else {
+      setModalOpen(true);
       setIsConfirm(true);
     }
   });
@@ -102,7 +103,6 @@ export const SignUp = () => {
           </article>
           <button
             type="submit"
-            onClick={() => setModalOpen(true)}
             className={`w-full text-base mt-4 py-1.5 bg-border-color rounded-[10px] ${
               !isCheck && 'opacity-40 pointer-events-none'
             }`}>
