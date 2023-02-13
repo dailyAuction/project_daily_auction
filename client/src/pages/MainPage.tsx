@@ -5,6 +5,8 @@ import { ClosingProduct } from '../components/MainPage/ClosingProduct/ClosingPro
 import { Footer } from '../components/MainPage/Footer/Footer';
 import { ToList } from '../components/MainPage/ToList/ToList';
 import { MainHeader } from '../components/_common/Header/MainHeader/MainHeader';
+import { ScrollToTopBtn } from '../components/_common/ScrollToTopBtn/ScrollToTopBtn';
+import { TabBar } from '../components/_common/TabBar/TabBar';
 import { products } from '../mock/product';
 
 export const MainPage = () => {
@@ -12,13 +14,17 @@ export const MainPage = () => {
   const [bestProductDetail] = useState(products);
 
   return (
-    <main className="base-layout bg-white">
+    <main className="base-layout bg-white relative">
       <MainHeader>Daily Auction</MainHeader>
       <Banner />
       <ClosingProduct closingProductDetail={closingProductDetail} />
       <Bestproduct bestProductDetail={bestProductDetail} />
       <ToList />
       <Footer />
+      <div className="fixed bottom-0 sm:w-[500px] w-screen">
+        <TabBar />
+      </div>
+      <ScrollToTopBtn />
     </main>
   );
 };

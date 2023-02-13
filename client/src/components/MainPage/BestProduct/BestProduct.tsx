@@ -1,5 +1,5 @@
 import { ProductItem } from '../../_common/\bProductItem/ProductItem';
-import { TabBar } from '../../_common/TabBar/TabBar';
+import { CategoryList } from '../../_common/CategoryList/CategoryList';
 
 export const Bestproduct = ({ bestProductDetail }) => {
   return (
@@ -26,7 +26,7 @@ export const Bestproduct = ({ bestProductDetail }) => {
         </svg>
       </div>
       <div>
-        <TabBar />
+        <CategoryList sortState={''} setSortState={''} />
       </div>
       <div className="flex flex-col gap-2 items-center">
         {bestProductDetail.map((el) => {
