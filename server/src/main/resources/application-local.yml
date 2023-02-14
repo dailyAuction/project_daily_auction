@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/dailyAuction?serverTimezone=UTC&characterEncoding=UTF-8
+    username: user   # todo : ec2환경 변수에 저장
+    password: 1234   # todo : ec2환경 변수에 저장
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true;
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
+  redis:
+    host: localhost
+    port: 6379
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: yeogiyo007@gmail.com
+    password: pibrnoalgjanhzwo # todo : ec2환경 변수에 저장
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 767519204317-5d6r3imorm6euetge3oq1nkvbdgihnik.apps.googleusercontent.com   # todo : ec2환경 변수에 저장
+            clientSecret: ${CLIENT_SECRET_GOOGLE}  # todo : ec2환경 변수에 저장
+            scope:
+              - email
+          kakao:
+            clientId: 817c5fbdef0e3b673a764e0b464e6acb   # todo : ec2환경 변수에 저장
+            clientSecret: ${CLIENT_SECRET_KAKAO}   # todo : ec2환경 변수에 저장
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            authorization-grant-type: authorization_code
+            client-name: Kakao
+
+
+jwt:
+  key:
+    secret: ${JWT_SECRET_KEY}               # todo : ec2환경 변수에 저장
+  access-token-expiration-minutes: 30
+  refresh-token-expiration-minutes: 1440
