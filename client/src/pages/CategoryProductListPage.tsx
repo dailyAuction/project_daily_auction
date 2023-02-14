@@ -4,7 +4,7 @@ import { TabBar } from '../components/_common/TabBar/TabBar';
 import { MainHeader } from '../components/_common/Header/MainHeader/MainHeader';
 import { CategoryList } from '../components/_common/CategoryList/CategoryList';
 import { CATEGORIES } from '../constants/constants';
-import { ProductItem } from '../components/_common/\bProductItem/ProductItem';
+import { ProductItem } from '../components/_common/ProductItem/ProductItem';
 import { products } from '../mock/product';
 
 export const CategoryProductListPage = () => {

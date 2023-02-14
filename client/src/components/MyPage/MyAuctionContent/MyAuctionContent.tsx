@@ -1,4 +1,4 @@
-import { ProductItem } from '../../_common/\bProductItem/ProductItem';
+import { ProductItem } from '../../_common/ProductItem/ProductItem';
 
 export const MyAuctionContent = ({ details, status }) => {
   const viewDataFilter = details?.filter((el) => el.statusId === status);

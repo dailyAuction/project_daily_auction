@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useQuery } from 'react-query';
-import { ProductItem } from '../../_common/\bProductItem/ProductItem';
+import { ProductItem } from '../../_common/ProductItem/ProductItem';
 import { CATEGORIES } from '../../../constants/constants';
 import { ProductDetailResp } from '../../../types/product.type';
 
