@@ -19,7 +19,6 @@ export const ProductItem = ({ productDetail }: ProductItemProps) => {
 
   const location = useLocation().pathname;
   const page = location.includes('auctionList') ? 'register' : location.includes('joinList') ? 'participation' : '';
-  console.log(location);
 
   return (
     <Link to={`/detail/${boardId}`}>
