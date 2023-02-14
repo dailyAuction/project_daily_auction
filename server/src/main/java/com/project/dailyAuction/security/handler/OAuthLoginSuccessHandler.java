@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -35,16 +34,15 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
         var oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email;
-        List<String> authorities;
         //Google
         if (String.valueOf(oAuth2User.getAttributes()).startsWith("{s")) {
-            email = "[goo]"+String.valueOf(oAuth2User.getAttributes().get("email"));
+            email = "[goo]" + oAuth2User.getAttributes().get("email");
         }
         //Kakao
         else {
             Map<String, Object> map = (Map<String, Object>) oAuth2User.getAttributes().get("properties");
             Map<String, Object> emailMap = (Map<String, Object>) oAuth2User.getAttributes().get("kakao_account");
-            email = "[ka]"+String.valueOf(emailMap.get("email"));
+            email = "[ka]" + emailMap.get("email");
         }
         // 이메일 등록 여부 체크
         long memberId = 0;
@@ -57,7 +55,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             memberId = member.getMemberId();
             log.info("# Already exits");
         }
-        String accessToken = delegateAccessToken(email,memberId);
+        String accessToken = delegateAccessToken(email, memberId);
         String refreshToken = delegateRefreshToken(email);
 
         redirect(request, response, email, accessToken, refreshToken);
@@ -65,13 +63,13 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         log.info("# Authenticated successfully!");
     }
 
-    private void saveRefreshTokenToRedis(String email, String refreshToken){
+    private void saveRefreshTokenToRedis(String email, String refreshToken) {
 
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response, String username, String accessToken, String refreshToken) throws IOException {
 
-        String uri = createURI(accessToken,refreshToken).toString();
+        String uri = createURI(accessToken, refreshToken).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
