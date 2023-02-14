@@ -32,9 +32,6 @@ public class Member {
     @Column
     private String status;
 
-    @Column
-    private String Participation;
-
 //    @ManyToOne
 //    @JoinColumn(name = "notice_id")
 //    private Notice notice;
@@ -54,16 +51,5 @@ public class Member {
 
     public void changeCoin(int newCoin){
         this.coin += newCoin;
-    }
-
-    public List<Long> getParticipationList(){
-        if (this.Participation.equals("")){
-            return new ArrayList<>();
-        }
-        String[] participations = this.Participation.split(",");
-
-        return Arrays.stream(participations)
-                .mapToLong(a-> Long.parseLong(a)).boxed()
-                .collect(Collectors.toList());
     }
 }

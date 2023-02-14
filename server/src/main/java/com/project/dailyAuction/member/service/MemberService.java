@@ -1,8 +1,10 @@
 package com.project.dailyAuction.member.service;
 
 
+import com.project.dailyAuction.board.Mapper.BoardMapping;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
+import com.project.dailyAuction.boardMember.repository.BoardMemberRepository;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.etcService.EmailService;
 import com.project.dailyAuction.etcService.RandomCodeService;
@@ -31,6 +33,7 @@ import java.util.*;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
+    private final BoardMemberRepository boardMemberRepository;
     private final JwtTokenizer jwtTokenizer;
     private final EmailService emailService;
     private final RandomCodeService randomCodeService;
@@ -168,7 +171,11 @@ public class MemberService {
     public Page<Board> getParticipation(String token, int page, int size) {
         Member member = findByAccessToken(token);
 
-        List<Long> participationList = member.getParticipationList();
+        List<Long> participationList = new ArrayList<>();
+        List<BoardMapping> list = boardMemberRepository.findAllByMember(member);
+        for (BoardMapping map : list) {
+            participationList.add(map.getBoard().getBoardId());
+        }
         return boardRepository.findAllByBoardIdIn(participationList, PageRequest.of(page - 1, size));
     }
 
