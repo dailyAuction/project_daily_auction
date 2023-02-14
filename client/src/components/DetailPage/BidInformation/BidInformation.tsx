@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { userInfoAtom } from '../../../atoms/user';
 import { useHandleIsLogin } from '../../../hooks/useHandleIsLogin';
+import { useBidInformation } from './useBidInformation';
+import { productDetail } from '../../../mock/productDetail';
 
 type BidModalProps = {
   handleClose: () => void;
@@ -49,6 +51,7 @@ export const BidInformation = ({ bidCount, statusId, startingPrice, currentPrice
   };
 
   const { handleIsLogin } = useHandleIsLogin();
+  const { handleClickRePost, handleDeleteProduct } = useBidInformation();
 
   const userInfo = useRecoilValue(userInfoAtom);
 
@@ -61,7 +64,6 @@ export const BidInformation = ({ bidCount, statusId, startingPrice, currentPrice
         </article>
         <article className="flex w-full justify-between items-center">
           <span className="text-sm">입찰 횟수 : {bidCount}</span>
-          {/* TODO: 로그인 여부 확인 기능 추가 */}
           {statusId === 0 && authorId !== userInfo.memberId && (
             <button
               type="submit"
@@ -72,13 +74,12 @@ export const BidInformation = ({ bidCount, statusId, startingPrice, currentPrice
               입찰
             </button>
           )}
-          {/* TODO: 로그인 여부 확인 기능 추가/ 재등록, 삭제 API 연결 */}
           {statusId === 2 && authorId === userInfo.memberId && (
             <article className="flex items-center space-x-2">
-              <button type="submit" className="red-btn">
+              <button type="submit" className="red-btn" onClick={() => handleClickRePost(productDetail.boardId)}>
                 재등록
               </button>
-              <button type="submit" className="white-btn">
+              <button type="submit" className="white-btn" onClick={() => handleDeleteProduct(productDetail.boardId)}>
                 삭제
               </button>
             </article>
