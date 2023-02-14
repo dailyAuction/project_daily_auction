@@ -36,7 +36,7 @@ export const Login = () => {
 
   return (
     <main className="w-full flex flex-col mt-11 items-center space-y-5">
-      <section className="space-y-7 w-3/5">
+      <section className="space-y-7 w-4/5">
         <form className="space-y-2" onSubmit={onSubmit}>
           <article>
             <label className="text-sm">이메일</label>
