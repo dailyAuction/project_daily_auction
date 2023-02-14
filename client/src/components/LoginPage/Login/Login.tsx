@@ -6,10 +6,10 @@ import { userIdPassword } from '../../../mock/userIdPassword';
 import { FindPasswordModal } from '../FindPasswordModal/FindPasswordModal';
 import { REG_EMAIL, REG_PASSWORD } from '../../../constants/constants';
 
-interface LoginData {
+type LoginData = {
   email: string;
   password: string;
-}
+};
 
 export const Login = () => {
   const [isCorrect, setIsCorrect] = useState(true);

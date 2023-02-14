@@ -6,21 +6,30 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthModal } from '../SignUpModal/AuthModal';
 import { REG_EMAIL, REG_PASSWORD } from '../../../constants/constants';
 
-interface SignUpData {
+type SignUpData = {
   email: string;
   password: string;
   confirmPassword: string;
-}
+};
+
+type VerifyFormData = {
+  verify: boolean;
+  verifyEmailReg: 1 | 0 | -1;
+  verifyCode: string;
+};
 
 export const SignUp = () => {
   const navigate = useNavigate();
-  const [isModalOpen, setModalOpen] = useState(false);
 
+  const [isModalOpen, setModalOpen] = useState(false);
   const [isConfirm, setIsConfirm] = useState(true);
-  const [isCheck, setIsCheck] = useState(false);
-  const [verify, setVerify] = useState(false);
-  const [verifyEmailReg, setVerifyEmailReg] = useState<1 | 0 | -1>(0);
-  const [verifyCode, setVerifyCode] = useState('');
+  const [isAgreeCheck, setIsAgreeCheck] = useState(false);
+
+  const [verifyForm, setVerifyForm] = useState<VerifyFormData>({
+    verify: false,
+    verifyEmailReg: 0,
+    verifyCode: '',
+  });
 
   // 임시 인증번호 통신 가능시 삭제
   const AUTH_DATA = '111111';
@@ -45,19 +54,24 @@ export const SignUp = () => {
   const getAuthVerify = () => {
     const { email } = getValues();
     if (REG_EMAIL.test(email)) {
-      setVerifyEmailReg(1);
+      setVerifyForm((prev) => ({ ...prev, verifyEmailReg: 1 }));
       setModalOpen(true);
     } else {
-      setVerifyEmailReg(-1);
+      setVerifyForm((prev) => ({ ...prev, verifyEmailReg: -1 }));
     }
   };
 
   const handleVerify = () => {
-    if (verifyCode === AUTH_DATA) {
-      setVerify(true);
+    if (verifyForm.verifyCode === AUTH_DATA) {
+      // setVerify(true);
+      setVerifyForm((prev) => ({ ...prev, verify: true }));
     } else {
-      setVerify(false);
+      setVerifyForm((prev) => ({ ...prev, verify: false }));
     }
+  };
+
+  const handleVerifyCode = (e: string) => {
+    setVerifyForm((prev) => ({ ...prev, verifyCode: e }));
   };
 
   return (
@@ -89,7 +103,9 @@ export const SignUp = () => {
                 {errors.email?.type === 'required' && '이메일을 입력해주세요'}
                 {errors.email?.type === 'pattern' && errors.email?.message}
               </p>
-              <p className="text-xs text-[#FF0000]">{verifyEmailReg === -1 && '이메일 형식으로 입력해주세요'}</p>
+              <p className="text-xs text-[#FF0000]">
+                {verifyForm.verifyEmailReg === -1 && '이메일 형식으로 입력해주세요'}
+              </p>
             </article>
             <article>
               <span className="text-sm">인증번호</span>
@@ -98,15 +114,15 @@ export const SignUp = () => {
                   type="text"
                   className="input"
                   placeholder="인증번호"
-                  onChange={(e) => setVerifyCode(e.target.value)}
+                  onChange={(e) => handleVerifyCode(e.target.value)}
                 />
                 {/* TODO : 인증코드 확인 로직 필요 */}
                 <button type="button" className="white-btn w-2/6" onClick={handleVerify}>
                   인증
                 </button>
               </div>
-              <p className={`text-xs ${verify ? 'text-blue-600' : 'text-[#FF0000]'}`}>
-                {verify ? '인증에 성공하였습니다.' : '이메일 인증을 해주세요.'}
+              <p className={`text-xs ${verifyForm.verify ? 'text-blue-600' : 'text-[#FF0000]'}`}>
+                {verifyForm.verify ? '인증에 성공하였습니다.' : '이메일 인증을 해주세요.'}
               </p>
             </article>
             <article>
@@ -145,7 +161,7 @@ export const SignUp = () => {
               {!isConfirm && <p className="text-xs text-[#FF0000]">비밀번호가 일치하지 않습니다.</p>}
             </article>
             <article className="text-sm flex flex-row pt-5">
-              <input type="checkbox" className="mx-4" onClick={() => setIsCheck(!isCheck)} />
+              <input type="checkbox" className="mx-4" onClick={() => setIsAgreeCheck(!isAgreeCheck)} />
               <article className="opacity-60">
                 {/* TODO : 이용약관 페이지 추가 작업 */}
                 <span className="underline underline-offset-1 cursor-pointer">이용약관</span>
@@ -155,7 +171,7 @@ export const SignUp = () => {
             <button
               type="submit"
               className={`w-full text-base mt-4 py-1.5 bg-border-color rounded-[10px] ${
-                isCheck === true && verify === true ? '' : 'opacity-40 pointer-events-none'
+                isAgreeCheck === true && verifyForm.verify === true ? '' : 'opacity-40 pointer-events-none'
               }`}>
               회원가입
             </button>
