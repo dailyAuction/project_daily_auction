@@ -22,7 +22,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: yeogiyo007@gmail.com
-    password: pibrnoalgjanhzwo # todo : ec2환경 변수에 저장
+    password: ${MAIL_PASSWORD} # todo : ec2환경 변수에 저장
     properties:
       mail:
         smtp:
