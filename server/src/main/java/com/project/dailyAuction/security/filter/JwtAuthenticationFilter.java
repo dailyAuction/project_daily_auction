@@ -1,6 +1,7 @@
 package com.project.dailyAuction.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.dailyAuction.cache.CacheProcessor;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.security.dto.LoginDto;
 import com.project.dailyAuction.security.jwt.JwtTokenizer;
@@ -24,6 +25,7 @@ import java.util.Map;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
+    private final CacheProcessor cacheProcessor;
 
     @SneakyThrows
     @Override
@@ -51,6 +53,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 토큰 생성
         String accessToken = delegateAccessToken(member);
         String refreshToken = delegateRefreshToken(member);
+
+        cacheProcessor.saveRefreshTokenToRedis(member.getMemberId(),refreshToken);
 
         response.setHeader("AccessToken", "Bearer " + accessToken);
         response.setHeader("RefreshToken", "Bearer " + refreshToken);

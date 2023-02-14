@@ -1,5 +1,6 @@
 package com.project.dailyAuction.security.handler;
 
+import com.project.dailyAuction.cache.CacheProcessor;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import com.project.dailyAuction.security.jwt.JwtTokenizer;
@@ -26,6 +27,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
     private final JwtTokenizer jwtTokenizer;
     private final MemberService memberService;
+    private final CacheProcessor cacheProcessor;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -58,13 +60,11 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         String accessToken = delegateAccessToken(email, memberId);
         String refreshToken = delegateRefreshToken(email);
 
+        cacheProcessor.saveRefreshTokenToRedis(memberId, refreshToken);
+
         redirect(request, response, email, accessToken, refreshToken);
 
         log.info("# Authenticated successfully!");
-    }
-
-    private void saveRefreshTokenToRedis(String email, String refreshToken) {
-
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response, String username, String accessToken, String refreshToken) throws IOException {
