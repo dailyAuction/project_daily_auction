@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -15,7 +16,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Board {
+public class Board implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long boardId;
@@ -52,10 +53,10 @@ public class Board {
 //    @OneToMany(mappedBy = "board")
 //    private List<Notice> notices = new ArrayList<>();
 
-    public void changeLeadingBidder(long memberId, int newPrice) {
-        this.bidderId = memberId;
-        this.currentPrice = newPrice;
-    }
+//    public void changeLeadingBidder(long memberId, int newPrice) {
+//        this.bidderId = memberId;
+//        this.currentPrice = newPrice;
+//    }
 
     public Long[] getHistoryArray(){
         String[] histories = this.history.split(",");
@@ -64,15 +65,19 @@ public class Board {
                 .toArray(Long[]::new);
     }
 
-    public void updateHistory(int newPrice) {
-        this.history = this.history + "," + newPrice;
+//    public void updateHistory(int newPrice) {
+//        this.history = this.history + "," + newPrice;
+//    }
+
+//    public void upBidCount(){
+//        this.bidCount++;
+//    }
+
+    public void upViewCount(int viewCount) {
+        this.viewCount += viewCount;
     }
 
-    public void upBidCount(){
-        this.bidCount++;
-    }
-
-    public void upViewCount() {
-        this.viewCount++;
+    public void changeStatus(long statusId){
+        this.statusId = statusId;
     }
 }
