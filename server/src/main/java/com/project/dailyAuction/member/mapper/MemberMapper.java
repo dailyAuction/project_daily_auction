@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 public interface MemberMapper {
     default Member signupDtoToMember(MemberDto.Signup dto){
         if (!dto.isVerified()){
-            new ResponseStatusException(ExceptionCode.NOT_VERIFIED.getCode(), ExceptionCode.NOT_VERIFIED.getMessage(), new IllegalArgumentException());
+            throw new ResponseStatusException(ExceptionCode.NOT_VERIFIED.getCode(), ExceptionCode.NOT_VERIFIED.getMessage(), new IllegalArgumentException());
         }
         return Member.builder()
                 .email(dto.getEmail())
