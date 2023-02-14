@@ -50,8 +50,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // 토큰 생성
         String accessToken = delegateAccessToken(member);
+        String refreshToken = delegateRefreshToken(member);
 
         response.setHeader("AccessToken", "Bearer " + accessToken);
+        response.setHeader("RefreshToken", "Bearer " + refreshToken);
 
         this.getSuccessHandler().onAuthenticationSuccess(request,response,authResult);
     }
@@ -70,5 +72,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
 
         return accessToken;
+    }
+    // 리프레쉬토큰 생성 로직
+    private String delegateRefreshToken(Member member) {
+        String subject = member.getEmail();
+        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+
+        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
+
+        return refreshToken;
     }
 }

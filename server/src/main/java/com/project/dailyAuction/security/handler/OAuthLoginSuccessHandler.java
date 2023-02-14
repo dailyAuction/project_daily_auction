@@ -58,16 +58,20 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             log.info("# Already exits");
         }
         String accessToken = delegateAccessToken(email,memberId);
+        String refreshToken = delegateRefreshToken(email);
 
-
-        redirect(request, response, email, accessToken);
+        redirect(request, response, email, accessToken, refreshToken);
 
         log.info("# Authenticated successfully!");
     }
 
-    private void redirect(HttpServletRequest request, HttpServletResponse response, String username, String accessToken) throws IOException {
+    private void saveRefreshTokenToRedis(String email, String refreshToken){
 
-        String uri = createURI(accessToken).toString();
+    }
+
+    private void redirect(HttpServletRequest request, HttpServletResponse response, String username, String accessToken, String refreshToken) throws IOException {
+
+        String uri = createURI(accessToken,refreshToken).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
@@ -86,9 +90,21 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         return accessToken;
     }
 
-    private URI createURI(String accessToken) {
+    private String delegateRefreshToken(String email) {
+        String subject = email;
+        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+
+        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
+
+        return refreshToken;
+    }
+
+    private URI createURI(String accessToken, String refreshToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("Authorization", "Bearer " + accessToken);
+        queryParams.add("access-token", "Bearer " + accessToken);
+        queryParams.add("refresh-token", "Bearer " + accessToken);
+
 
         return UriComponentsBuilder
                 .newInstance()
