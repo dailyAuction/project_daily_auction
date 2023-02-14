@@ -61,14 +61,15 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         String refreshToken = delegateRefreshToken(email);
 
         cacheProcessor.saveRefreshTokenToRedis(memberId, refreshToken);
-
-        redirect(request, response, email, accessToken, refreshToken);
+        response.addHeader("MemberId", String.valueOf(memberId));
+        response.addHeader("Email", email);
+        response.addHeader("Coin", String.valueOf(memberId));
+        redirect(request, response, accessToken, refreshToken);
 
         log.info("# Authenticated successfully!");
     }
 
-    private void redirect(HttpServletRequest request, HttpServletResponse response, String username, String accessToken, String refreshToken) throws IOException {
-
+    private void redirect(HttpServletRequest request, HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
         String uri = createURI(accessToken, refreshToken).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
     }

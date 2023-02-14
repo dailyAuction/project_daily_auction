@@ -36,10 +36,11 @@ public class Member {
 //    @JoinColumn(name = "notice_id")
 //    private Notice notice;
 
-    public void setUserDetails(long memberId, String email, String password){
+    public void setUserDetails(long memberId, String email, String password,int coin){
         this.memberId = memberId;
         this.email = email;
         this.password = password;
+        this.coin = coin;
     }
     public void changePassword(String password){
         this.password = password;
