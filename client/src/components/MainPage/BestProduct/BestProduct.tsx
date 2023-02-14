@@ -3,33 +3,14 @@ import axios from 'axios';
 import { useQuery } from 'react-query';
 import { ProductItem } from '../../_common/\bProductItem/ProductItem';
 import { CATEGORIES } from '../../../constants/constants';
-
-interface BestProductResp {
-  boardId: string;
-  image: string[];
-  thumbnail: string;
-  authorId: number;
-  bidderId: number;
-  title: string;
-  description: string;
-  categoryId: number;
-  startingPrice: string;
-  currentPrice: string;
-  statusId: number;
-  createdAt: string;
-  finishedAt: string;
-  viewCount: string;
-  bidCount: string;
-  history: number[];
-  myPrice?: string;
-}
+import { ProductDetailResp } from '../../../types/product.type';
 
 export const Bestproduct = () => {
   const [categoryId, setCategoryId] = useState(0);
 
   const getBestProduct = async () => {
     const path = categoryId ? `${categoryId}/popular-item` : 'all-popular-item';
-    const { data } = await axios.get<BestProductResp[]>(`${process.env.REACT_APP_URL}/${path}`);
+    const { data } = await axios.get<ProductDetailResp[]>(`${process.env.REACT_APP_URL}/${path}`);
     return data;
   };
 
@@ -37,7 +18,7 @@ export const Bestproduct = () => {
     data: bestProduct,
     isLoading,
     isError,
-  } = useQuery<BestProductResp[], Error>('bestProduct', getBestProduct, {
+  } = useQuery<ProductDetailResp[], Error>('bestProduct', getBestProduct, {
     staleTime: 1000 * 20,
     retry: 0,
     onError: (e) => console.log(e.message),

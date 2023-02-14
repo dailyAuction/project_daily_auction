@@ -2,29 +2,10 @@ import axios from 'axios';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import { ProductItemImg } from '../../_common/ProductItemImg/ProductItemImg';
-
-interface ClosingProductResp {
-  boardId: string;
-  image: string[];
-  thumbnail: string;
-  authorId: number;
-  bidderId: number;
-  title: string;
-  description: string;
-  categoryId: number;
-  startingPrice: string;
-  currentPrice: string;
-  statusId: number;
-  createdAt: string;
-  finishedAt: string;
-  viewCount: string;
-  bidCount: string;
-  history: number[];
-  myPrice?: string;
-}
+import { ProductDetailResp } from '../../../types/product.type';
 
 const getClosingProduct = async () => {
-  const { data } = await axios.get<ClosingProductResp[]>(`${process.env.REACT_APP_URL}/imminent-item`);
+  const { data } = await axios.get<ProductDetailResp[]>(`${process.env.REACT_APP_URL}/imminent-item`);
   return data;
 };
 
@@ -33,7 +14,7 @@ export const ClosingProduct = () => {
     data: closingProduct,
     isLoading,
     isError,
-  } = useQuery<ClosingProductResp[], Error>('closingProduct', getClosingProduct, {
+  } = useQuery<ProductDetailResp[], Error>('closingProduct', getClosingProduct, {
     retry: 0,
     onError: (e) => console.log(e.message),
   });
