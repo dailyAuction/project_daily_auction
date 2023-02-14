@@ -13,7 +13,16 @@ export const MyAuctionList = () => {
 
   const getMyAuction = async () => {
     const { data } = await axios.get<ProductDetailResp[]>(
-      `${process.env.REACT_APP_URL}/members/${status}/my-auction-list`
+      `${process.env.REACT_APP_URL}/members/${status}/my-auction-list`,
+      {
+        params: {
+          page: '',
+          size: '',
+        },
+        headers: {
+          Authorization: `Bearer 액세스토큰`,
+        },
+      }
     );
     return data;
   };
