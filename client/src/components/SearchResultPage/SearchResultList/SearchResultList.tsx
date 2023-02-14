@@ -1,7 +1,6 @@
 import { useQuery } from 'react-query';
 import { useGetQueryString } from '../../../hooks/useGetQueryString';
 import { ProductItem } from '../../_common/\bProductItem/ProductItem';
-import { products } from '../../../mock/product';
 import { searchAPI } from '../../../api/searchAPI';
 
 export const SearchResultList = () => {
@@ -17,7 +16,7 @@ export const SearchResultList = () => {
   // TODO: 무한 스크롤 구현하기
   return (
     <section className="flex flex-col space-y-3">
-      {products.map((product) => (
+      {data.map((product) => (
         <ProductItem productDetail={product} key={product.boardId} />
       ))}
     </section>
