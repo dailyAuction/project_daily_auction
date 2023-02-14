@@ -1,7 +1,32 @@
+import { useState } from 'react';
+import axios from 'axios';
+import { useQuery } from 'react-query';
 import { ProductItem } from '../../_common/\bProductItem/ProductItem';
-import { CategoryList } from '../../_common/CategoryList/CategoryList';
+import { CATEGORIES } from '../../../constants/constants';
+import { ProductDetailResp } from '../../../types/product.type';
 
-export const Bestproduct = ({ bestProductDetail }) => {
+export const Bestproduct = () => {
+  const [categoryId, setCategoryId] = useState(0);
+
+  const getBestProduct = async () => {
+    const path = categoryId ? `${categoryId}/popular-item` : 'all-popular-item';
+    const { data } = await axios.get<ProductDetailResp[]>(`${process.env.REACT_APP_URL}/${path}`);
+    return data;
+  };
+
+  const {
+    data: bestProduct,
+    isLoading,
+    isError,
+  } = useQuery<ProductDetailResp[], Error>('bestProduct', getBestProduct, {
+    staleTime: 1000 * 20,
+    retry: 0,
+    onError: (e) => console.log(e.message),
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>카테고리별 인기상품이 없습니다.</div>;
+
   return (
     <div className="w-full">
       <div className="flex items-center">
@@ -25,11 +50,21 @@ export const Bestproduct = ({ bestProductDetail }) => {
           />
         </svg>
       </div>
-      <div>
-        <CategoryList sortState={''} setSortState={''} />
+      <div className="p-2 pb-4 overflow-x-scroll scrollbar-hide">
+        <section className="w-max space-x-3">
+          {CATEGORIES.map((el, i) => {
+            return (
+              <span key={el} onClick={() => setCategoryId(i)}>
+                <button type="button" className={`category-btn ${categoryId === i && 'bg-main-red text-white'}`}>
+                  {el}
+                </button>
+              </span>
+            );
+          })}
+        </section>
       </div>
       <div className="flex flex-col gap-2 items-center">
-        {bestProductDetail.map((el) => {
+        {bestProduct?.map((el) => {
           return (
             <div key={el.boardId} className="w-[96%]">
               <ProductItem productDetail={el} />
