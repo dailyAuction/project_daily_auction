@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { userIdPassword } from '../../../mock/userIdPassword';
 import { FindPasswordModal } from '../FindPasswordModal/FindPasswordModal';
+import { REG_EMAIL, REG_PASSWORD } from '../../../constants/constants';
 
 interface LoginData {
   email: string;
@@ -47,7 +48,7 @@ export const Login = () => {
               {...register('email', {
                 required: true,
                 pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  value: REG_EMAIL,
                   message: '이메일 형식으로 입력해주세요.',
                 },
               })}
@@ -66,7 +67,7 @@ export const Login = () => {
               {...register('password', {
                 required: true,
                 pattern: {
-                  value: /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+                  value: REG_PASSWORD,
                   message: '비밀번호를 8자 이상으로 숫자, 영문, 특수기호를 조합해서 사용하세요.',
                 },
               })}
