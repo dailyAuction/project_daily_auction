@@ -12,18 +12,15 @@ export const MyAuctionList = () => {
   const [status, setStatus] = useState(0);
 
   const getMyAuction = async () => {
-    const { data } = await axios.get<ProductDetailResp[]>(
-      `${process.env.REACT_APP_URL}/members/${status}/my-auction-list`,
-      {
-        params: {
-          page: '',
-          size: '',
-        },
-        headers: {
-          Authorization: `Bearer 액세스토큰`,
-        },
-      }
-    );
+    const { data } = await axios.get<ProductDetailResp[]>(`${process.env.REACT_APP_URL}/members/0/my-auction-list`, {
+      params: {
+        page: '',
+        size: '',
+      },
+      headers: {
+        Authorization: `Bearer token`,
+      },
+    });
     return data;
   };
 
@@ -31,7 +28,7 @@ export const MyAuctionList = () => {
     data: myAuctionList,
     isLoading,
     isError,
-  } = useQuery<ProductDetailResp[], Error>('bestProduct', getMyAuction, {
+  } = useQuery<ProductDetailResp[], Error>('myAuctionList', getMyAuction, {
     staleTime: 1000 * 20,
     retry: 0,
     onError: (e) => console.log(e.message),
