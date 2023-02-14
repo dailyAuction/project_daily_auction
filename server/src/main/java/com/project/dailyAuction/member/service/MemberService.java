@@ -58,7 +58,7 @@ public class MemberService {
     // 비밀번호 체크
     public void verifyPassword(Member member, String password) {
         if (!passwordEncoder().matches(password, member.getPassword())) {
-            new ResponseStatusException(ExceptionCode.WRONG_PASSWORD.getCode(), ExceptionCode.WRONG_PASSWORD.getMessage(), new IllegalArgumentException());
+            throw new ResponseStatusException(ExceptionCode.WRONG_PASSWORD.getCode(), ExceptionCode.WRONG_PASSWORD.getMessage(), new IllegalArgumentException());
         }
     }
 
@@ -70,7 +70,7 @@ public class MemberService {
     public void verifyExistEmail(String email) {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         if (optionalMember.isPresent()) {
-            new ResponseStatusException(ExceptionCode.MEMBER_EXISTS.getCode(), ExceptionCode.MEMBER_EXISTS.getMessage(), new IllegalArgumentException());
+            throw new ResponseStatusException(ExceptionCode.MEMBER_EXISTS.getCode(), ExceptionCode.MEMBER_EXISTS.getMessage(), new IllegalArgumentException());
         }
     }
 
@@ -122,7 +122,7 @@ public class MemberService {
     public String checkEmail(MemberDto.Email dto) throws MessagingException {
         String email = dto.getEmail();
         if (memberRepository.countByEmail(email) == 1) {
-            new ResponseStatusException(ExceptionCode.MEMBER_EXISTS.getCode(), ExceptionCode.MEMBER_EXISTS.getMessage(), new IllegalArgumentException());
+            throw new ResponseStatusException(ExceptionCode.MEMBER_EXISTS.getCode(), ExceptionCode.MEMBER_EXISTS.getMessage(), new IllegalArgumentException());
         }
 
         String code = randomCodeService.genCode();
@@ -134,7 +134,7 @@ public class MemberService {
     public void findPassword(MemberDto.Email dto) throws MessagingException {
         String email = dto.getEmail();
         if (memberRepository.countByEmail(email) == 0) {
-            new ResponseStatusException(ExceptionCode.MEMBER_NOT_FOUND.getCode(), ExceptionCode.MEMBER_NOT_FOUND.getMessage(), new IllegalArgumentException());
+            throw new ResponseStatusException(ExceptionCode.MEMBER_NOT_FOUND.getCode(), ExceptionCode.MEMBER_NOT_FOUND.getMessage(), new IllegalArgumentException());
         }
         Member member = findByEmail(email);
         String newPassword = randomPasswordService.genPassword();
