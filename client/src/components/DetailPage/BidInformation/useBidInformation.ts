@@ -4,11 +4,13 @@ import { useRecoilValue } from 'recoil';
 import { productDetailAPI } from '../../../api/boardsAPI';
 import { userInfoAtom } from '../../../atoms/user';
 
-export const useBidInformation = (
-  bidValue?: string,
-  setValidationMsg?: React.Dispatch<SetStateAction<string>>,
-  setBidValue?: React.Dispatch<SetStateAction<string>>
-) => {
+type UseBidInformationFactor = {
+  bidValue?: string;
+  setBidValue?: React.Dispatch<SetStateAction<string>>;
+  setValidationMsg?: React.Dispatch<SetStateAction<string>>;
+};
+
+export const useBidInformation = ({ bidValue, setBidValue, setValidationMsg }: UseBidInformationFactor) => {
   const navigate = useNavigate();
   const { coin: myCoin } = useRecoilValue(userInfoAtom);
 

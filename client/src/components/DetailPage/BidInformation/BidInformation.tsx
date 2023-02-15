@@ -19,7 +19,7 @@ const BidModal = ({ handleClose, currentPrice }: BidModalProps) => {
   const [bidValue, setBidValue] = useState('');
   const [validationMsg, setValidationMsg] = useState('');
 
-  const { handleClickBid, handleChange } = useBidInformation(bidValue, setBidValue, setValidationMsg);
+  const { handleClickBid, handleChange } = useBidInformation({ bidValue, setBidValue, setValidationMsg });
 
   const { coin: myCoin } = useRecoilValue(userInfoAtom);
 
@@ -66,7 +66,7 @@ export const BidInformation = () => {
   };
 
   const { handleIsLogin } = useHandleIsLogin();
-  const { handleClickRePost, handleDeleteProduct } = useBidInformation();
+  const { handleClickRePost, handleDeleteProduct } = useBidInformation({});
 
   const userInfo = useRecoilValue(userInfoAtom);
   const boardId = useLocation().pathname.split('/')[2];
