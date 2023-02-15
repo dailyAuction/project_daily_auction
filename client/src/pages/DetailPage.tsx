@@ -33,7 +33,7 @@ export const DetailPage = () => {
   return (
     <main className="base-layout">
       <SubHeader>상세 페이지</SubHeader>
-      <section className="content-layout relative">
+      <section className="content-layout">
         <ImageList url={image} />
         <h1 className="text-xl font-semibold">아주 아름다운 모자 판매합니다.</h1>
         <CategoryBtn>{CATEGORIES[categoryId]}</CategoryBtn>

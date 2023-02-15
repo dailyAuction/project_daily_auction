@@ -12,14 +12,16 @@ type BidModalProps = {
   handleClose: () => void;
 };
 
+// 입찰 모달
 const BidModal = ({ handleClose }: BidModalProps) => {
   const [bidValue, setBidValue] = useState(0);
   const onChange = (e) => {
     setBidValue(e.target.value);
   };
 
+  // TODO: 유효성 검사 로직 구현
   return (
-    <section className="bg-modal">
+    <section className="bg-modal z-10">
       <div className="modal-container">
         <article className="flex flex-col space-y-1">
           <span>현재 경매가</span>
