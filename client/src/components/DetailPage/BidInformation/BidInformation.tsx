@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { userInfoAtom } from '../../../atoms/user';
 import { useHandleIsLogin } from '../../../hooks/useHandleIsLogin';
 import { useBidInformation } from './useBidInformation';
+import { blockInvalidChar } from '../../../utils/blockInvalidChar';
 
 import { productDetailAPI } from '../../../api/boardsAPI';
 
@@ -14,12 +15,20 @@ type BidModalProps = {
 
 // 입찰 모달
 const BidModal = ({ handleClose }: BidModalProps) => {
-  const [bidValue, setBidValue] = useState(0);
-  const onChange = (e) => {
-    setBidValue(e.target.value);
+  const [bidValue, setBidValue] = useState('');
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    setBidValue(target.value);
+
+    // 맨 앞자리가 0인 경우, target.value 도 0이면 입력을 방지한다.
+    if (+bidValue === 0 && +target.value === 0) {
+      setBidValue('');
+    }
   };
 
-  // TODO: 유효성 검사 로직 구현
+  const { handleClickBid } = useBidInformation();
+
   return (
     <section className="bg-modal z-10">
       <div className="modal-container">
@@ -28,7 +37,14 @@ const BidModal = ({ handleClose }: BidModalProps) => {
           <span className="text-xl font-bold text-main-orange">120,000 coin</span>
         </article>
         <article>
-          <input placeholder="입찰가를 입력해주세요" onChange={onChange} value={bidValue} className="input" />
+          <input
+            placeholder="입찰가를 입력해주세요"
+            onChange={onChange}
+            value={bidValue}
+            className="input"
+            type="number"
+            onKeyDown={blockInvalidChar}
+          />
           <span className="text-xs text-main-red">현재 충전하신 코인이 부족합니다.</span>
         </article>
         <article className="flex self-end space-x-1 items-center">
@@ -36,7 +52,7 @@ const BidModal = ({ handleClose }: BidModalProps) => {
           <span className="text-bold text-main-orange">10,000 coin</span>
         </article>
         <article className="flex justify-between pt-3">
-          <button type="submit" className="red-btn">
+          <button type="submit" className="red-btn" onClick={() => handleClickBid(+bidValue)}>
             입찰
           </button>
           <button type="submit" className="white-btn" onClick={handleClose}>
