@@ -1,7 +1,12 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import { useRecoilValue } from 'recoil';
 import { userInfoAtom } from '../../../atoms/user';
 import { useHandleIsLogin } from '../../../hooks/useHandleIsLogin';
+import { useBidInformation } from './useBidInformation';
+
+import { productDetailAPI } from '../../../api/boardsAPI';
 
 type BidModalProps = {
   handleClose: () => void;
@@ -41,7 +46,7 @@ const BidModal = ({ handleClose }: BidModalProps) => {
   );
 };
 
-export const BidInformation = ({ bidCount, statusId, startingPrice, currentPrice, myPrice, authorId, bidderId }) => {
+export const BidInformation = () => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -49,8 +54,26 @@ export const BidInformation = ({ bidCount, statusId, startingPrice, currentPrice
   };
 
   const { handleIsLogin } = useHandleIsLogin();
+  const { handleClickRePost, handleDeleteProduct } = useBidInformation();
 
   const userInfo = useRecoilValue(userInfoAtom);
+  const boardId = useLocation().pathname.split('/')[2];
+
+  const { isLoading, error, data } = useQuery(
+    'productDetail',
+    async () => {
+      const res = await productDetailAPI.get(boardId);
+      return res.data;
+    },
+    {
+      onError: (e) => console.error(e),
+    }
+  );
+
+  const { bidCount, statusId, startingPrice, currentPrice, myPrice = null, authorId } = data || {};
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>에러가 발생하였습니다.</div>;
 
   return (
     <>
@@ -61,7 +84,6 @@ export const BidInformation = ({ bidCount, statusId, startingPrice, currentPrice
         </article>
         <article className="flex w-full justify-between items-center">
           <span className="text-sm">입찰 횟수 : {bidCount}</span>
-          {/* TODO: 로그인 여부 확인 기능 추가 */}
           {statusId === 0 && authorId !== userInfo.memberId && (
             <button
               type="submit"
@@ -72,13 +94,12 @@ export const BidInformation = ({ bidCount, statusId, startingPrice, currentPrice
               입찰
             </button>
           )}
-          {/* TODO: 로그인 여부 확인 기능 추가/ 재등록, 삭제 API 연결 */}
           {statusId === 2 && authorId === userInfo.memberId && (
             <article className="flex items-center space-x-2">
-              <button type="submit" className="red-btn">
+              <button type="submit" className="red-btn" onClick={() => handleClickRePost(boardId)}>
                 재등록
               </button>
-              <button type="submit" className="white-btn">
+              <button type="submit" className="white-btn" onClick={() => handleDeleteProduct(boardId)}>
                 삭제
               </button>
             </article>

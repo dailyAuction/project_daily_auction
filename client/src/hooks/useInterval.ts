@@ -22,9 +22,10 @@ export const useInterval = (callback: () => void, delay: number, shouldContinue?
       // 매 delay마다 interval을 실행합니다.
       // useEffect 훅이 종료되면 인터벌을 종료합니다.
       const id = setInterval(tick, delay);
+
       return () => clearInterval(id);
     }
-    // eslint-disable-next-line
-    else return () => null;
-  }, [delay]);
+
+    return () => null;
+  }, [delay, shouldContinue]);
 };
