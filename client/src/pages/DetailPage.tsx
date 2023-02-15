@@ -25,7 +25,7 @@ export const DetailPage = () => {
   );
 
   // data가 undefined, null인 경우 TypeError 발생, 아닐 경우에만 분해되도록 함.
-  const { image, categoryId, viewCount, finishedAt, statusId, description } = data || {};
+  const { image, categoryId, viewCount, finishedAt, statusId, description, history } = data || {};
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>에러가 발생하였습니다.</div>;
@@ -45,8 +45,8 @@ export const DetailPage = () => {
         <AuctionStatus finishedAt={finishedAt} statusId={statusId} />
 
         <BidInformation />
-        <Chart />
-        <article>{description}</article>
+        <article className="py-8 bg-white px-2">{description}</article>
+        <Chart initData={history} />
       </section>
       <TabBar />
     </main>
