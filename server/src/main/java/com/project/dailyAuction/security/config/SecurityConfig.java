@@ -1,5 +1,6 @@
 package com.project.dailyAuction.security.config;
 
+import com.project.dailyAuction.cache.CacheProcessor;
 import com.project.dailyAuction.member.service.MemberService;
 import com.project.dailyAuction.security.filter.JwtAuthenticationFilter;
 import com.project.dailyAuction.security.filter.JwtVerificationFilter;
@@ -26,7 +27,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
@@ -40,6 +40,8 @@ import java.util.stream.Collectors;
 public class SecurityConfig implements WebMvcConfigurer {
     private final JwtTokenizer jwtTokenizer;
     private final MemberService memberService;
+    private final CacheProcessor cacheProcessor;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -63,7 +65,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new OAuthLoginSuccessHandler(jwtTokenizer, memberService))
+                        .successHandler(new OAuthLoginSuccessHandler(jwtTokenizer, memberService, cacheProcessor))
                 )
         ;
         return http.build();
@@ -88,8 +90,9 @@ public class SecurityConfig implements WebMvcConfigurer {
 
         return new InMemoryClientRegistrationRepository(registrations);
     }
+
     private ClientRegistration getRegistration(OAuth2ClientProperties clientProperties, String client) {
-        if("google".equals(client)) {
+        if ("google".equals(client)) {
             OAuth2ClientProperties.Registration registration = clientProperties.getRegistration().get("google");
             return CommonOAuth2Provider.GOOGLE.getBuilder(client)
                     .clientId(registration.getClientId())
@@ -99,6 +102,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         }
         return null;
     }
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -120,7 +124,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         public void configure(HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer, cacheProcessor);
             jwtAuthenticationFilter.setFilterProcessesUrl("/login");
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new LoginFailureHandler());
@@ -138,9 +142,9 @@ public class SecurityConfig implements WebMvcConfigurer {
         public void configure(HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer, cacheProcessor);
             jwtAuthenticationFilter.setFilterProcessesUrl("/login");
-            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new OAuthLoginSuccessHandler(jwtTokenizer, memberService));
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new OAuthLoginSuccessHandler(jwtTokenizer, memberService, cacheProcessor));
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new LoginFailureHandler());
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer);

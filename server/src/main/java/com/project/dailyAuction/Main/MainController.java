@@ -1,6 +1,5 @@
 package com.project.dailyAuction.Main;
 
-import com.project.dailyAuction.Search.dto.KeywordDto;
 import com.project.dailyAuction.Search.dto.TopKeywordsDto;
 import com.project.dailyAuction.Search.entity.Keyword;
 import com.project.dailyAuction.Search.mapper.KeywordMapper;
@@ -28,14 +27,16 @@ public class MainController {
     private final SearchService searchService;
     private final BoardMapper boardMapper;
     private final KeywordMapper keywordMapper;
+
     // 검색
     @GetMapping("/{category-id}/search")
     @ResponseStatus(HttpStatus.OK)
     public PageDto search(@PathVariable("category-id") long categoryId,
-                       @RequestBody KeywordDto dto,
-                       @RequestParam int page,
-                       @RequestParam int size) {
-        Page<Board> boardPages = searchService.search(categoryId,dto,page,size);
+                          @RequestParam int page,
+                          @RequestParam int size,
+                          @RequestParam String keyword) {
+        log.info(keyword);
+        Page<Board> boardPages = searchService.search(categoryId, keyword, page, size);
         List<Board> boards = boardPages.getContent();
 
         return new PageDto(boardMapper.boardListToBoardDtoList(boards), boardPages);
@@ -71,8 +72,8 @@ public class MainController {
     @GetMapping("/all-popular-item")
     @ResponseStatus(HttpStatus.OK)
     public PageDto getAllPopularItem(@RequestParam int page,
-                                  @RequestParam int size) {
-        Page<Board> boardPages = searchService.getAllPopularItem(page,size);
+                                     @RequestParam int size) {
+        Page<Board> boardPages = searchService.getAllPopularItem(page, size);
         List<Board> boards = boardPages.getContent();
 
         return new PageDto(boardMapper.boardListToBoardDtoList(boards), boardPages);

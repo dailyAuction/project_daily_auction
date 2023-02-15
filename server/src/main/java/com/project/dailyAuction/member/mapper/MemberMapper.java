@@ -18,7 +18,6 @@ public interface MemberMapper {
                 .password(dto.getPassword())
                 .status(MemberStatusCode.활동회원.getMessage())
                 .coin(0)
-                .Participation("")
                 .build();
     }
 }

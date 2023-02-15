@@ -1,11 +1,9 @@
 package com.project.dailyAuction.Search.service;
 
-import com.project.dailyAuction.Search.dto.KeywordDto;
 import com.project.dailyAuction.Search.entity.Keyword;
 import com.project.dailyAuction.Search.repository.KeywordRepository;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
-import com.project.dailyAuction.code.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -28,13 +25,13 @@ public class SearchService {
     private final BoardRepository boardRepository;
     private final RedisTemplate<String, String> redisTemplate;
 
-    public Page<Board> search(long categoryId, KeywordDto dto, int page, int size) {
-        addSearchCountInRedis(dto.getKeyword());
+    public Page<Board> search(long categoryId, String keyword, int page, int size) {
+        addSearchCountInRedis(keyword);
 
         if (categoryId == 0) {
-            return boardRepository.findByTitleContaining(dto.getKeyword(), PageRequest.of(page - 1, size));
+            return boardRepository.findByTitleContaining(keyword, PageRequest.of(page - 1, size));
         } else {
-            return boardRepository.findByCategoryIdAndTitleContaining(categoryId, dto.getKeyword(), PageRequest.of(page - 1, size));
+            return boardRepository.findByCategoryIdAndTitleContaining(categoryId, keyword, PageRequest.of(page - 1, size));
         }
     }
 
