@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const blockInvalidChar = (e: React.KeyboardEvent) => {
-  // 백스페이스, 한글, 문자 제외 숫자만 입력 가능
-  if (/[a-z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣|+|-]/g.test(e.key) && e.key !== 'Backspace') e.preventDefault();
+// FIXME: 한글 문자, e 문자 눌리는 것 완정 방지하도록 수정
+export const blockInvalidChar = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  if (e.key === 'Process') e.preventDefault();
 };
