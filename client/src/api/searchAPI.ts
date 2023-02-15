@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { ProductDetailResp } from '../types/product.type';
 import { httpClient } from '../utils/httpClient';
 

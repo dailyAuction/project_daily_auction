@@ -2,7 +2,7 @@ import { ProductDetailResp } from '../types/product.type';
 import { httpClient } from '../utils/httpClient';
 
 export const productDetailAPI = {
-  url: `${process.env.REACT_APP_URL}/boards`,
-  get: (path: string) => httpClient.get<ProductDetailResp>(`/${path}`),
-  delete: (path: string) => httpClient.delete(`/${path}`),
+  url: `/boards`,
+  get: (path: string) => httpClient.get<ProductDetailResp>(`${productDetailAPI.url}/${path}`),
+  delete: (path: string) => httpClient.delete(`${productDetailAPI.url}/${path}`),
 };
