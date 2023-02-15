@@ -1,6 +1,7 @@
 package com.project.dailyAuction.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.dailyAuction.cache.CacheProcessor;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.security.dto.LoginDto;
 import com.project.dailyAuction.security.jwt.JwtTokenizer;
@@ -24,6 +25,7 @@ import java.util.Map;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
+    private final CacheProcessor cacheProcessor;
 
     @SneakyThrows
     @Override
@@ -50,8 +52,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // 토큰 생성
         String accessToken = delegateAccessToken(member);
+        String refreshToken = delegateRefreshToken(member);
 
+        cacheProcessor.saveRefreshTokenToRedis(member.getMemberId(),refreshToken);
+        response.setHeader("MemberId", String.valueOf(member.getMemberId()));
+        response.setHeader("Email", member.getEmail());
+        response.setHeader("Coin", String.valueOf(member.getCoin()));
         response.setHeader("AccessToken", "Bearer " + accessToken);
+        response.setHeader("RefreshToken", "Bearer " + refreshToken);
 
         this.getSuccessHandler().onAuthenticationSuccess(request,response,authResult);
     }
@@ -70,5 +78,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
 
         return accessToken;
+    }
+    // 리프레쉬토큰 생성 로직
+    private String delegateRefreshToken(Member member) {
+        String subject = member.getEmail();
+        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+
+        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
+
+        return refreshToken;
     }
 }

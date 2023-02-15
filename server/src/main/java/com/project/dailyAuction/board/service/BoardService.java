@@ -239,7 +239,7 @@ public class BoardService {
     public void deleteBoard(String token, long boardId) {
         Board target = find(boardId);
         if (target.getSellerId() != memberService.findByAccessToken(token).getMemberId()) {
-            new ResponseStatusException(ExceptionCode.NOT_WRITER.getCode(),
+            throw new ResponseStatusException(ExceptionCode.NOT_WRITER.getCode(),
                     ExceptionCode.NOT_WRITER.getMessage(),
                     new IllegalArgumentException());
         }
@@ -253,7 +253,7 @@ public class BoardService {
 
         // 자기글에 입찰 불가
         if (member.getMemberId() == board.getSellerId()) {
-            new ResponseStatusException(ExceptionCode.CANT_BID_SLEF.getCode(),
+            throw new ResponseStatusException(ExceptionCode.CANT_BID_SLEF.getCode(),
                     ExceptionCode.CANT_BID_SLEF.getMessage(),
                     new IllegalArgumentException());
         }
@@ -270,14 +270,14 @@ public class BoardService {
         }
         //코인이 부족하면 에러
         if (member.getCoin() < newPrice) {
-            new ResponseStatusException(ExceptionCode.NOT_ENOUGH_COIN.getCode(),
+            throw new ResponseStatusException(ExceptionCode.NOT_ENOUGH_COIN.getCode(),
                     ExceptionCode.NOT_ENOUGH_COIN.getMessage(),
                     new IllegalArgumentException());
         }
 
         //입찰가보다 낮거나 같으면 에러
         if (currentPrice >= newPrice) {
-            new ResponseStatusException(ExceptionCode.LESS_THAN_CURRENT.getCode(),
+            throw new ResponseStatusException(ExceptionCode.LESS_THAN_CURRENT.getCode(),
                     ExceptionCode.LESS_THAN_CURRENT.getMessage(),
                     new IllegalArgumentException());
         }
