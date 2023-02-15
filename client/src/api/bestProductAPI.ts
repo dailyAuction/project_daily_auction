@@ -1,12 +1,12 @@
 import { ProductDetailResp } from '../types/product.type';
 import { httpClient } from '../utils/httpClient';
 
-type MyAuctionListAPIFactor = {
+type bestProductAPIFactor = {
   path: string;
 };
 
 export const bestProductAPI = {
-  get: async ({ path }: MyAuctionListAPIFactor) => {
+  get: async ({ path }: bestProductAPIFactor) => {
     const res = await httpClient.get<ProductDetailResp[]>(`/${path}`);
     return res.data;
   },

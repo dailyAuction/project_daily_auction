@@ -4,7 +4,7 @@ import { ProductItemImg } from '../../_common/ProductItemImg/ProductItemImg';
 import { closingProductAPI } from '../../../api/closingProductAPI';
 
 export const ClosingProduct = () => {
-  const { isLoading, error, data } = useQuery('myAuction', () => closingProductAPI.get(), {
+  const { isLoading, error, data } = useQuery('closingProduct', () => closingProductAPI.get(), {
     // 현재 데이터가 없어서 쿼리를 1초단위로 보내는만큼 매초 에러가 발생해서 우선 주석처리 해두었습니다.
     // refetchOnMount: true,
     // refetchOnWindowFocus: true,

@@ -13,7 +13,7 @@ export const MyJoinList = () => {
   const [status, setStatus] = useState(0);
 
   const { isLoading, error, data } = useQuery(
-    'myAuction',
+    'myJoin',
     () => myAuctionListAPI.get({ sort: '', path: 'participation-list' }),
     { staleTime: 1000 * 20 }
   );
