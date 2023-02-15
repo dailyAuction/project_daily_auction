@@ -10,7 +10,9 @@ import com.project.dailyAuction.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
@@ -103,5 +105,16 @@ public class MemberController {
         List<Board> boards = boardPages.getContent();
 
         return new PageDto(boardMapper.boardListToBoardDtoList(boards),boardPages);
+    }
+
+    // 토큰 갱신
+    @GetMapping("/refresh-token")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity updateAccessToken(@RequestHeader(name = "RefreshToken")String refreshToken){
+        String newToken = memberService.genAccessToken(refreshToken);
+        HttpHeaders response = new HttpHeaders();
+        response.set("Authorization", newToken);
+
+        return ResponseEntity.ok().headers(response).body("");
     }
 }
