@@ -10,11 +10,15 @@ import { myAuctionListAPI } from '../../../api/myAuctionListAPI';
 export const MyAuctionList = () => {
   const [status, setStatus] = useState(0);
 
-  const { isLoading, error, data } = useQuery('myAuctionList', () => myAuctionListAPI.get({ sort: '' }), {
-    staleTime: 1000 * 20,
-    retry: 0,
-    onError: (e) => console.error(e),
-  });
+  const { isLoading, error, data } = useQuery(
+    'myAuction',
+    () => myAuctionListAPI.get({ sort: '', path: 'my-auction-list' }),
+    {
+      staleTime: 1000 * 20,
+      retry: 0,
+      onError: (e) => console.error(e),
+    }
+  );
 
   return (
     <div className="base-layout bg-white">
