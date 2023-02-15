@@ -13,9 +13,11 @@ export const PostProductPage = () => {
     setModalOpen(!modalOpen);
   }, [modalOpen]);
 
+  const ab = () => {};
+
   return (
     <main className="base-layout">
-      <div className="base-layout" onClick={handlerModal}>
+      <div className="base-layout" onClick={() => modalOpen && handlerModal()}>
         <SubHeader>상품 등록</SubHeader>
         <RegisterItemImg />
         <CategoryDropdown />
