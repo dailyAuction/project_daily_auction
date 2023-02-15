@@ -33,6 +33,7 @@ export const Chart = ({ initData }) => {
     ],
   });
   // FIXME: 반응형으로 화면 크기 바뀔 때 너비가 달라지지 않는 현상 있음.
+  // FIXME: 컴포넌트 마운트, 언마운트시에 제대로 렌더링되도록 useEffect 적용 필요해보임.
   return (
     <section className="flex flex-col space-y-2 w-full justify-center">
       <Line options={options} data={chartData} className="h-full bg-white px-2 w-full" />
