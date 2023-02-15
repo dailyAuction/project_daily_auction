@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useInterval } from './useInterval';
 
 export const useGetTimeRemain = (finishedAt: string) => {
   const [realTime, setRealTime] = useState(new Date());
-  const [timeRemain, setTimeRemain] = useState('');
+  const [timeRemain, setTimeRemain] = useState('00 : 00 : 00');
+  const [shoudContinue, setShouldContinue] = useState(true);
   const finishTime = new Date(finishedAt);
   const timeDiff = +finishTime - +realTime;
 
@@ -16,11 +17,17 @@ export const useGetTimeRemain = (finishedAt: string) => {
   useInterval(
     () => {
       setRealTime(new Date());
-      setTimeRemain(`${hours} : ${minutes} : ${seconds}`);
+      setTimeRemain(
+        `${String(hours).padStart(2, '0')} : ${String(minutes).padStart(2, '0')} : ${String(seconds).padStart(2, '0')}`
+      );
     },
     1000,
-    timeDiff >= 0
+    shoudContinue
   );
+
+  useEffect(() => {
+    if (timeDiff <= 0) setShouldContinue(false);
+  }, [realTime]);
 
   return { timeRemain };
 };

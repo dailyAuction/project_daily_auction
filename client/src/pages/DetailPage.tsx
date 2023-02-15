@@ -1,3 +1,5 @@
+import { useLocation } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import { CategoryBtn } from '../components/_common/CategoryBtn/CategoryBtn';
 import { AuctionStatus } from '../components/DetailPage/AuctionStatus/AuctionStatus';
 import { BidInformation } from '../components/DetailPage/BidInformation/BidInformation';
@@ -6,37 +8,45 @@ import { ImageList } from '../components/DetailPage/ImageList/ImageList';
 import { TabBar } from '../components/_common/TabBar/TabBar';
 import { SubHeader } from '../components/_common/Header/SubHeader/SubHeader';
 import { CATEGORIES } from '../constants/constants';
-import { productDetail } from '../mock/productDetail';
+import { productDetailAPI } from '../api/boardsAPI';
 
 export const DetailPage = () => {
+  const boardId = useLocation().pathname.split('/')[2];
+
+  const { isLoading, error, data } = useQuery(
+    'productDetail',
+    async () => {
+      const res = await productDetailAPI.get(boardId);
+      return res.data;
+    },
+    {
+      onError: (e) => console.error(e),
+    }
+  );
+
+  // data가 undefined, null인 경우 TypeError 발생, 아닐 경우에만 분해되도록 함.
+  const { image, categoryId, viewCount, finishedAt, statusId, description } = data || {};
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>에러가 발생하였습니다.</div>;
+
   return (
     <main className="base-layout">
       <SubHeader>상세 페이지</SubHeader>
       <section className="content-layout relative">
-        <ImageList url={productDetail.image} />
+        <ImageList url={image} />
         <h1 className="text-xl font-semibold">아주 아름다운 모자 판매합니다.</h1>
-        <CategoryBtn>{CATEGORIES[productDetail.categoryId]}</CategoryBtn>
+        <CategoryBtn>{CATEGORIES[categoryId]}</CategoryBtn>
         <article className="flex justify-between px-2">
-          <span>id : {productDetail.boardId}</span>
-          <span>조회수 : {productDetail.viewCount}</span>
+          <span>id : {boardId}</span>
+          <span>조회수 : {viewCount}</span>
         </article>
 
-        <AuctionStatus finishedAt={productDetail.finishedAt} statusId={productDetail.statusId} />
+        <AuctionStatus finishedAt={finishedAt} statusId={statusId} />
 
-        <BidInformation
-          bidCount={productDetail.bidCount}
-          statusId={productDetail.statusId}
-          startingPrice={productDetail.startingPrice}
-          currentPrice={productDetail.currentPrice}
-          myPrice={productDetail.myPrice}
-          authorId={productDetail.authorId}
-          bidderId={productDetail.bidderId}
-        />
+        <BidInformation />
         <Chart />
-        <article>
-          엄청난 모자들을 파는 경매가 진행 되고 있는 이 경매는 정말 엄청나고 굉장한 디자인을 가진 모자들을 한번에
-          판매하고 있습니다.
-        </article>
+        <article>{description}</article>
       </section>
       <TabBar />
     </main>
