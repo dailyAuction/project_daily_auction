@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { useGetQueryString } from '../../../hooks/useGetQueryString';
-import { ProductItem } from '../../_common/\bProductItem/ProductItem';
+import { ProductItem } from '../../_common/ProductItem/ProductItem';
 import { searchAPI } from '../../../api/searchAPI';
 
 export const SearchResultList = () => {

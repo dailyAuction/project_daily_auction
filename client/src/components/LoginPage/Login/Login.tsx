@@ -4,11 +4,12 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { userIdPassword } from '../../../mock/userIdPassword';
 import { FindPasswordModal } from '../FindPasswordModal/FindPasswordModal';
+import { REG_EMAIL, REG_PASSWORD } from '../../../constants/constants';
 
-interface LoginData {
+type LoginData = {
   email: string;
   password: string;
-}
+};
 
 export const Login = () => {
   const [isCorrect, setIsCorrect] = useState(true);
@@ -36,7 +37,7 @@ export const Login = () => {
 
   return (
     <main className="w-full flex flex-col mt-11 items-center space-y-5">
-      <section className="space-y-7 w-3/5">
+      <section className="space-y-7 w-4/5">
         <form className="space-y-2" onSubmit={onSubmit}>
           <article>
             <label className="text-sm">이메일</label>
@@ -47,7 +48,7 @@ export const Login = () => {
               {...register('email', {
                 required: true,
                 pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  value: REG_EMAIL,
                   message: '이메일 형식으로 입력해주세요.',
                 },
               })}
@@ -66,8 +67,8 @@ export const Login = () => {
               {...register('password', {
                 required: true,
                 pattern: {
-                  value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$/,
-                  message: '비밀번호를 8~16자로 영문 대소문자, 숫자, 특수기호를 조합해서 사용하세요.',
+                  value: REG_PASSWORD,
+                  message: '비밀번호를 8자 이상으로 숫자, 영문, 특수기호를 조합해서 사용하세요.',
                 },
               })}
             />

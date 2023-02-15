@@ -10,7 +10,17 @@ declare module 'react-query/types/react/QueryClientProvider' {
 }
 
 export const App = () => {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
 
   return (
     <div className="flex items-center justify-center w-screen h-screen bg-background-desktop">
