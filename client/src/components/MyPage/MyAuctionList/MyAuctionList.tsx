@@ -10,14 +10,15 @@ import { myAuctionListAPI } from '../../../api/myAuctionListAPI';
 export const MyAuctionList = () => {
   const [status, setStatus] = useState(0);
 
+  const queryOptions = {
+    staleTime: 1000 * 20,
+    retry: 0,
+  };
+
   const { isLoading, error, data } = useQuery(
     'myAuction',
     () => myAuctionListAPI.get({ sort: '', path: 'my-auction-list' }),
-    {
-      staleTime: 1000 * 20,
-      retry: 0,
-      onError: (e) => console.error(e),
-    }
+    { staleTime: 1000 * 20 }
   );
 
   return (

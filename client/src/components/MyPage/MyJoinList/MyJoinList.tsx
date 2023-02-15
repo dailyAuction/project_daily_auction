@@ -15,11 +15,7 @@ export const MyJoinList = () => {
   const { isLoading, error, data } = useQuery(
     'myAuction',
     () => myAuctionListAPI.get({ sort: '', path: 'participation-list' }),
-    {
-      staleTime: 1000 * 20,
-      retry: 0,
-      onError: (e) => console.error(e),
-    }
+    { staleTime: 1000 * 20 }
   );
 
   return (
