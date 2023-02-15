@@ -4,14 +4,13 @@ import { useRecoilValue } from 'recoil';
 import { productDetailAPI } from '../../../api/boardsAPI';
 import { userInfoAtom } from '../../../atoms/user';
 
-type UseBidInformationFactor = {
+type UseBidInformationModalFactor = {
   bidValue?: string;
   setBidValue?: React.Dispatch<SetStateAction<string>>;
   setValidationMsg?: React.Dispatch<SetStateAction<string>>;
 };
 
-export const useBidInformation = ({ bidValue, setBidValue, setValidationMsg }: UseBidInformationFactor) => {
-  const navigate = useNavigate();
+export const useBidInformationModal = ({ bidValue, setBidValue, setValidationMsg }: UseBidInformationModalFactor) => {
   const { coin: myCoin } = useRecoilValue(userInfoAtom);
 
   // bidValue 변경 핸들러
@@ -42,6 +41,12 @@ export const useBidInformation = ({ bidValue, setBidValue, setValidationMsg }: U
     }
   };
 
+  return { handleClickBid, handleChange };
+};
+
+export const useBidInformation = () => {
+  const navigate = useNavigate();
+
   // 판매자가 재등록 및 삭제할 때 사용되는 핸들러
   const handleClickRePost = (boardId: string) => {
     // boardId로 재등록 요청된 게시글 데이터를 조회할 수 있음.
@@ -61,5 +66,5 @@ export const useBidInformation = ({ bidValue, setBidValue, setValidationMsg }: U
     }
   };
 
-  return { handleClickRePost, handleDeleteProduct, handleClickBid, handleChange };
+  return { handleClickRePost, handleDeleteProduct };
 };

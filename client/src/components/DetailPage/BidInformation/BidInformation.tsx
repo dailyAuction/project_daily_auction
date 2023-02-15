@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { useRecoilValue } from 'recoil';
 import { userInfoAtom } from '../../../atoms/user';
 import { useHandleIsLogin } from '../../../hooks/useHandleIsLogin';
-import { useBidInformation } from './useBidInformation';
+import { useBidInformation, useBidInformationModal } from './useBidInformation';
 
 import { productDetailAPI } from '../../../api/boardsAPI';
 import { blockInvalidChar } from '../../../utils/blockInvalidChar';
@@ -19,7 +19,7 @@ const BidModal = ({ handleClose, currentPrice }: BidModalProps) => {
   const [bidValue, setBidValue] = useState('');
   const [validationMsg, setValidationMsg] = useState('');
 
-  const { handleClickBid, handleChange } = useBidInformation({ bidValue, setBidValue, setValidationMsg });
+  const { handleClickBid, handleChange } = useBidInformationModal({ bidValue, setBidValue, setValidationMsg });
 
   const { coin: myCoin } = useRecoilValue(userInfoAtom);
 
@@ -66,7 +66,7 @@ export const BidInformation = () => {
   };
 
   const { handleIsLogin } = useHandleIsLogin();
-  const { handleClickRePost, handleDeleteProduct } = useBidInformation({});
+  const { handleClickRePost, handleDeleteProduct } = useBidInformation();
 
   const userInfo = useRecoilValue(userInfoAtom);
   const boardId = useLocation().pathname.split('/')[2];
