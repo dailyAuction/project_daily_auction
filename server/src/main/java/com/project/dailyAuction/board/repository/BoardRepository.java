@@ -59,4 +59,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Page<Board> getBoardsByCreatedAtAfter(LocalDateTime time, Pageable pageable);
 
     Page<Board> findBoardsByCategoryIdAndCreatedAt(long categoryId, LocalDateTime time, Pageable pageable);
+
+    @Modifying
+    @Query(value = "update board set current_price =:price where board_id =:boardId", nativeQuery = true)
+    void updatePrice(Long boardId, int price);
 }

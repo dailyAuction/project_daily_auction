@@ -94,6 +94,17 @@ public class CacheProcessor {
             keywordRepository.updateSearchedCnt(keyword, searchedCnt);
         }
     }
+    @Transactional
+    public void updateBoardPriceToMySql() {
+        Set<String> redisKeys = redisTemplate.keys("boardPrice*");
+        Iterator<String> it = redisKeys.iterator();
+        while (it.hasNext()) {
+            String data = it.next();
+            long boardId = Long.parseLong(data.split("::")[1]);
+            int price = Integer.parseInt(redisTemplate.opsForValue().get(data));
+            boardRepository.updatePrice(boardId, price);
+        }
+    }
 
     //bidding 관련
     @Transactional
@@ -157,7 +168,8 @@ public class CacheProcessor {
                         "boardBidCount*",
                         "boardLeadingBidder*",
                         "boardViewCount*",
-                        "SearchedCount*"));
+                        "SearchedCount*",
+                        "boardPrice*"));
                 return null;
             }
         });
