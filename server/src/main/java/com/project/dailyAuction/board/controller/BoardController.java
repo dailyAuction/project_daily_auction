@@ -27,17 +27,17 @@ public class BoardController {
         boardService.setFinishedTimeToRedis(board.getBoardId(),board.getFinishedAt());
     }
 
-    @GetMapping("/{board-id}")
-    @ResponseStatus(HttpStatus.OK)
-    public BoardDto.Response getBoard(@RequestHeader(name = "Authorization", required = false) String token,
-                                      @PathVariable("board-id") long boardId) {
-        int viewCount = boardService.addViewCntToRedis(boardId);
-        int bidCount = boardService.getBidCountInRedis(boardId);
-        long bidderId = boardService.getBidderInRedis(boardId);
-        String history = boardService.getHistoryInRedis(boardId);
-        BoardDto.Response response = boardService.getDetailPage(token, boardId, viewCount,bidCount,bidderId,history);
-        return response;
-    }
+//    @GetMapping("/{board-id}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public BoardDto.Response getBoard(@RequestHeader(name = "Authorization", required = false) String token,
+//                                      @PathVariable("board-id") long boardId) {
+//        int viewCount = boardService.addViewCntToRedis(boardId);
+//        int bidCount = boardService.getBidCountInRedis(boardId);
+//        long bidderId = boardService.getBidderInRedis(boardId);
+//        String history = boardService.getHistoryInRedis(boardId);
+//        BoardDto.Response response = boardService.getDetailPage(token, boardId, viewCount,bidCount,bidderId,history);
+//        return response;
+//    }
 
     @GetMapping("/{sort}/{category-id}")
     @ResponseStatus(HttpStatus.OK)
@@ -58,7 +58,7 @@ public class BoardController {
     private void bidBoard(@RequestHeader(name = "Authorization") String token,
                           @PathVariable("board-id") long boardId,
                           @RequestBody BoardDto.Patch patchDto) {
-        boardService.bidBoard(token, boardId, patchDto);
+        boardService.bidBoard(token, boardId, patchDto.getNewPrice());
     }
 
     @DeleteMapping("/{board-id}")

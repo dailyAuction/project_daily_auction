@@ -66,8 +66,8 @@ public class BoardService {
     public BoardDto.Response getDetailPage(String token, long boardId, int viewCount, int bidCount, long bidderId, String history) {
         Board target = find(boardId);
 
-        Integer[] histories = (Integer[]) Arrays.stream(history.split(","))
-                .mapToInt(Integer::parseInt).boxed().toArray();
+        Integer[] histories = Arrays.stream(history.split(","))
+                .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
 
 
         BoardDto.Response response = BoardDto.Response.builder()
@@ -247,7 +247,7 @@ public class BoardService {
     }
 
 
-    public void bidBoard(String token, long boardId, BoardDto.Patch patchDto) {
+    public void bidBoard(String token, long boardId, int newPrice) {
         Member member = memberService.findByAccessToken(token);
         Board board = find(boardId);
 
@@ -259,7 +259,7 @@ public class BoardService {
         }
 
         int currentPrice = board.getCurrentPrice();
-        int newPrice = patchDto.getNewPrice();
+//        int newPrice = patchDto.getNewPrice();
         if (board.getBidderId() != 0) {
             Member lastMember = memberService.find(board.getBidderId());
             //코인 증가
