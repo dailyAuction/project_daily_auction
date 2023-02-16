@@ -9,6 +9,11 @@ export const CategoryDropdown = ({ productInfo, setProductInfo }) => {
     setOpen(!open);
   };
 
+  const handlerOnClickCategory = (idx: number) => {
+    setProductInfo({ ...productInfo, category: CATEGORIES[idx] });
+    setOpen(false);
+  };
+
   return (
     <div className="w-full border-b-2">
       <div className="relative">
@@ -46,7 +51,7 @@ export const CategoryDropdown = ({ productInfo, setProductInfo }) => {
           <div className="absolute flex flex-wrap items-center h-20 mt-2 pl-2 py-2 bg-white rounded-md z-20">
             {CATEGORIES.map((item, idx) => {
               return (
-                <div onClick={() => setProductInfo({ ...productInfo, category: CATEGORIES[idx] })} key={item}>
+                <div key={item} onClick={() => handlerOnClickCategory(idx)}>
                   <CategoryBtn key={item}>{item}</CategoryBtn>
                 </div>
               );
