@@ -15,7 +15,7 @@ export const DetailPage = () => {
   const boardId = useLocation().pathname.split('/')[2];
 
   // 웹소켓 연결
-  const { msg: currentPrice, sendBid } = useWebsocket(`/sub/board-id/${boardId}`);
+  const { response, sendBid } = useWebsocket(`/sub/board-id/${boardId}`);
 
   const { isLoading, error, data } = useQuery(
     'productDetail',
@@ -48,9 +48,9 @@ export const DetailPage = () => {
 
         <AuctionStatus finishedAt={finishedAt} statusId={statusId} />
 
-        <BidInformation currentPrice={currentPrice} sendBid={sendBid} />
+        <BidInformation reatTimeData={response} sendBid={sendBid} />
         <article className="py-8 bg-white px-2">{description}</article>
-        <Chart initData={history} />
+        <Chart realTimeData={response} initData={history} />
       </section>
       <TabBar />
     </main>

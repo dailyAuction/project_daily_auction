@@ -1,6 +1,7 @@
 import { Chart as ChartJS, CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { ProductDetailRealtimeResp } from '../../../types/product.type';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Title);
 
@@ -17,9 +18,13 @@ export const options = {
   },
 };
 
-// TODO: 웹소켓 적용하여 data 및 chartData 실시간 업데이트 구현
+type ChartProps = {
+  initData: number[];
+  realTimeData: ProductDetailRealtimeResp;
+};
 
-export const Chart = ({ initData }) => {
+export const Chart = ({ realTimeData, initData }: ChartProps) => {
+  const { history } = realTimeData;
   const [data, setData] = useState(initData);
   const [chartData, setChartData] = useState({
     labels: data,
@@ -32,6 +37,11 @@ export const Chart = ({ initData }) => {
       },
     ],
   });
+
+  useEffect(() => {
+    if (history) setData(history.split('').map((price) => +price));
+  }, [history]);
+
   // FIXME: 반응형으로 화면 크기 바뀔 때 너비가 달라지지 않는 현상 있음.
   // FIXME: 컴포넌트 마운트, 언마운트시에 제대로 렌더링되도록 useEffect 적용 필요해보임.
   return (

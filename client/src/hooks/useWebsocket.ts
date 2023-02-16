@@ -2,7 +2,7 @@ import { Client } from '@stomp/stompjs';
 import { useEffect, useState } from 'react';
 
 export const useWebsocket = (subEndpoint = '/sub/board-id/2') => {
-  const [msg, setMsg] = useState('');
+  const [response, setResponse] = useState<any>({});
 
   // 웹소켓 연결을 위한 stomp 클라이언트 생성
   const client = new Client({
@@ -20,7 +20,7 @@ export const useWebsocket = (subEndpoint = '/sub/board-id/2') => {
     client.activate();
     client.onConnect = (frame) => {
       console.log(`connected: ${frame}`);
-      client.subscribe(subEndpoint, (res) => setMsg(res.body));
+      client.subscribe(subEndpoint, (res) => setResponse(res.body));
     };
 
     // 컴포넌트 언마운트시 연결을 해제
@@ -42,5 +42,5 @@ export const useWebsocket = (subEndpoint = '/sub/board-id/2') => {
     });
   };
 
-  return { msg, sendBid };
+  return { response, sendBid };
 };
