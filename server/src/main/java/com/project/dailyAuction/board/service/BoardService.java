@@ -61,7 +61,7 @@ public class BoardService {
     }
 
     //    @Cacheable(key = "#boardId", value = "findBoard")
-    public BoardDto.Response getDetailPage(String token, long boardId, int viewCount, int bidCount, long bidderId, String history) {
+    public BoardDto.Response getDetailPage(String token, long boardId,int currentPrice, int viewCount, int bidCount, long bidderId, String history) {
         Board target = find(boardId);
 
         Integer[] histories = Arrays.stream(history.split(","))
@@ -76,7 +76,7 @@ public class BoardService {
                 .image(target.getImage())
                 .thumbnail(target.getThumbnail())
                 .startingPrice(target.getStartingPrice())
-                .currentPrice(target.getCurrentPrice())
+                .currentPrice(currentPrice)
                 .createdAt(target.getCreatedAt())
                 .finishedAt(target.getFinishedAt())
                 .viewCount(viewCount)
