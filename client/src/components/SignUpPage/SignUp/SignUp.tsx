@@ -2,15 +2,19 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useMutation } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthModal } from '../SignUpModal/AuthModal';
 import { REG_EMAIL, REG_PASSWORD } from '../../../constants/constants';
+import { MemberAuthData } from '../../../types/member.type';
+import { signupAPI } from '../../../api/signupAPI';
+import { useVerify } from './useVerify';
 
-type SignUpData = {
-  email: string;
-  password: string;
+type SignUpData = MemberAuthData;
+
+type SignUpConfirmData = {
   confirmPassword: string;
-};
+} & MemberAuthData;
 
 type VerifyFormData = {
   verify: boolean;
@@ -31,47 +35,34 @@ export const SignUp = () => {
     verifyCode: '',
   });
 
-  // 임시 인증번호 통신 가능시 삭제
-  const AUTH_DATA = '111111';
-
   const {
     register,
     handleSubmit,
     getValues,
     formState: { errors },
-  } = useForm<SignUpData>();
+  } = useForm<SignUpConfirmData>();
+  const { email } = getValues();
 
-  const onSubmit = handleSubmit((data: SignUpData) => {
-    // confirm data가 같은지 확인.
+  const { getAuthVerify, handleVerify, verifyError } = useVerify({ email, setModalOpen, verifyForm, setVerifyForm });
+
+  const { mutate: postSignUp } = useMutation((signUpData: SignUpData) => {
+    return signupAPI.post(signUpData);
+  });
+
+  const onSubmit = handleSubmit((data: SignUpConfirmData) => {
+    const signUpData: SignUpData = { email: data.email, password: data.password };
     if (data.password !== data.confirmPassword) {
       setIsConfirm(false);
     } else {
+      postSignUp(signUpData);
       setIsConfirm(true);
       navigate('/login');
     }
   });
 
-  const getAuthVerify = () => {
-    const { email } = getValues();
-    if (REG_EMAIL.test(email)) {
-      setVerifyForm((prev) => ({ ...prev, verifyEmailReg: 1 }));
-      setModalOpen(true);
-    } else {
-      setVerifyForm((prev) => ({ ...prev, verifyEmailReg: -1 }));
-    }
-  };
-
-  const handleVerify = () => {
-    if (verifyForm.verifyCode === AUTH_DATA) {
-      // setVerify(true);
-      setVerifyForm((prev) => ({ ...prev, verify: true }));
-    } else {
-      setVerifyForm((prev) => ({ ...prev, verify: false }));
-    }
-  };
-
-  const handleVerifyCode = (e: string) => {
-    setVerifyForm((prev) => ({ ...prev, verifyCode: e }));
+  const handleVerifyCode = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    setVerifyForm((prev) => ({ ...prev, verifyCode: target.value }));
   };
 
   return (
@@ -83,6 +74,7 @@ export const SignUp = () => {
               <span className="text-sm">이메일</span>
               <div className="flex space-x-2">
                 <input
+                  id="email"
                   type="email"
                   placeholder="이메일"
                   className="input"
@@ -110,12 +102,7 @@ export const SignUp = () => {
             <article>
               <span className="text-sm">인증번호</span>
               <div className="flex space-x-2">
-                <input
-                  type="text"
-                  className="input"
-                  placeholder="인증번호"
-                  onChange={(e) => handleVerifyCode(e.target.value)}
-                />
+                <input type="text" className="input" placeholder="인증번호" onChange={handleVerifyCode} />
                 {/* TODO : 인증코드 확인 로직 필요 */}
                 <button type="button" className="white-btn w-2/6" onClick={handleVerify}>
                   인증
@@ -187,7 +174,7 @@ export const SignUp = () => {
           </article>
         </section>
       </main>
-      {isModalOpen ? <AuthModal handleClose={() => setModalOpen(false)} /> : <></>}
+      {isModalOpen ? <AuthModal verifyError={verifyError} handleClose={() => setModalOpen(false)} /> : <></>}
     </>
   );
 };
