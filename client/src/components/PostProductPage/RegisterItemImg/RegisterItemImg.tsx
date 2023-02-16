@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 export const RegisterItemImg = ({ myImage, setMyImage }) => {
   const handleAddImage = (e) => {
     const nowSelectImageList = e.target.files;
@@ -27,7 +25,7 @@ export const RegisterItemImg = ({ myImage, setMyImage }) => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
           </div>
-          <input type="file" id="input-file" multiple accept="image/*" style={{ display: 'none' }} />
+          <input type="file" id="input-file" name="imgUpload" multiple accept="image/*" style={{ display: 'none' }} />
         </label>
         <div className="flex justify-start align-middle">
           {myImage.map((x) => {

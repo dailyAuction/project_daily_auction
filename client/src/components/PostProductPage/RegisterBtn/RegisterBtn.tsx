@@ -8,7 +8,7 @@ export const RegisterBtn = () => {
 
   return (
     <>
-      <button type="submit" className="red-btn m-2 ml-auto mb-3" onClick={() => setModalOpen(true)}>
+      <button type="button" className="red-btn m-2 ml-auto mb-3" onClick={() => setModalOpen(true)}>
         등록
       </button>
       {modalOpen && (
@@ -17,8 +17,8 @@ export const RegisterBtn = () => {
             <span className="font-bold text-lg">경고</span>
             <span>한 번 등록하면 경매가 종료되기 전까지 게시글을 수정할 수 없습니다. 등록하시겠습니까?</span>
             <div className="w-full flex justify-center gap-3 font-bold">
-              <button type="button" className="white-btn" onClick={() => navigate(`/detail/${detailId}`)}>
-                예
+              <button type="submit" className="white-btn">
+                {/* onClick={() => navigate(`/detail/${detailId}`)} */}예
               </button>
               <button type="button" className="white-btn" onClick={() => setModalOpen(false)}>
                 아니오
