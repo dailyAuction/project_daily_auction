@@ -34,7 +34,7 @@
   }
 
   .bg-modal {
-    @apply w-full h-full bg-main-brown/[.30] absolute right-0 top-0 space-y-0 flex justify-center items-center flex-col;
+    @apply w-full h-full bg-main-brown/[.30] absolute right-0 -top-3 space-y-0 flex justify-center items-center flex-col;
   }
 
   .modal-container {
