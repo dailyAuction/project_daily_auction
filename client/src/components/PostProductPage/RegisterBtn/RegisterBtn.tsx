@@ -1,10 +1,7 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export const RegisterBtn = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  const navigate = useNavigate();
-  const detailId = 1; // dummyPath
 
   return (
     <>
@@ -18,7 +15,7 @@ export const RegisterBtn = () => {
             <span>한 번 등록하면 경매가 종료되기 전까지 게시글을 수정할 수 없습니다. 등록하시겠습니까?</span>
             <div className="w-full flex justify-center gap-3 font-bold">
               <button type="submit" className="white-btn">
-                {/* onClick={() => navigate(`/detail/${detailId}`)} */}예
+                예
               </button>
               <button type="button" className="white-btn" onClick={() => setModalOpen(false)}>
                 아니오

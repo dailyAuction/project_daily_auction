@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { useMutation } from 'react-query';
 import { CategoryDropdown } from '../components/PostProductPage/CategoryDropdown/CategoryDropdown';
 import { RegisterItemImg } from '../components/PostProductPage/RegisterItemImg/RegisterItemImg';
@@ -22,20 +21,16 @@ export const PostProductPage = () => {
   Array.from(myImage).forEach((img) => formData.append('files', img));
   formData.append('data', JSON.stringify(productInfo));
 
-  const { mutate } = useMutation(() => {
-    return postProductAPI.post(formData);
-  });
+  const { mutate } = useMutation(() => postProductAPI.post(formData));
 
-  const handleSubmit = (e, data) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>, data) => {
     e.preventDefault();
     mutate(data, {
-      onSuccess: () => {
-        console.log('success');
-      },
-      onError: () => {
-        console.log('error');
-      },
+      onSuccess: (message) => console.log(message),
+      // onSuccess: () => navigate(`/detail/${authorId}`),
+      onError: (error) => alert(error),
     });
+
     // Array.from(formData.entries()).forEach((el) => console.log(el));
   };
 
