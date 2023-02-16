@@ -26,7 +26,6 @@ export const SignUp = () => {
   const navigate = useNavigate();
 
   const [isModalOpen, setModalOpen] = useState(false);
-  const [isConfirm, setIsConfirm] = useState(true);
   const [isAgreeCheck, setIsAgreeCheck] = useState(false);
 
   const [verifyForm, setVerifyForm] = useState<VerifyFormData>({
@@ -38,10 +37,11 @@ export const SignUp = () => {
   const {
     register,
     handleSubmit,
-    getValues,
+    watch,
+    setError,
     formState: { errors },
   } = useForm<SignUpConfirmData>();
-  const { email } = getValues();
+  const email = watch('email');
 
   const { getAuthVerify, handleVerify, verifyError } = useVerify({ email, setModalOpen, verifyForm, setVerifyForm });
 
@@ -52,10 +52,9 @@ export const SignUp = () => {
   const onSubmit = handleSubmit((data: SignUpConfirmData) => {
     const signUpData: SignUpData = { email: data.email, password: data.password };
     if (data.password !== data.confirmPassword) {
-      setIsConfirm(false);
+      setError('confirmPassword', { message: '비밀번호가 일치하지 않습니다.' }, { shouldFocus: true });
     } else {
       postSignUp(signUpData);
-      setIsConfirm(true);
       navigate('/login');
     }
   });
@@ -109,13 +108,14 @@ export const SignUp = () => {
                 </button>
               </div>
               <p className={`text-xs ${verifyForm.verify ? 'text-blue-600' : 'text-[#FF0000]'}`}>
-                {verifyForm.verify ? '인증에 성공하였습니다.' : '이메일 인증을 해주세요.'}
+                {verifyForm.verify ? '인증에 성공하였습니다.' : '인증번호를 입력해주세요.'}
               </p>
             </article>
             <article>
               <span className="text-sm">비밀번호</span>
-              <span className="text-xs ml-2 opacity-50">숫자, 영문, 특수문자를 포함해 8자리 이상이어야 합니다.</span>
+              <span className="text-xs ml-2 opacity-50">숫자, 영문, 특수문자를 포함해 8자리 이상</span>
               <input
+                id="password"
                 type="password"
                 placeholder="비밀번호"
                 className="input"
@@ -128,12 +128,14 @@ export const SignUp = () => {
                 })}
               />
               <p className="text-xs text-[#FF0000]">
-                {errors.password?.type === 'required' && '비밀번호를 입력해주세요'}
+                {errors?.password?.type === 'required' && '비밀번호를 입력해주세요'}
+                {errors?.password?.type === 'pattern' && errors?.password?.message}
               </p>
             </article>
             <article>
               <span className="text-sm">비밀번호 확인</span>
               <input
+                id="confirmPassword"
                 type="password"
                 placeholder="비밀번호 확인"
                 className="input"
@@ -143,9 +145,10 @@ export const SignUp = () => {
                 })}
               />
               <p className="text-xs text-[#FF0000]">
-                {errors.confirmPassword?.type === 'required' && '비밀번호를 재입력해주세요'}
+                {errors?.confirmPassword?.type === 'required' && '비밀번호를 재입력해주세요'}
+                {errors?.confirmPassword?.type === 'pattern' && '비밀번호를 올바르게 입력해주세요'}
+                {errors?.confirmPassword?.message}
               </p>
-              {!isConfirm && <p className="text-xs text-[#FF0000]">비밀번호가 일치하지 않습니다.</p>}
             </article>
             <article className="text-sm flex flex-row pt-5">
               <input type="checkbox" className="mx-4" onClick={() => setIsAgreeCheck(!isAgreeCheck)} />
