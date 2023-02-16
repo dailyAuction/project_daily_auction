@@ -1,8 +1,9 @@
-type CheckModalProps = {
+type AuthModalProps = {
   handleClose: () => void;
+  verifyError: boolean;
 };
 
-export const AuthModal = (verifyError, { handleClose }: CheckModalProps) => {
+export const AuthModal = ({ handleClose, verifyError }: AuthModalProps) => {
   return (
     <section className="bg-modal">
       <div className="modal-container justify-around items-center py-5">
