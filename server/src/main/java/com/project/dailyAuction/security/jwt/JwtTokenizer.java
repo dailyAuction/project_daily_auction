@@ -32,6 +32,11 @@ public class JwtTokenizer {
     @Value("${jwt.access-token-expiration-minutes}")
     private int accessTokenExpirationMinutes;
 
+    @Getter
+    @Value("${jwt.refresh-token-expiration-minutes}")
+    private int refreshTokenExpirationMinutes;
+
+
     public String encodeBase64SecretKey(String secretKey){
         return Encoders.BASE64.encode(secretKey.getBytes(StandardCharsets.UTF_8));
     }
@@ -44,6 +49,16 @@ public class JwtTokenizer {
 
         return Jwts.builder()
                 .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(Calendar.getInstance().getTime())
+                .setExpiration(expiration)
+                .signWith(key)
+                .compact();
+    }
+
+    public String generateRefreshToken(String subject, Date expiration, String base64EncodedSecretKey) {
+        Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
+        return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(Calendar.getInstance().getTime())
                 .setExpiration(expiration)
@@ -97,7 +112,6 @@ public class JwtTokenizer {
                     .getBody();
         } catch (ExpiredJwtException e){
             log.info("# Expired JWT token");
-            // todo: 에러코드 설정
             throw new ResponseStatusException(ExceptionCode.EXPIRED_TOKEN.getCode(), ExceptionCode.EXPIRED_TOKEN.getMessage(), new IllegalArgumentException());
         }
     }

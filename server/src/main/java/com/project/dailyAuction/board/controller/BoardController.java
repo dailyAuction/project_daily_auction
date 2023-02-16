@@ -53,13 +53,13 @@ public class BoardController {
         return new PageDto(responses, boardPage);
     }
 
-    @PatchMapping("/{board-id}/bidding")
-    @ResponseStatus(HttpStatus.OK)
-    private void bidBoard(@RequestHeader(name = "Authorization") String token,
-                          @PathVariable("board-id") long boardId,
-                          @RequestBody BoardDto.Patch patchDto) {
-        boardService.bidBoard(token, boardId, patchDto);
-    }
+//    @PatchMapping("/{board-id}/bidding")
+//    @ResponseStatus(HttpStatus.OK)
+//    private void bidBoard(@RequestHeader(name = "Authorization") String token,
+//                          @PathVariable("board-id") long boardId,
+//                          @RequestBody BoardDto.Patch patchDto) {
+//        boardService.bidBoard(token, boardId, patchDto.getNewPrice());
+//    }
 
     @DeleteMapping("/{board-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

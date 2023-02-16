@@ -9,6 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -17,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
@@ -92,6 +94,17 @@ public class CacheProcessor {
             keywordRepository.updateSearchedCnt(keyword, searchedCnt);
         }
     }
+    @Transactional
+    public void updateBoardPriceToMySql() {
+        Set<String> redisKeys = redisTemplate.keys("boardPrice*");
+        Iterator<String> it = redisKeys.iterator();
+        while (it.hasNext()) {
+            String data = it.next();
+            long boardId = Long.parseLong(data.split("::")[1]);
+            int price = Integer.parseInt(redisTemplate.opsForValue().get(data));
+            boardRepository.updatePrice(boardId, price);
+        }
+    }
 
     //bidding 관련
     @Transactional
@@ -124,6 +137,16 @@ public class CacheProcessor {
         }
     }
 
+    // refreshToken 레디스에 저장
+    @Transactional
+    public void saveRefreshTokenToRedis(long memberId, String refreshToken) {
+        String key = "refreshToken::" + memberId;
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+
+        valueOperations.set(key, refreshToken,24, TimeUnit.HOURS);
+    }
+
+
     //업데이트 후 레디스 전체 초기화
     public void flushRedis() {
         redisTemplate.execute(new RedisCallback<Object>() {
@@ -145,7 +168,8 @@ public class CacheProcessor {
                         "boardBidCount*",
                         "boardLeadingBidder*",
                         "boardViewCount*",
-                        "SearchedCount*"));
+                        "SearchedCount*",
+                        "boardPrice*"));
                 return null;
             }
         });
