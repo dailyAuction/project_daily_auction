@@ -64,6 +64,10 @@ public class Board implements Serializable {
                 .toArray(Long[]::new);
     }
 
+    public void updatePrice(int price) {
+        this.currentPrice = price;
+    }
+
 //    public void updateHistory(int newPrice) {
 //        this.history = this.history + "," + newPrice;
 //    }

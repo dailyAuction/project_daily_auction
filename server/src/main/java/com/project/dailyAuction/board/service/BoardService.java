@@ -18,7 +18,6 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -27,7 +26,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,8 +64,8 @@ public class BoardService {
     public BoardDto.Response getDetailPage(String token, long boardId, int viewCount, int bidCount, long bidderId, String history) {
         Board target = find(boardId);
 
-        Integer[] histories = (Integer[]) Arrays.stream(history.split(","))
-                .mapToInt(Integer::parseInt).boxed().toArray();
+        Integer[] histories = Arrays.stream(history.split(","))
+                .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
 
 
         BoardDto.Response response = BoardDto.Response.builder()
@@ -265,7 +263,7 @@ public class BoardService {
     }
 
 
-    public void bidBoard(String token, long boardId, BoardDto.Patch patchDto) {
+    public void bidBoard(String token, long boardId, int newPrice) {
         Member member = memberService.findByAccessToken(token);
         Board board = find(boardId);
 
@@ -277,7 +275,7 @@ public class BoardService {
         }
 
         int currentPrice = getPriceInRedis(boardId);
-        int newPrice = patchDto.getNewPrice();
+
         if (board.getBidderId() != 0) {
             Member lastMember = memberService.find(board.getBidderId());
             //코인 증가
@@ -286,6 +284,7 @@ public class BoardService {
             //알림 발송
             noticeService.send(lastMember, board, 3);
         }
+
         //코인이 부족하면 에러
         if (member.getCoin() < newPrice) {
             throw new ResponseStatusException(ExceptionCode.NOT_ENOUGH_COIN.getCode(),
@@ -307,13 +306,16 @@ public class BoardService {
         }
 
         //현재입찰가 변경
-        changePriceToRedis(board.getBoardId(), newPrice);
+        if (board.getCurrentPrice() == 0) {
+            board.updatePrice(newPrice);
+        } else {
+            changePriceToRedis(board.getBoardId(), newPrice);
+        }
 
         //bid count 증가
         addBidCountToRedis(board.getBoardId());
         //히스토리 추가
         addHistoryToRedis(board.getBoardId(), newPrice);
-//        board.updateHistory(newPrice);
 
         //기록용 남기기
         BoardMember boardMember = boardMemberRepository.findByBoardAndMember(board, member);
