@@ -28,4 +28,8 @@ public class BoardMember {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public void changeMyPrice(int price) {
+        this.myPrice = price;
+    }
 }

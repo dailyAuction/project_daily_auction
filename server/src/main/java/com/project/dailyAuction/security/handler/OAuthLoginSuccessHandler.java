@@ -1,5 +1,6 @@
 package com.project.dailyAuction.security.handler;
 
+import com.project.dailyAuction.cache.CacheProcessor;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import com.project.dailyAuction.security.jwt.JwtTokenizer;
@@ -18,7 +19,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -27,6 +27,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
     private final JwtTokenizer jwtTokenizer;
     private final MemberService memberService;
+    private final CacheProcessor cacheProcessor;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -35,16 +36,15 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
         var oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email;
-        List<String> authorities;
         //Google
         if (String.valueOf(oAuth2User.getAttributes()).startsWith("{s")) {
-            email = "[goo]"+String.valueOf(oAuth2User.getAttributes().get("email"));
+            email = "[goo]" + oAuth2User.getAttributes().get("email");
         }
         //Kakao
         else {
             Map<String, Object> map = (Map<String, Object>) oAuth2User.getAttributes().get("properties");
             Map<String, Object> emailMap = (Map<String, Object>) oAuth2User.getAttributes().get("kakao_account");
-            email = "[ka]"+String.valueOf(emailMap.get("email"));
+            email = "[ka]" + emailMap.get("email");
         }
         // 이메일 등록 여부 체크
         long memberId = 0;
@@ -57,17 +57,20 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             memberId = member.getMemberId();
             log.info("# Already exits");
         }
-        String accessToken = delegateAccessToken(email,memberId);
+        String accessToken = delegateAccessToken(email, memberId);
+        String refreshToken = delegateRefreshToken(email);
 
-
-        redirect(request, response, email, accessToken);
+        cacheProcessor.saveRefreshTokenToRedis(memberId, refreshToken);
+        response.addHeader("MemberId", String.valueOf(memberId));
+        response.addHeader("Email", email);
+        response.addHeader("Coin", String.valueOf(memberId));
+        redirect(request, response, accessToken, refreshToken);
 
         log.info("# Authenticated successfully!");
     }
 
-    private void redirect(HttpServletRequest request, HttpServletResponse response, String username, String accessToken) throws IOException {
-
-        String uri = createURI(accessToken).toString();
+    private void redirect(HttpServletRequest request, HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
+        String uri = createURI(accessToken, refreshToken).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
@@ -86,9 +89,21 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         return accessToken;
     }
 
-    private URI createURI(String accessToken) {
+    private String delegateRefreshToken(String email) {
+        String subject = email;
+        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+
+        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
+
+        return refreshToken;
+    }
+
+    private URI createURI(String accessToken, String refreshToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("Authorization", "Bearer " + accessToken);
+        queryParams.add("access-token", "Bearer " + accessToken);
+        queryParams.add("refresh-token", "Bearer " + accessToken);
+
 
         return UriComponentsBuilder
                 .newInstance()

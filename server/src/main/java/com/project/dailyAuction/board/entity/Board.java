@@ -53,16 +53,19 @@ public class Board implements Serializable {
 //    @OneToMany(mappedBy = "board")
 //    private List<Notice> notices = new ArrayList<>();
 
-//    public void changeLeadingBidder(long memberId, int newPrice) {
-//        this.bidderId = memberId;
-//        this.currentPrice = newPrice;
-//    }
+    public void changeLeadingBidder(long memberId) {
+        this.bidderId = memberId;
+    }
 
     public Long[] getHistoryArray(){
         String[] histories = this.history.split(",");
         return Arrays.stream(histories)
                 .mapToLong(a -> Long.parseLong(a)).boxed()
                 .toArray(Long[]::new);
+    }
+
+    public void updatePrice(int price) {
+        this.currentPrice = price;
     }
 
 //    public void updateHistory(int newPrice) {
