@@ -4,37 +4,49 @@ import { useQuery } from 'react-query';
 import { useRecoilValue } from 'recoil';
 import { userInfoAtom } from '../../../atoms/user';
 import { useHandleIsLogin } from '../../../hooks/useHandleIsLogin';
-import { useBidInformation } from './useBidInformation';
+import { useBidInformation, useBidInformationModal } from './useBidInformation';
 
 import { productDetailAPI } from '../../../api/boardsAPI';
+import { blockInvalidChar } from '../../../utils/blockInvalidChar';
 
 type BidModalProps = {
   handleClose: () => void;
+  currentPrice: string;
 };
 
-const BidModal = ({ handleClose }: BidModalProps) => {
-  const [bidValue, setBidValue] = useState(0);
-  const onChange = (e) => {
-    setBidValue(e.target.value);
-  };
+// 입찰 모달
+const BidModal = ({ handleClose, currentPrice }: BidModalProps) => {
+  const [bidValue, setBidValue] = useState('');
+  const [validationMsg, setValidationMsg] = useState('');
+
+  const { handleClickBid, handleChange } = useBidInformationModal({ bidValue, setBidValue, setValidationMsg });
+
+  const { coin: myCoin } = useRecoilValue(userInfoAtom);
 
   return (
-    <section className="bg-modal">
+    <section className="bg-modal z-10">
       <div className="modal-container">
         <article className="flex flex-col space-y-1">
           <span>현재 경매가</span>
-          <span className="text-xl font-bold text-main-orange">120,000 coin</span>
+          <span className="text-xl font-bold text-main-orange">{currentPrice} coin</span>
         </article>
         <article>
-          <input placeholder="입찰가를 입력해주세요" onChange={onChange} value={bidValue} className="input" />
-          <span className="text-xs text-main-red">현재 충전하신 코인이 부족합니다.</span>
+          <input
+            placeholder="입찰가를 입력해주세요"
+            onChange={handleChange}
+            value={bidValue}
+            className="input"
+            type="number"
+            onKeyDown={blockInvalidChar}
+          />
+          <span className="text-xs text-main-red">{validationMsg}</span>
         </article>
         <article className="flex self-end space-x-1 items-center">
           <span className="text-sm">현재 내 코인 : </span>
-          <span className="text-bold text-main-orange">10,000 coin</span>
+          <span className="text-bold text-main-orange h-3">{myCoin} coin</span>
         </article>
         <article className="flex justify-between pt-3">
-          <button type="submit" className="red-btn">
+          <button type="submit" className="red-btn" onClick={() => handleClickBid(currentPrice)}>
             입찰
           </button>
           <button type="submit" className="white-btn" onClick={handleClose}>
@@ -106,7 +118,7 @@ export const BidInformation = () => {
           )}
         </article>
       </section>
-      {isModalOpen && <BidModal handleClose={() => setModalOpen(false)} />}
+      {isModalOpen && <BidModal handleClose={() => setModalOpen(false)} currentPrice={currentPrice} />}
     </>
   );
 };
