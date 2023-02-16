@@ -9,9 +9,13 @@ import { TabBar } from '../components/_common/TabBar/TabBar';
 import { SubHeader } from '../components/_common/Header/SubHeader/SubHeader';
 import { CATEGORIES } from '../constants/constants';
 import { productDetailAPI } from '../api/boardsAPI';
+import { useWebsocket } from '../hooks/useWebsocket';
 
 export const DetailPage = () => {
   const boardId = useLocation().pathname.split('/')[2];
+
+  // 웹소켓 연결
+  const { msg: currentPrice, sendBid } = useWebsocket(`/sub/board-id/${boardId}`);
 
   const { isLoading, error, data } = useQuery(
     'productDetail',
@@ -29,7 +33,7 @@ export const DetailPage = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>에러가 발생하였습니다.</div>;
-  // TODO: 웹소켓을 어떤 컴포넌트에서 연결하여 받아올 것인지 조사하고 적용할 필요 있음!
+
   return (
     <main className="base-layout">
       <SubHeader>상세 페이지</SubHeader>
@@ -44,7 +48,7 @@ export const DetailPage = () => {
 
         <AuctionStatus finishedAt={finishedAt} statusId={statusId} />
 
-        <BidInformation />
+        <BidInformation currentPrice={currentPrice} sendBid={sendBid} />
         <article className="py-8 bg-white px-2">{description}</article>
         <Chart initData={history} />
       </section>

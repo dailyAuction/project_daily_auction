@@ -9,13 +9,17 @@ import { useBidInformation, useBidInformationModal } from './useBidInformation';
 import { productDetailAPI } from '../../../api/boardsAPI';
 import { blockInvalidChar } from '../../../utils/blockInvalidChar';
 
-type BidModalProps = {
-  handleClose: () => void;
+type BidInformationProps = {
   currentPrice: string;
+  sendBid: (price: string) => void;
+};
+
+type BidModalProps = BidInformationProps & {
+  handleClose: () => void;
 };
 
 // 입찰 모달
-const BidModal = ({ handleClose, currentPrice }: BidModalProps) => {
+const BidModal = ({ handleClose, currentPrice, sendBid }: BidModalProps) => {
   const [bidValue, setBidValue] = useState('');
   const [validationMsg, setValidationMsg] = useState('');
 
@@ -46,7 +50,7 @@ const BidModal = ({ handleClose, currentPrice }: BidModalProps) => {
           <span className="text-bold text-main-orange h-3">{myCoin} coin</span>
         </article>
         <article className="flex justify-between pt-3">
-          <button type="submit" className="red-btn" onClick={() => handleClickBid(currentPrice)}>
+          <button type="submit" className="red-btn" onClick={() => handleClickBid(currentPrice, sendBid)}>
             입찰
           </button>
           <button type="submit" className="white-btn" onClick={handleClose}>
@@ -58,7 +62,7 @@ const BidModal = ({ handleClose, currentPrice }: BidModalProps) => {
   );
 };
 
-export const BidInformation = () => {
+export const BidInformation = ({ currentPrice, sendBid }: BidInformationProps) => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -82,7 +86,7 @@ export const BidInformation = () => {
     }
   );
 
-  const { bidCount, statusId, startingPrice, currentPrice, myPrice = null, authorId } = data || {};
+  const { bidCount, statusId, startingPrice, myPrice = null, authorId } = data || {};
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>에러가 발생하였습니다.</div>;
@@ -118,7 +122,9 @@ export const BidInformation = () => {
           )}
         </article>
       </section>
-      {isModalOpen && <BidModal handleClose={() => setModalOpen(false)} currentPrice={currentPrice} />}
+      {isModalOpen && (
+        <BidModal handleClose={() => setModalOpen(false)} currentPrice={currentPrice} sendBid={sendBid} />
+      )}
     </>
   );
 };
