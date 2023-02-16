@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { CategoryDropdown } from '../components/PostProductPage/CategoryDropdown/CategoryDropdown';
 import { RegisterItemImg } from '../components/PostProductPage/RegisterItemImg/RegisterItemImg';
 import { SubHeader } from '../components/_common/Header/SubHeader/SubHeader';
@@ -7,24 +7,32 @@ import { TabBar } from '../components/_common/TabBar/TabBar';
 import { RegisterBtn } from '../components/PostProductPage/RegisterBtn/RegisterBtn';
 
 export const PostProductPage = () => {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [myImage, setMyImage] = useState([]);
+  const [productInfo, setProductInfo] = useState({
+    title: '',
+    startingPrice: 0,
+    description: '',
+    category: '',
+  });
 
-  const handlerModal = useCallback(() => {
-    setModalOpen(!modalOpen);
-  }, [modalOpen]);
+  const formData = new FormData();
+  Array.from(myImage).forEach((img) => formData.append('files', img));
+  formData.append('data', JSON.stringify(productInfo));
 
-  const ab = () => {};
+  const handlerSubmit = (e) => {
+    e.preventDefault();
+    Array.from(formData.entries()).forEach((el) => console.log(el));
+  };
 
   return (
     <main className="base-layout">
-      <div className="base-layout" onClick={() => modalOpen && handlerModal()}>
+      <form className="base-layout" onSubmit={handlerSubmit}>
         <SubHeader>상품 등록</SubHeader>
-        <RegisterItemImg />
-        <CategoryDropdown />
-        <RegisterProductInfo />
-
-        <RegisterBtn modalOpen={modalOpen} handlerModal={handlerModal} />
-      </div>
+        <RegisterItemImg myImage={myImage} setMyImage={setMyImage} />
+        <CategoryDropdown productInfo={productInfo} setProductInfo={setProductInfo} />
+        <RegisterProductInfo productInfo={productInfo} setProductInfo={setProductInfo} />
+        <RegisterBtn />
+      </form>
 
       <TabBar />
     </main>

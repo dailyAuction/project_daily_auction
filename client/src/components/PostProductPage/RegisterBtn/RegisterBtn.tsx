@@ -1,12 +1,14 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const RegisterBtn = ({ modalOpen, handlerModal }) => {
+export const RegisterBtn = () => {
+  const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const detailId = 1; // dummyPath
 
   return (
     <>
-      <button type="submit" className="red-btn m-2 ml-auto mb-3" onClick={handlerModal}>
+      <button type="submit" className="red-btn m-2 ml-auto mb-3" onClick={() => setModalOpen(true)}>
         등록
       </button>
       {modalOpen && (
@@ -18,7 +20,7 @@ export const RegisterBtn = ({ modalOpen, handlerModal }) => {
               <button type="button" className="white-btn" onClick={() => navigate(`/detail/${detailId}`)}>
                 예
               </button>
-              <button type="button" className="white-btn">
+              <button type="button" className="white-btn" onClick={() => setModalOpen(false)}>
                 아니오
               </button>
             </div>

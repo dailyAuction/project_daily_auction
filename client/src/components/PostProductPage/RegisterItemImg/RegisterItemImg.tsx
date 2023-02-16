@@ -1,8 +1,6 @@
 import { useState } from 'react';
 
-export const RegisterItemImg = () => {
-  const [myImage, setMyImage] = useState([]);
-
+export const RegisterItemImg = ({ myImage, setMyImage }) => {
   const addImage = (e) => {
     const nowSelectImageList = e.target.files;
     const nowImgURLList = [...myImage];
