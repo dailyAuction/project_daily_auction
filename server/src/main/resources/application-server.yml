@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/dailyAuction?serverTimezone=UTC&characterEncoding=UTF-8
-    username: user   # todo : ec2환경 변수에 저장
-    password: 1234   # todo : ec2환경 변수에 저장
+    url: jdbc:mysql://daily-auction-rds.cqig7mn7hzad.ap-northeast-2.rds.amazonaws.com:13306/dailyAuction?serverTimezone=UTC&characterEncoding=UTF-8
+    username: admin   # todo : ec2환경 변수에 저장
+    password: ${RDS_DB_PASSWORD}   # todo : ec2환경 변수에 저장
   jpa:
     hibernate:
       ddl-auto: update
@@ -42,7 +42,7 @@ spring:
           kakao:
             clientId: 817c5fbdef0e3b673a764e0b464e6acb   # todo : ec2환경 변수에 저장
             clientSecret: ${CLIENT_SECRET_KAKAO}   # todo : ec2환경 변수에 저장
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            redirect-uri: http://ec2-13-124-156-170.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/kakao
             authorization-grant-type: authorization_code
             client-name: Kakao
 
