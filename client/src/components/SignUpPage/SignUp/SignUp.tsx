@@ -52,7 +52,7 @@ export const SignUp = () => {
   });
 
   const { mutate: postSignUp } = useMutation((signUpData: SignUpData) => {
-    return signupAPI.post(signUpData);
+    return signupAPI.postSignUp(signUpData);
   });
 
   const onSubmit = handleSubmit((data: SignUpConfirmData) => {
