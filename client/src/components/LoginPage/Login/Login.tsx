@@ -1,37 +1,52 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { useMutation } from 'react-query';
 import { useState } from 'react';
 import { userIdPassword } from '../../../mock/userIdPassword';
 import { FindPasswordModal } from '../FindPasswordModal/FindPasswordModal';
 import { REG_EMAIL, REG_PASSWORD } from '../../../constants/constants';
+import { MemberAuthData } from '../../../types/member.type';
+import { loginAPI } from '../../../api/loginAPI';
 
-type LoginData = {
-  email: string;
-  password: string;
-};
+type LoginData = MemberAuthData;
 
 export const Login = () => {
   const [isCorrect, setIsCorrect] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
 
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors },
   } = useForm<LoginData>();
 
+  const {
+    mutate: postLogin,
+    isError: loginFail,
+    isSuccess: loginSuccess,
+  } = useMutation((loginData: LoginData) => {
+    return loginAPI.post(loginData);
+  });
+
   // 테스트용 로그인
   const onSubmit = handleSubmit((data: LoginData) => {
-    const { email, password } = getValues();
-    if (email === userIdPassword.email && password === userIdPassword.password) {
+    postLogin(data);
+    // TODO : 로그인 통신 성공 시
+    // if (loginSuccess) {
+    // setIsCorrect(true);
+    //  navigate(-1);
+    // }
+    // if (loginFail) {
+    //  setIsCorrect(false);
+    // }
+    if (data.email === userIdPassword.email && data.password === userIdPassword.password) {
       setIsCorrect(true);
       navigate(-1);
     } else {
       setIsCorrect(false);
-      console.log(data);
     }
   });
 

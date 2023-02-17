@@ -19,9 +19,9 @@ export const useVerify = ({ email, setModalOpen, verifyForm, setVerifyForm }: Us
   const {
     mutate: getVerify,
     isError: verifyError,
-    isSuccess: veifySuccess,
+    isSuccess: verifySuccess,
     // TODO : 통신시 인증코드 넘어오는지 확인
-    data: verifyCode,
+    data,
   } = useMutation((postEmail: string) => {
     return signupAPI.postVerified(postEmail);
   });
@@ -43,6 +43,6 @@ export const useVerify = ({ email, setModalOpen, verifyForm, setVerifyForm }: Us
       setVerifyForm((prev) => ({ ...prev, verify: false }));
     }
   };
-
-  return { getAuthVerify, handleVerify, verifyError, veifySuccess };
+  console.log(data);
+  return { getAuthVerify, handleVerify, verifyError, verifySuccess };
 };
