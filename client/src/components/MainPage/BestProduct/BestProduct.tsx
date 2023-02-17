@@ -6,11 +6,19 @@ import { bestProductAPI } from '../../../api/bestProductAPI';
 
 export const Bestproduct = () => {
   const [categoryId, setCategoryId] = useState(0);
+  const [isClick, setIsClick] = useState(true);
+
   const path = categoryId ? `${categoryId}/popular-item` : 'all-popular-item';
 
-  const { isLoading, error, data } = useQuery('bestProduct', () => bestProductAPI.get({ path }), {
+  const { isLoading, error, data } = useQuery(['bestProduct', `${categoryId}`], () => bestProductAPI.get({ path }), {
+    enabled: isClick,
     staleTime: 1000 * 20,
   });
+
+  const handleClickCategory = (idx) => {
+    setCategoryId(idx);
+    setIsClick(true);
+  };
 
   return (
     <div className="w-full">
@@ -37,17 +45,17 @@ export const Bestproduct = () => {
       </div>
       <div className="p-2 pb-4 overflow-x-scroll scrollbar-hide">
         <section className="w-max space-x-3">
-          {isLoading && <div>Loading...</div>}
-          {error && <div>카테고리별 인기상품이 없습니다.</div>}
           {CATEGORIES.map((el, i) => {
             return (
-              <span key={el} onClick={() => setCategoryId(i)}>
+              <span key={el} onClick={() => handleClickCategory(i)}>
                 <button type="button" className={`category-btn ${categoryId === i && 'bg-main-red text-white'}`}>
                   {el}
                 </button>
               </span>
             );
           })}
+          {isLoading && <div>Loading...</div>}
+          {error && <div>카테고리별 인기상품이 없습니다.</div>}
         </section>
       </div>
       <div className="flex flex-col gap-2 items-center">
