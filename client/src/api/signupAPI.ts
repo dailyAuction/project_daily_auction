@@ -12,7 +12,7 @@ export const signupAPI = {
 
   // 회원가입
   post: async (data: SignUpData) => {
-    await httpClient.post<SignUpData>(signupAPI.url, data);
+    await httpClient.post<SignUpData>(`${signupAPI.url}/signup`, data);
   },
 
   // 이메일 인증 요청
