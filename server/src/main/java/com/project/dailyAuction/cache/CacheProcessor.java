@@ -57,8 +57,9 @@ public class CacheProcessor {
             }
             // 경매 종료
             else if (LocalDateTime.now().isAfter(finishedAt)) {
+                updateViewToMySql(boardId);
                 boardRepository.updateStatus(boardId, checkFinishCode(boardId));
-                deleteFinishedTimeInRedis(boardId);
+                deleteInRedis("finishedTime", boardId);
                 log.info(boardId + "번 게시글 마감");
 
                 //구매자 경매 낙찰 알림 전송
@@ -94,9 +95,38 @@ public class CacheProcessor {
         }
     }
 
+    //마감 시 mysql에 보드정보 넘겨주는 메서드
+    @Transactional
+    public void updateViewToMySql(long boardId) {
+        Set<String> redisKeys = redisTemplate.keys("boardViewCount::" + boardId);
+        Iterator<String> it = redisKeys.iterator();
+        while (it.hasNext()) {
+            String data = it.next();
+            int viewCnt = Integer.parseInt(redisTemplate.opsForValue().get(data));
+            boardRepository.updateViews(boardId, viewCnt);
+            deleteInRedis("boardViewCount",boardId);
+        }
+        redisKeys = redisTemplate.keys("boardPrice::" + boardId);
+        it = redisKeys.iterator();
+        while (it.hasNext()) {
+            String data = it.next();
+            int price = Integer.parseInt(redisTemplate.opsForValue().get(data));
+            boardRepository.updatePrice(boardId, price);
+            deleteInRedis("boardPrice",boardId);
+        }
+        redisKeys = redisTemplate.keys("boardBidCount::" + boardId);
+        it = redisKeys.iterator();
+        while (it.hasNext()) {
+            String data = it.next();
+            int bidCount = Integer.parseInt(redisTemplate.opsForValue().get(data));
+            boardRepository.updateBidCnt(boardId, bidCount);
+            deleteInRedis("boardBidCount",boardId);
+        }
+    }
+
     //mysql에 조회수를 넘겨주는 메서드
     @Transactional
-    public void updateViewToMySql() {
+    public void updateViewCntToMySql() {
         Set<String> redisKeys = redisTemplate.keys("boardViewCount*");
         Iterator<String> it = redisKeys.iterator();
         while (it.hasNext()) {
@@ -105,6 +135,7 @@ public class CacheProcessor {
             int viewCnt = Integer.parseInt(redisTemplate.opsForValue().get(data));
             boardRepository.updateViews(boardId, viewCnt);
         }
+        deleteAllInRedis("boardViewCount");
     }
 
     @Transactional
@@ -117,6 +148,7 @@ public class CacheProcessor {
             int searchedCnt = Integer.parseInt(redisTemplate.opsForValue().get(data));
             keywordRepository.updateSearchedCnt(keyword, searchedCnt);
         }
+        deleteAllInRedis("SearchedCount");
     }
 
     @Transactional
@@ -129,6 +161,7 @@ public class CacheProcessor {
             int price = Integer.parseInt(redisTemplate.opsForValue().get(data));
             boardRepository.updatePrice(boardId, price);
         }
+        deleteAllInRedis("boardPrice");
     }
 
     //bidding 관련
@@ -142,6 +175,7 @@ public class CacheProcessor {
             int bidCnt = Integer.parseInt(redisTemplate.opsForValue().get(data));
             boardRepository.updateBidCnt(boardId, bidCnt);
         }
+        deleteAllInRedis("boardBidCount");
 
         redisKeys = redisTemplate.keys("boardLeadingBidder*");
         it = redisKeys.iterator();
@@ -151,6 +185,8 @@ public class CacheProcessor {
             long bidderId = Long.parseLong(redisTemplate.opsForValue().get(data));
             boardRepository.updateBidCnt(boardId, bidderId);
         }
+        deleteAllInRedis("boardLeadingBidder");
+
 
         redisKeys = redisTemplate.keys("boardHistory*");
         it = redisKeys.iterator();
@@ -160,6 +196,7 @@ public class CacheProcessor {
             String history = redisTemplate.opsForValue().get(data);
             boardRepository.updateHistory(boardId, history);
         }
+        deleteAllInRedis("boardHistory");
     }
 
     // refreshToken 레디스에 저장
@@ -200,12 +237,21 @@ public class CacheProcessor {
         });
     }
 
-    // redis에서 시간 지난 finishedAt 삭제
-    public void deleteFinishedTimeInRedis(long boardId) {
+    public void deleteInRedis(String key, long boardId) {
         redisTemplate.execute(new RedisCallback<Object>() {
             @Override
             public Object doInRedis(RedisConnection connection) throws DataAccessException {
-                redisTemplate.delete("finishedTime::" + boardId);
+                redisTemplate.delete(key + "::" + boardId);
+                return null;
+            }
+        });
+    }
+
+    public void deleteAllInRedis(String key) {
+        redisTemplate.execute(new RedisCallback<Object>() {
+            @Override
+            public Object doInRedis(RedisConnection connection) throws DataAccessException {
+                redisTemplate.delete(key + "*");
                 return null;
             }
         });

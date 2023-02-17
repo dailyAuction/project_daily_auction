@@ -16,7 +16,7 @@ public class CacheEvent {
     // 시작 시
     @PostConstruct
     public void initCache(){
-        cacheProcessor.updateViewToMySql();
+        cacheProcessor.updateViewCntToMySql();
         cacheProcessor.updateBiddingToMySql();
         cacheProcessor.deleteRedisPerHour();
         log.info("조회수, 입찰 관련 반영-init");
@@ -37,7 +37,7 @@ public class CacheEvent {
     @Scheduled(cron = "0 0 0/1 * * ?")
     public void schedulePerHourCache() {
         // +
-        cacheProcessor.updateViewToMySql();
+        cacheProcessor.updateViewCntToMySql();
         cacheProcessor.updateBiddingToMySql();
         cacheProcessor.updateTopKeywordToMySql();
         cacheProcessor.updateBoardPriceToMySql();

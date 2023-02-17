@@ -5,6 +5,7 @@ import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.boardMember.entity.BoardMember;
 import com.project.dailyAuction.boardMember.repository.BoardMemberRepository;
+import com.project.dailyAuction.cache.CacheProcessor;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
@@ -38,6 +39,7 @@ public class BoardService {
     private final BoardMemberRepository boardMemberRepository;
     private final RedisTemplate<String, String> redisTemplate;
     private final NoticeRepository noticeRepository;
+    private final CacheProcessor cacheProcessor;
 
     public Board saveBoard(String token, BoardDto.Post postDto) {
         Member member = memberService.findByAccessToken(token);
@@ -259,6 +261,12 @@ public class BoardService {
                     ExceptionCode.NOT_WRITER.getMessage(),
                     new IllegalArgumentException());
         }
+        // 경매 진행 중일 때 삭제하면 환불
+        if (target.getStatusId() == 1) {
+            Member lastBidder = memberService.find(target.getBidderId());
+            lastBidder.changeCoin(target.getCurrentPrice());
+        }
+
         boardRepository.delete(target);
     }
 
@@ -349,7 +357,8 @@ public class BoardService {
     }
 
     public List<Board> getPopularItem(long categoryId) {
-        if (categoryId == 1) {
+        cacheProcessor.updateViewCntToMySql();
+        if (categoryId == 0) {
             return boardRepository.findTop5ByStatusIdOrderByViewCountDesc(1);
         } else {
             return boardRepository.findTop5ByCategoryIdAndStatusIdOrderByViewCountDesc(categoryId, 1);
@@ -372,12 +381,16 @@ public class BoardService {
         } else if (sort == 1) {//마감임박순 정렬
             defaultSort = Sort.by("createdAt").ascending();
         } else if (sort == 2) {//입찰수 기준 정렬
+            cacheProcessor.updateBiddingToMySql();
             defaultSort = Sort.by("bidCount").descending();
         } else if (sort == 3) {//조회수 기준 정렬
+            cacheProcessor.updateViewCntToMySql();
             defaultSort = Sort.by("viewCount").descending();
         } else if (sort == 4) {//높은 현재가 기준 정렬
+            cacheProcessor.updateBoardPriceToMySql();
             defaultSort = Sort.by("currentPrice").descending();
         } else if (sort == 5) {//낮은 현재가 기준 정렬
+            cacheProcessor.updateBoardPriceToMySql();
             defaultSort = Sort.by("currentPrice").ascending();
         }
         // 전체 리스트 조회
