@@ -357,7 +357,8 @@ public class BoardService {
     }
 
     public List<Board> getPopularItem(long categoryId) {
-        if (categoryId == 1) {
+        cacheProcessor.updateViewCntToMySql();
+        if (categoryId == 0) {
             return boardRepository.findTop5ByStatusIdOrderByViewCountDesc(1);
         } else {
             return boardRepository.findTop5ByCategoryIdAndStatusIdOrderByViewCountDesc(categoryId, 1);
@@ -380,12 +381,16 @@ public class BoardService {
         } else if (sort == 1) {//마감임박순 정렬
             defaultSort = Sort.by("createdAt").ascending();
         } else if (sort == 2) {//입찰수 기준 정렬
+            cacheProcessor.updateBiddingToMySql();
             defaultSort = Sort.by("bidCount").descending();
         } else if (sort == 3) {//조회수 기준 정렬
+            cacheProcessor.updateViewCntToMySql();
             defaultSort = Sort.by("viewCount").descending();
         } else if (sort == 4) {//높은 현재가 기준 정렬
+            cacheProcessor.updateBoardPriceToMySql();
             defaultSort = Sort.by("currentPrice").descending();
         } else if (sort == 5) {//낮은 현재가 기준 정렬
+            cacheProcessor.updateBoardPriceToMySql();
             defaultSort = Sort.by("currentPrice").ascending();
         }
         // 전체 리스트 조회

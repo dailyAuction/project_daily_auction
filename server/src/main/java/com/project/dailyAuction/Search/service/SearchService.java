@@ -4,6 +4,7 @@ import com.project.dailyAuction.Search.entity.Keyword;
 import com.project.dailyAuction.Search.repository.KeywordRepository;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
+import com.project.dailyAuction.cache.CacheProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,7 @@ public class SearchService {
     private final KeywordRepository keywordRepository;
     private final BoardRepository boardRepository;
     private final RedisTemplate<String, String> redisTemplate;
+    private final CacheProcessor cacheProcessor;
 
     public Page<Board> search(long categoryId, String keyword, int page, int size) {
         addSearchCountInRedis(keyword);
@@ -67,10 +69,12 @@ public class SearchService {
     }
 
     public List<Keyword> getTopKeyword() {
+        cacheProcessor.updateTopKeywordToMySql();
         return keywordRepository.findTop10ByOrderBySearchedCntDesc();
     }
 
     public Page<Board> getAllPopularItem(int page, int size) {
+        cacheProcessor.updateViewCntToMySql();
         return boardRepository.findByStatusIdOrderByViewCountDesc(1, PageRequest.of(page - 1, size));
     }
 }
