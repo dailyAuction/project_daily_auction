@@ -9,6 +9,7 @@ export const SearchResultList = () => {
   const { isLoading, error, data } = useQuery('productDetail', () => searchAPI.get({ categoryId, keyword }), {
     onError: (e) => console.error(e),
     retry: false,
+    refetchOnMount: true,
   });
 
   if (isLoading) return <div>Loading...</div>;
@@ -17,7 +18,11 @@ export const SearchResultList = () => {
   // TODO: 무한 스크롤 구현하기
   return (
     <section className="flex flex-col space-y-3">
-      {data && data.map((product) => <ProductItem productDetail={product} key={product.boardId} />)}
+      {Array.isArray(data) && data ? (
+        data?.map((product) => <ProductItem productDetail={product} key={product.boardId} />)
+      ) : (
+        <span>검색 결과가 없습니다.</span>
+      )}
     </section>
   );
 };

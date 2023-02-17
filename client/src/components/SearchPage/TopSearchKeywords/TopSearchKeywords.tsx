@@ -15,16 +15,18 @@ export const TopSearchKeywords = () => {
     <section>
       <h2 className="text-lg font-bold mb-3">인기 검색어</h2>
       <article className="flex flex-col space-y-2">
-        {!data.length && <span>인기 검색어가 없습니다.</span>}
-        {data.length &&
-          data.map((keyword, idx) => (
+        {Array.isArray(data) && data ? (
+          data?.map((keyword, idx) => (
             <Link to={`/search/0_${keyword}`} key={keyword}>
               <div className="flex cursor-pointer">
                 <span className="block w-9">{idx + 1}</span>
                 <span>{keyword}</span>
               </div>
             </Link>
-          ))}
+          ))
+        ) : (
+          <span>인기 검색어가 없습니다.</span>
+        )}
       </article>
     </section>
   );
