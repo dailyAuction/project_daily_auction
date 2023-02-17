@@ -62,6 +62,21 @@ public class NoticeService {
         );
     }
 
+    //오버로드
+    public void send(Member receiver, Board board, long status, int coin) {
+        Notice notice = noticeRepository.save(createNotice(receiver, board, status));
+
+        String receiverId = String.valueOf(receiver.getMemberId());
+        String eventId = receiverId + "_" + System.currentTimeMillis();
+        Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverId);
+        emitters.forEach(
+                (key, emitter) -> {
+                    emitterRepository.saveEventCache(key, notice);
+                    sendNotification(emitter, eventId, key, NoticeResponseDto.create(notice, coin));
+                }
+        );
+    }
+
     private Notice createNotice(Member receiver, Board board, long status) {
         return Notice.builder()
                 .receiver(receiver)
