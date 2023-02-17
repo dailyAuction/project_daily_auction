@@ -44,7 +44,7 @@ export const SignUp = () => {
   const email = watch('email');
 
   // TODO : verfySuccess로 모달 창 open으로 수정 - 성공시 isModalOpen 삭제
-  const { getAuthVerify, handleVerify, verifyError, veifySuccess } = useVerify({
+  const { getAuthVerify, handleVerify, verifyError, verifySuccess } = useVerify({
     email,
     setModalOpen,
     verifyForm,
