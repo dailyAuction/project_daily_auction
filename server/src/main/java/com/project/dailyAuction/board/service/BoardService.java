@@ -5,6 +5,7 @@ import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.boardMember.entity.BoardMember;
 import com.project.dailyAuction.boardMember.repository.BoardMemberRepository;
+import com.project.dailyAuction.cache.CacheProcessor;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
@@ -38,6 +39,7 @@ public class BoardService {
     private final BoardMemberRepository boardMemberRepository;
     private final RedisTemplate<String, String> redisTemplate;
     private final NoticeRepository noticeRepository;
+    private final CacheProcessor cacheProcessor;
 
     public Board saveBoard(String token, BoardDto.Post postDto) {
         Member member = memberService.findByAccessToken(token);
@@ -259,6 +261,12 @@ public class BoardService {
                     ExceptionCode.NOT_WRITER.getMessage(),
                     new IllegalArgumentException());
         }
+        // 경매 진행 중일 때 삭제하면 환불
+        if (target.getStatusId() == 1) {
+            Member lastBidder = memberService.find(target.getBidderId());
+            lastBidder.changeCoin(target.getCurrentPrice());
+        }
+
         boardRepository.delete(target);
     }
 
