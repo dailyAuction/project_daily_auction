@@ -13,7 +13,7 @@ public enum ExceptionCode {
     LESS_THAN_CURRENT(409,"Less than current price"),
     NOT_WRITER(401,"Not writer"),
     NOT_VERIFIED(409,"Not Verified"),
-    CANT_BID_SLEF(409, "Can't bid self"),
+    CANT_BID_SELF(409, "Can't bid self"),
     NOTICE_NOT_FOUND(404, "Notice not found"),
     KEYWORD_NOT_FOUND(404,"Keyword not found")
     ;

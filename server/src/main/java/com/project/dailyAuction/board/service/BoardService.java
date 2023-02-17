@@ -269,8 +269,8 @@ public class BoardService {
 
         // 자기글에 입찰 불가
         if (member.getMemberId() == board.getSellerId()) {
-            throw new ResponseStatusException(ExceptionCode.CANT_BID_SLEF.getCode(),
-                    ExceptionCode.CANT_BID_SLEF.getMessage(),
+            throw new ResponseStatusException(ExceptionCode.CANT_BID_SELF.getCode(),
+                    ExceptionCode.CANT_BID_SELF.getMessage(),
                     new IllegalArgumentException());
         }
 
@@ -282,7 +282,7 @@ public class BoardService {
             lastMember.changeCoin(currentPrice);
 
             //알림 발송
-            noticeService.send(lastMember, board, 3);
+            noticeService.send(lastMember, board, 3, lastMember.getCoin());
         }
 
         //코인이 부족하면 에러
