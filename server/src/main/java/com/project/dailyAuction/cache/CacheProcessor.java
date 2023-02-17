@@ -3,6 +3,10 @@ package com.project.dailyAuction.cache;
 import com.project.dailyAuction.Search.repository.KeywordRepository;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
+import com.project.dailyAuction.board.service.BoardService;
+import com.project.dailyAuction.member.entity.Member;
+import com.project.dailyAuction.member.service.MemberService;
+import com.project.dailyAuction.notice.NoticeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -27,6 +31,9 @@ public class CacheProcessor {
     private final RedisTemplate<String, String> redisTemplate;
     private final BoardRepository boardRepository;
     private final KeywordRepository keywordRepository;
+    private final NoticeService noticeService;
+    private final MemberService memberService;
+    private final BoardService boardService;
 
     // 보드 상태 업데이트
     @Transactional
@@ -38,15 +45,31 @@ public class CacheProcessor {
             Long boardId = Long.parseLong(data.split("::")[1]);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime finishedAt = LocalDateTime.parse(redisTemplate.opsForValue().get(data), formatter);
+            Board board = boardService.find(boardId);
+            Member buyer = memberService.find(boardService.getBidderInRedis(boardId));
+            Member seller = memberService.find(board.getSellerId());
             if ((LocalDateTime.now().isAfter(finishedAt.minusMinutes(5)) ||
                     LocalDateTime.now().isEqual(finishedAt.minusMinutes(5))) && LocalDateTime.now().isBefore(finishedAt.minusMinutes(4))) {
                 log.info(boardId + "번 게시글 마감 5분 전");
+
+                //마감 임박 알림 전송
+                noticeService.send(buyer, board, 5);
             }
             // 경매 종료
             else if (LocalDateTime.now().isAfter(finishedAt)) {
                 boardRepository.updateStatus(boardId, checkFinishCode(boardId));
                 deleteFinishedTimeInRedis(boardId);
                 log.info(boardId + "번 게시글 마감");
+
+                //구매자 경매 낙찰 알림 전송
+                noticeService.send(buyer, board, 2);
+                if (board.getBidderId() != 0L) {
+                    //판매자 경매 낙찰 알림 전송
+                    noticeService.send(seller, board, 1);
+                } else {
+                    //판매자 경매 유찰 알림 전송
+                    noticeService.send(seller, board, 3);
+                }
             }
         }
     }
@@ -83,6 +106,7 @@ public class CacheProcessor {
             boardRepository.updateViews(boardId, viewCnt);
         }
     }
+
     @Transactional
     public void updateTopKeywordToMySql() {
         Set<String> redisKeys = redisTemplate.keys("SearchedCount*");
@@ -94,6 +118,7 @@ public class CacheProcessor {
             keywordRepository.updateSearchedCnt(keyword, searchedCnt);
         }
     }
+
     @Transactional
     public void updateBoardPriceToMySql() {
         Set<String> redisKeys = redisTemplate.keys("boardPrice*");
@@ -143,7 +168,7 @@ public class CacheProcessor {
         String key = "refreshToken::" + memberId;
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
-        valueOperations.set(key, refreshToken,24, TimeUnit.HOURS);
+        valueOperations.set(key, refreshToken, 24, TimeUnit.HOURS);
     }
 
 
