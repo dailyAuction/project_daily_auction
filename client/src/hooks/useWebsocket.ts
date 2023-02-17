@@ -6,13 +6,13 @@ export const useWebsocket = (subEndpoint = '/sub/board-id/2') => {
 
   // 웹소켓 연결을 위한 stomp 클라이언트 생성
   const client = new Client({
-    brokerURL: `ws:${process.env.REACT_APP_URL}/ws`,
+    brokerURL: `ws:${process.env.REACT_APP_WEBSOCKET_URL}/ws`,
     debug: (str) => console.log(str),
     // 자동 재연결을 위한 옵션
     reconnectDelay: -1,
     // server와 client의 연결상태 확인을 위한 auto send 기능
-    // heartbeatIncoming: 10000,
-    // heartbeatOutgoing: 10000,
+    heartbeatIncoming: 10000,
+    heartbeatOutgoing: 10000,
   });
 
   useEffect(() => {
