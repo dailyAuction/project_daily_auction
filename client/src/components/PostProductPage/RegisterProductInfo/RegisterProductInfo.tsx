@@ -1,5 +1,5 @@
 export const RegisterProductInfo = ({ productInfo, setProductInfo }) => {
-  const handlerOnchange = (e) => {
+  const handlerOnchange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (e.target.type === 'text') setProductInfo({ ...productInfo, title: e.target.value });
     if (e.target.type === 'number') setProductInfo({ ...productInfo, startingPrice: e.target.value });
     if (e.target.type === 'textarea') setProductInfo({ ...productInfo, description: e.target.value });
