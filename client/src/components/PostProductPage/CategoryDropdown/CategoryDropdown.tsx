@@ -2,16 +2,16 @@ import { useState } from 'react';
 import { CategoryBtn } from '../../_common/CategoryBtn/CategoryBtn';
 import { CATEGORIES } from '../../../constants/constants';
 
-export const CategoryDropdown = () => {
+export const CategoryDropdown = ({ productInfo, setProductInfo }) => {
   const [open, setOpen] = useState(false);
-  const [curCategory, setCurCategory] = useState('');
 
   const handlerOnClickDropdown = () => {
     setOpen(!open);
   };
 
-  const handlerOnClickCategory = (idx) => {
-    setCurCategory(CATEGORIES[idx]);
+  const handlerOnClickCategory = (idx: number) => {
+    setProductInfo({ ...productInfo, category: CATEGORIES[idx] });
+    setOpen(false);
   };
 
   return (
@@ -21,7 +21,7 @@ export const CategoryDropdown = () => {
           type="button"
           className={`relative flex justify-between align-middle p-2.5 w-full cursor-auto ${open && 'bg-white'}`}>
           <p className="">카테고리</p>
-          <div className="flex flex-1 ml-6">{curCategory}</div>
+          <div className="flex flex-1 ml-6">{productInfo.category}</div>
           {open ? (
             <svg
               onClick={handlerOnClickDropdown}
@@ -51,7 +51,7 @@ export const CategoryDropdown = () => {
           <div className="absolute flex flex-wrap items-center h-20 mt-2 pl-2 py-2 bg-white rounded-md z-20">
             {CATEGORIES.map((item, idx) => {
               return (
-                <div onClick={() => handlerOnClickCategory(idx)} key={item}>
+                <div key={item} onClick={() => handlerOnClickCategory(idx)}>
                   <CategoryBtn key={item}>{item}</CategoryBtn>
                 </div>
               );

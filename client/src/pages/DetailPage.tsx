@@ -25,6 +25,8 @@ export const DetailPage = () => {
     },
     {
       onError: (e) => console.error(e),
+      refetchOnMount: true,
+      refetchOnWindowFocus: true,
     }
   );
 
