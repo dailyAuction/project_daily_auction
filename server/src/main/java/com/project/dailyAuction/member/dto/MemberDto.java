@@ -12,7 +12,6 @@ public class MemberDto {
     @AllArgsConstructor
     public static class Signup{
         private String email;
-        private boolean verified;
         private String password;
 
     }

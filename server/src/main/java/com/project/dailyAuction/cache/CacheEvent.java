@@ -19,7 +19,7 @@ public class CacheEvent {
         cacheProcessor.updateViewCntToMySql();
         cacheProcessor.updateBiddingToMySql();
         cacheProcessor.deleteRedisPerHour();
-        log.info("조회수, 입찰 관련 반영-init!");
+        log.info("조회수, 입찰 관련 반영-init");
     }
 
     // 순서별 정리
