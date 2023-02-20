@@ -3,7 +3,7 @@ package com.project.dailyAuction.cache;
 import com.project.dailyAuction.Search.repository.KeywordRepository;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
-import com.project.dailyAuction.board.service.BoardService;
+import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import com.project.dailyAuction.notice.NoticeService;
@@ -15,6 +15,7 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -33,7 +34,6 @@ public class CacheProcessor {
     private final KeywordRepository keywordRepository;
     private final NoticeService noticeService;
     private final MemberService memberService;
-    private final BoardService boardService;
 
     // 보드 상태 업데이트
     @Transactional
@@ -45,8 +45,8 @@ public class CacheProcessor {
             Long boardId = Long.parseLong(data.split("::")[1]);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime finishedAt = LocalDateTime.parse(redisTemplate.opsForValue().get(data), formatter);
-            Board board = boardService.find(boardId);
-            Member buyer = memberService.find(boardService.getBidderInRedis(boardId));
+            Board board = boardRepository.findById(boardId).get();
+            Member buyer = memberService.find(getBidderInRedis(boardId));
             Member seller = memberService.find(board.getSellerId());
             if ((LocalDateTime.now().isAfter(finishedAt.minusMinutes(5)) ||
                     LocalDateTime.now().isEqual(finishedAt.minusMinutes(5))) && LocalDateTime.now().isBefore(finishedAt.minusMinutes(4))) {
@@ -72,6 +72,20 @@ public class CacheProcessor {
                     noticeService.send(seller, board, 3);
                 }
             }
+        }
+    }
+
+    public long getBidderInRedis(long boardId) {
+        String key = "boardLeadingBidder::" + boardId;
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        if (valueOperations.get(key) == null) {
+            Board board = boardRepository.findById(boardId)
+                    .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
+                            ExceptionCode.BOARD_NOT_FOUND.getMessage(),
+                            new IllegalArgumentException()));
+            return board.getBidderId();
+        } else {
+            return Long.parseLong(valueOperations.get(key));
         }
     }
 
