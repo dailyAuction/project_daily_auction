@@ -17,3 +17,10 @@ export interface ProductDetailResp {
   history: number[];
   myPrice?: string; // 내 입찰가
 }
+
+export interface ProductDetailRealtimeResp {
+  boardId: string;
+  price: string;
+  bidCount: string;
+  history: string;
+}
