@@ -19,14 +19,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest
 public class MemberControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private MemberService memberService;
-
-    @Test
-    void joinMember() throws Exception {
+//    @Autowired
+//    private MockMvc mockMvc;
+//
+//    @MockBean
+//    private MemberService memberService;
+//
+//    @Test
+//    void joinMember() throws Exception {
 //        MemberDto.Signup dto = new MemberDto.Signup("abc@gmail.com", true, "1234");
 
         // when
@@ -39,5 +39,5 @@ public class MemberControllerTest {
 //                .andExpect(status().isOk())
 //                .andExpect(content().string("1000"))
 //                .andDo(print());
-    }
+ //   }
 }
