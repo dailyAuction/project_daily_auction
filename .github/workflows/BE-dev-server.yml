@@ -14,11 +14,7 @@ jobs:
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.0
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: Install Dependencies
-        run: |
-          sudo yum update -y
-          sudo yum install -y java-1.8.0-openjdk
+          ssh-private-key: ${{ secrets.EC2_PRIVATE_KEY }}
       - name: Deploy Application
         run: |
           cd project_daily_auction
