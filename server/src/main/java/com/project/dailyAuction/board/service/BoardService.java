@@ -8,6 +8,7 @@ import com.project.dailyAuction.boardImage.repository.BoardImageRepository;
 import com.project.dailyAuction.boardImage.service.ImageHandler;
 import com.project.dailyAuction.boardMember.entity.BoardMember;
 import com.project.dailyAuction.boardMember.repository.BoardMemberRepository;
+import com.project.dailyAuction.cache.CacheProcessor;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
@@ -46,6 +47,7 @@ public class BoardService {
     private final NoticeRepository noticeRepository;
     private final ImageHandler imageHandler;
     private final BoardImageRepository boardImageRepository;
+    private final CacheProcessor cacheProcessor;
 
     public Board saveBoard(String token, BoardDto.Post postDto, List<MultipartFile> images) throws IOException {
         Member member = memberService.findByAccessToken(token);
@@ -107,7 +109,7 @@ public class BoardService {
         if (token != null) {
             Member member = memberService.findByAccessToken(token);
             //내 가격 업데이트
-            response.updateMyPrice(findMyPrice(member, target));
+            response.updateMyPrice(findMyPrice(token, boardId));
 
             //유저가 board상세페이지에 접속하려고하면 알림의 상태를 읽음으로 바꾼다.
             List<Notice> notices = noticeRepository.findAllByReceiverAndBoard(member, target);
@@ -276,6 +278,12 @@ public class BoardService {
                     ExceptionCode.NOT_WRITER.getMessage(),
                     new IllegalArgumentException());
         }
+        // 경매 진행 중일 때 삭제하면 환불
+        if (target.getStatusId() == 1) {
+            Member lastBidder = memberService.find(target.getBidderId());
+            lastBidder.changeCoin(target.getCurrentPrice());
+        }
+
         boardRepository.delete(target);
     }
 
@@ -286,8 +294,8 @@ public class BoardService {
 
         // 자기글에 입찰 불가
         if (member.getMemberId() == board.getSellerId()) {
-            throw new ResponseStatusException(ExceptionCode.CANT_BID_SLEF.getCode(),
-                    ExceptionCode.CANT_BID_SLEF.getMessage(),
+            throw new ResponseStatusException(ExceptionCode.CANT_BID_SELF.getCode(),
+                    ExceptionCode.CANT_BID_SELF.getMessage(),
                     new IllegalArgumentException());
         }
 
@@ -299,7 +307,7 @@ public class BoardService {
             lastMember.changeCoin(currentPrice);
 
             //알림 발송
-            noticeService.send(lastMember, board, 3);
+            noticeService.send(lastMember, board, 3, lastMember.getCoin());
         }
 
         //코인이 부족하면 에러
@@ -366,7 +374,8 @@ public class BoardService {
     }
 
     public List<Board> getPopularItem(long categoryId) {
-        if (categoryId == 1) {
+        cacheProcessor.updateViewCntToMySql();
+        if (categoryId == 0) {
             return boardRepository.findTop5ByStatusIdOrderByViewCountDesc(1);
         } else {
             return boardRepository.findTop5ByCategoryIdAndStatusIdOrderByViewCountDesc(categoryId, 1);
@@ -377,7 +386,9 @@ public class BoardService {
         return boardRepository.findTop5ByStatusIdOrderByCreatedAtDesc(1);
     }
 
-    public int findMyPrice(Member member, Board board) {
+    public int findMyPrice(String token, long boardId) {
+        Board board = find(boardId);
+        Member member = memberService.findByAccessToken(token);
         BoardMember boardMember = boardMemberRepository.findByBoardAndMember(board, member);
         return boardMember.getMyPrice();
     }
@@ -389,12 +400,16 @@ public class BoardService {
         } else if (sort == 1) {//마감임박순 정렬
             defaultSort = Sort.by("createdAt").ascending();
         } else if (sort == 2) {//입찰수 기준 정렬
+            cacheProcessor.updateBiddingToMySql();
             defaultSort = Sort.by("bidCount").descending();
         } else if (sort == 3) {//조회수 기준 정렬
+            cacheProcessor.updateViewCntToMySql();
             defaultSort = Sort.by("viewCount").descending();
         } else if (sort == 4) {//높은 현재가 기준 정렬
+            cacheProcessor.updateBoardPriceToMySql();
             defaultSort = Sort.by("currentPrice").descending();
         } else if (sort == 5) {//낮은 현재가 기준 정렬
+            cacheProcessor.updateBoardPriceToMySql();
             defaultSort = Sort.by("currentPrice").ascending();
         }
         // 전체 리스트 조회

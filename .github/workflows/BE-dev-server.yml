@@ -1,0 +1,26 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - BE-dev-server
+
+jobs:
+  deploy:
+    runs-on: amazonlinux:2
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_PRIVATE_KEY }}
+      - name: Deploy Application
+        run: |
+          cd project_daily_auction
+          git fetch
+          git checkout BE-dev-server
+          git pull
+          cd server
+          ./gradlew clean build
+          ./gradlew build

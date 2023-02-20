@@ -101,14 +101,14 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
     private URI createURI(String accessToken, String refreshToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("access-token", "Bearer " + accessToken);
-        queryParams.add("refresh-token", "Bearer " + accessToken);
+        queryParams.add("AccessToken", "Bearer " + accessToken);
+        queryParams.add("RefreshToken", "Bearer " + accessToken);
 
 
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
-                .host("localhost")
+                .host("ec2-13-124-156-170.ap-northeast-2.compute.amazonaws.com")
                 .port(8080)
                 .path("callback/receive-token.html")
                 .queryParams(queryParams)
