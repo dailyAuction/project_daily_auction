@@ -49,6 +49,6 @@ public class CacheEvent {
     @Scheduled(cron = "0 0/1 * * * ?")
     public void schedulePerMinuteCache() {
         cacheProcessor.updateBoardStatusToMySql();
-        log.info("게시글 상태 체크-1분");
+        log.info("게시글 상태 체크-1분!");
     }
 }
