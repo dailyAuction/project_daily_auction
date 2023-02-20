@@ -92,7 +92,7 @@ public class BoardService {
         if (token != null) {
             Member member = memberService.findByAccessToken(token);
             //내 가격 업데이트
-            response.updateMyPrice(findMyPrice(member, target));
+            response.updateMyPrice(findMyPrice(token, boardId));
 
             //유저가 board상세페이지에 접속하려고하면 알림의 상태를 읽음으로 바꾼다.
             List<Notice> notices = noticeRepository.findAllByReceiverAndBoard(member, target);
@@ -369,7 +369,9 @@ public class BoardService {
         return boardRepository.findTop5ByStatusIdOrderByCreatedAtDesc(1);
     }
 
-    public int findMyPrice(Member member, Board board) {
+    public int findMyPrice(String token, long boardId) {
+        Board board = find(boardId);
+        Member member = memberService.findByAccessToken(token);
         BoardMember boardMember = boardMemberRepository.findByBoardAndMember(board, member);
         return boardMember.getMyPrice();
     }

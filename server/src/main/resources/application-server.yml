@@ -52,3 +52,15 @@ jwt:
     secret: ${JWT_SECRET_KEY}               # todo : ec2환경 변수에 저장
   access-token-expiration-minutes: 30
   refresh-token-expiration-minutes: 1440
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    s3:
+      bucket: daily-auction-bucket
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

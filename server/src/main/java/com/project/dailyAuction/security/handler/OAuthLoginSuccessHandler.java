@@ -101,8 +101,8 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
     private URI createURI(String accessToken, String refreshToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("access-token", "Bearer " + accessToken);
-        queryParams.add("refresh-token", "Bearer " + accessToken);
+        queryParams.add("AccessToken", "Bearer " + accessToken);
+        queryParams.add("RefreshToken", "Bearer " + accessToken);
 
 
         return UriComponentsBuilder
