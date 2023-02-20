@@ -16,7 +16,6 @@ public class BoardDto {
     public static class Post {
         private String title;
         private String description;
-        private String image;
         private long categoryId;
         private int startingPrice;
     }
