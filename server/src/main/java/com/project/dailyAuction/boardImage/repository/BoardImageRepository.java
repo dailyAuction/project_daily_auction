@@ -10,5 +10,7 @@ public interface BoardImageRepository extends JpaRepository<BoardImage,Long> {
     BoardImage save(BoardImage boardPicture);
 
     List<BoardImage> findAllByBoard(Board board);
+
+    BoardImage findByStoredFilePath(String storedFilePath);
 }
 
