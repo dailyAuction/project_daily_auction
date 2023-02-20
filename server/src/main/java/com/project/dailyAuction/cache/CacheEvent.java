@@ -19,7 +19,7 @@ public class CacheEvent {
         cacheProcessor.updateViewCntToMySql();
         cacheProcessor.updateBiddingToMySql();
         cacheProcessor.deleteRedisPerHour();
-        log.info("조회수, 입찰 관련 반영-init");
+        log.info("조회수, 입찰 관련 반영-init!");
     }
 
     // 순서별 정리
@@ -49,6 +49,6 @@ public class CacheEvent {
     @Scheduled(cron = "0 0/1 * * * ?")
     public void schedulePerMinuteCache() {
         cacheProcessor.updateBoardStatusToMySql();
-        log.info("게시글 상태 체크-1분!");
+        log.info("게시글 상태 체크-1분");
     }
 }
