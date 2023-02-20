@@ -236,38 +236,24 @@ public class CacheProcessor {
 
     // 한시간마다 db업데이트 후 삭제
     public void deleteRedisPerHour() {
-        redisTemplate.execute(new RedisCallback<Object>() {
-            @Override
-            public Object doInRedis(RedisConnection connection) throws DataAccessException {
-                redisTemplate.delete(Arrays.asList(
-                        "boardHistory*",
-                        "boardBidCount*",
-                        "boardLeadingBidder*",
-                        "boardViewCount*",
-                        "SearchedCount*",
-                        "boardPrice*"));
-                return null;
-            }
-        });
+        deleteAllInRedis("boardHistory*");
+        deleteAllInRedis("boardBidCount*");
+        deleteAllInRedis("boardLeadingBidder*");
+        deleteAllInRedis("boardViewCount*");
+        deleteAllInRedis("SearchedCount*");
+        deleteAllInRedis("boardPrice*");
     }
 
     public void deleteInRedis(String key, long boardId) {
-        redisTemplate.execute(new RedisCallback<Object>() {
-            @Override
-            public Object doInRedis(RedisConnection connection) throws DataAccessException {
-                redisTemplate.delete(key + "::" + boardId);
-                return null;
-            }
-        });
+        redisTemplate.delete(key + "::" + boardId);
     }
 
     public void deleteAllInRedis(String key) {
-        redisTemplate.execute(new RedisCallback<Object>() {
-            @Override
-            public Object doInRedis(RedisConnection connection) throws DataAccessException {
-                redisTemplate.delete(key + "*");
-                return null;
-            }
-        });
+        Set<String> redisKeys = redisTemplate.keys(key+"*");
+        Iterator<String> it = redisKeys.iterator();
+        while (it.hasNext()) {
+            String data = it.next();
+            redisTemplate.delete(data);
+        }
     }
 }
