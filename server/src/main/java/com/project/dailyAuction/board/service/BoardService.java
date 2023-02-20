@@ -55,6 +55,7 @@ public class BoardService {
                 .finishedAt(LocalDateTime.now().plusDays(1))
                 .sellerId(member.getMemberId())
                 .startingPrice(postDto.getStartingPrice())
+                .currentPrice(postDto.getStartingPrice())
                 .sellerId(member.getMemberId())
                 .history(String.valueOf(postDto.getStartingPrice()))
                 .build();
