@@ -54,23 +54,15 @@ public class BidController {
 
         }
         BoardDto.Response dto = boardService.getDetailPage(token, boardId, currentPrice, viewCount, bidCount, bidderId, history);
-        Message.InitResponse response = new Message.InitResponse();
-        if (!message.getBidderToken().equals("")) {
-            response = Message.InitResponse.builder()
-                    .boardId(boardId)
-                    .bidCount(bidCount)
-                    .currentPrice(dto.getCurrentPrice())
-                    .history(dto.getHistory())
-                    .myPrice(myPrice)
-                    .build();
-        } else {
-            response = Message.InitResponse.builder()
-                    .boardId(boardId)
-                    .bidCount(bidCount)
-                    .currentPrice(dto.getCurrentPrice())
-                    .history(dto.getHistory())
-                    .build();
-        }
+
+        Message.InitResponse response = Message.InitResponse.builder()
+                .boardId(boardId)
+                .bidCount(bidCount)
+                .currentPrice(dto.getCurrentPrice())
+                .history(dto.getHistory())
+                .myPrice(myPrice)
+                .build();
+
 
         simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
     }
