@@ -235,12 +235,12 @@ public class CacheProcessor {
 
     // 한시간마다 db업데이트 후 삭제
     public void deleteRedisPerHour() {
-        deleteAllInRedis("boardHistory*");
-        deleteAllInRedis("boardBidCount*");
-        deleteAllInRedis("boardLeadingBidder*");
-        deleteAllInRedis("boardViewCount*");
-        deleteAllInRedis("SearchedCount*");
-        deleteAllInRedis("boardPrice*");
+        deleteAllInRedis("boardHistory");
+        deleteAllInRedis("boardBidCount");
+        deleteAllInRedis("boardLeadingBidder");
+        deleteAllInRedis("boardViewCount");
+        deleteAllInRedis("SearchedCount");
+        deleteAllInRedis("boardPrice");
     }
 
     public void deleteInRedis(String key, long boardId) {
