@@ -58,6 +58,11 @@ dependencies {
 
 	//websocket 관련
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	//aws 관련
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+	implementation group: 'commons-io', name: 'commons-io', version: '2.4'
 }
 
 tasks.named('test') {

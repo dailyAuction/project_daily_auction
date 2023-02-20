@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -22,8 +24,9 @@ public class BoardController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void postBoard(@RequestHeader(name = "Authorization") String token,
-                          @RequestBody BoardDto.Post postDto) {
-        Board board = boardService.saveBoard(token, postDto);
+                          @RequestPart("data") BoardDto.Post postDto,
+                          @RequestPart("files")List<MultipartFile> images) throws IOException {
+        Board board = boardService.saveBoard(token, postDto, images);
         boardService.setFinishedTimeToRedis(board.getBoardId(),board.getFinishedAt());
     }
 

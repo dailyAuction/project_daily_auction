@@ -1,6 +1,7 @@
 package com.project.dailyAuction.board.entity;
 
 //import com.project.dailyAuction.boardNotice.entity.Notice;
+import com.project.dailyAuction.boardImage.entity.BoardImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,8 +27,8 @@ public class Board implements Serializable {
     private String description;
     @Column
     private long sellerId;
-    @Column(nullable = false)
-    private String image;
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    private List<BoardImage> images = new ArrayList<>();
     @Column
     private String thumbnail;
     @Column
@@ -82,5 +83,13 @@ public class Board implements Serializable {
 
     public void changeStatus(long statusId){
         this.statusId = statusId;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public void setImages(List<BoardImage> images) {
+        this.images = images;
     }
 }

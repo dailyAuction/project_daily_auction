@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class BoardDto {
     @Getter
@@ -30,7 +31,7 @@ public class BoardDto {
         private long bidderId;
         private String title;
         private String description;
-        private String image;
+        private List<String> imageUrls;
         private String thumbnail;
         private long statusId;
         private long categoryId;
