@@ -19,6 +19,8 @@ public class CacheEvent {
         cacheProcessor.updateViewCntToMySql();
         cacheProcessor.updateBiddingToMySql();
         cacheProcessor.deleteRedisPerHour();
+//        cacheProcessor.flushRedis();
+//        cacheProcessor.deleteAllInRedis("SearchedCount");
         log.info("조회수, 입찰 관련 반영-init");
     }
 
