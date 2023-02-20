@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 public class BoardTest {
-    @Test
-    void 경매_생성() {
-    }
-
-    @Mock
-    private BoardService boardService;
-
-    @Mock
-    private BoardRepository boardRepository;
+//    @Test
+//    void 경매_생성() {
+//    }
+//
+//    @Mock
+//    private BoardService boardService;
+//
+//    @Mock
+//    private BoardRepository boardRepository;
 }
