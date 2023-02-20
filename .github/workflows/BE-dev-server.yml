@@ -7,27 +7,24 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-
+    runs-on: amazonlinux:2
     steps:
-      - name: Checkout
+      - name: Checkout Code
         uses: actions/checkout@v2
-
-      - name: Install SSH client
-        run: sudo apt-get update && sudo apt-get install openssh-client -y
-
-      - name: SSH Deploy
-        uses: appleboy/ssh-action@master
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.0
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          port: ${{ secrets.EC2_SSH_PORT }}
-          script: |
-            cd project_daily_auction
-            git fetch
-            git checkout BE-dev-server
-            git pull
-            cd server
-            ./gradlew clean build
-            ./gradlew build
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Install Dependencies
+        run: |
+          sudo yum update -y
+          sudo yum install -y java-1.8.0-openjdk
+      - name: Deploy Application
+        run: |
+          cd project_daily_auction
+          git fetch
+          git checkout BE-dev-server
+          git pull
+          cd server
+          ./gradlew clean build
+          ./gradlew build
