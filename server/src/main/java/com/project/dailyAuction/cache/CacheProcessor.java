@@ -45,10 +45,9 @@ public class CacheProcessor {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime finishedAt = LocalDateTime.parse(redisTemplate.opsForValue().get(data), formatter);
             Board board = boardRepository.findById(boardId).get();
-            Member buyer = memberService.find(getBidderInRedis(boardId));
-            Member seller = memberService.find(board.getSellerId());
             if ((LocalDateTime.now().isAfter(finishedAt.minusMinutes(5)) ||
                     LocalDateTime.now().isEqual(finishedAt.minusMinutes(5))) && LocalDateTime.now().isBefore(finishedAt.minusMinutes(4))) {
+                Member buyer = memberService.find(getBidderInRedis(boardId));
                 log.info(boardId + "번 게시글 마감 5분 전");
 
                 //마감 임박 알림 전송
@@ -56,16 +55,20 @@ public class CacheProcessor {
             }
             // 경매 종료
             else if (LocalDateTime.now().isAfter(finishedAt)) {
+                Member seller = memberService.find(board.getSellerId());
                 updateViewToMySql(boardId);
                 boardRepository.updateStatus(boardId, checkFinishCode(boardId));
                 deleteInRedis("finishedTime", boardId);
                 log.info(boardId + "번 게시글 마감");
 
-                //구매자 경매 낙찰 알림 전송
-                noticeService.send(buyer, board, 2);
                 if (board.getBidderId() != 0L) {
+                    Member buyer = memberService.find(getBidderInRedis(boardId));
+                    //구매자 경매 낙찰 알림 전송
+                    noticeService.send(buyer, board, 2);
+
                     //판매자 경매 낙찰 알림 전송
                     noticeService.send(seller, board, 1);
+
                 } else {
                     //판매자 경매 유찰 알림 전송
                     noticeService.send(seller, board, 3);
