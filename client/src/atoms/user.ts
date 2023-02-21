@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { localStorageEffect } from './localStorageEffect';
 
 // const [loginState, setLoginState] = useRecoilState(loginStateAtom);
 export const loginStateAtom = atom({
@@ -6,7 +7,7 @@ export const loginStateAtom = atom({
   default: true,
 });
 
-// const [userInfo, setUserInfo] = useRecoilState(loginStateAtom);
+// const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
 export const userInfoAtom = atom({
   key: 'userInfo',
   default: {
@@ -14,4 +15,5 @@ export const userInfoAtom = atom({
     coin: '1000000',
     email: 'test@test.com',
   },
+  effects: [localStorageEffect('userinfo')],
 });
