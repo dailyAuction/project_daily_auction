@@ -26,7 +26,6 @@ export const DetailPage = () => {
     {
       onError: (e) => console.error(e),
       refetchOnMount: true,
-      refetchOnWindowFocus: true,
     }
   );
 
@@ -35,8 +34,6 @@ export const DetailPage = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>에러가 발생하였습니다.</div>;
-
-  console.log(response);
 
   return (
     <main className="base-layout">
@@ -53,6 +50,7 @@ export const DetailPage = () => {
         <AuctionStatus finishedAt={finishedAt} statusId={statusId} />
 
         <BidInformation reatTimeData={response} sendBid={sendBid} />
+
         <article className="py-8 bg-white px-2">{description}</article>
         <Chart realTimeData={response} initData={history} />
       </section>

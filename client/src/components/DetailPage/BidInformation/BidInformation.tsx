@@ -28,6 +28,7 @@ export const BidInformation = ({ reatTimeData, sendBid }: BidInformationProps) =
   const userInfo = useRecoilValue(userInfoAtom);
   const boardId = useLocation().pathname.split('/')[2];
 
+  // fetch data
   const { isLoading, error, data } = useQuery(
     'productDetail',
     async () => {
@@ -43,7 +44,7 @@ export const BidInformation = ({ reatTimeData, sendBid }: BidInformationProps) =
   const { statusId, startingPrice, myPrice = null, authorId } = data || {};
 
   // 실시간 경매 정보 데이터
-  const { price: currentPrice, bidCount } = reatTimeData;
+  const { currentPrice, bidCount } = reatTimeData;
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>에러가 발생하였습니다.</div>;
@@ -52,7 +53,9 @@ export const BidInformation = ({ reatTimeData, sendBid }: BidInformationProps) =
     <>
       <section className="flex w-full justify-center bg-white px-2 py-3 space-y-4 flex-col">
         <article className="flex items-center space-x-2">
-          <span className="text-lg font-bold text-main-orange">{currentPrice}</span>
+          <span className="text-lg font-bold text-main-orange">
+            {currentPrice ? currentPrice?.toLocaleString() : Number(startingPrice).toLocaleString()} coin
+          </span>
           <span className="text-sm">{myPrice ? `내 입찰가 : ${myPrice}` : `시작가 : ${startingPrice}`}</span>
         </article>
         <article className="flex w-full justify-between items-center">
@@ -80,7 +83,11 @@ export const BidInformation = ({ reatTimeData, sendBid }: BidInformationProps) =
         </article>
       </section>
       {isModalOpen && (
-        <BidModal handleClose={() => setModalOpen(false)} currentPrice={currentPrice} sendBid={sendBid} />
+        <BidModal
+          handleClose={() => setModalOpen(false)}
+          currentPrice={currentPrice || Number(startingPrice)}
+          sendBid={sendBid}
+        />
       )}
     </>
   );

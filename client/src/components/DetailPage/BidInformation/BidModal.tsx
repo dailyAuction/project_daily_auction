@@ -5,7 +5,7 @@ import { blockInvalidChar } from '../../../utils/blockInvalidChar';
 import { useBidInformationModal } from './useBidInformation';
 
 type BidModalProps = {
-  currentPrice: string;
+  currentPrice: number;
   sendBid: (price: string) => void;
   handleClose: () => void;
 };
@@ -37,9 +37,9 @@ export const BidModal = ({ handleClose, currentPrice, sendBid }: BidModalProps) 
           />
           <span className="text-xs text-main-red">{validationMsg}</span>
         </article>
-        <article className="flex self-end space-x-1 items-center">
+        <article className="self-end">
           <span className="text-sm">현재 내 코인 : </span>
-          <span className="text-bold text-main-orange h-3">{myCoin} coin</span>
+          <span className="text-bold text-main-orange h-3">{Number(myCoin).toLocaleString()} coin</span>
         </article>
         <article className="flex justify-between pt-3">
           <button type="submit" className="red-btn" onClick={() => handleClickBid(currentPrice, sendBid)}>
