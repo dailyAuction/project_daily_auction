@@ -34,7 +34,7 @@ public class BidController {
                 .boardId(boardId)
                 .bidCount(bidCount)
                 .history(histories)
-                .price(message.getPrice())
+                .currentPrice(message.getPrice())
                 .build();
         simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
     }
@@ -51,20 +51,13 @@ public class BidController {
         long bidderId = boardService.getBidderInRedis(boardId);
         int viewCount = boardService.addViewCntToRedis(boardId);
 
-        int myPrice = 0;
-        if (!message.getBidderToken().equals("")) {
-            token = message.getBidderToken();
-            myPrice = boardService.findMyPrice(token, boardId);
-
-        }
         BoardDto.Response dto = boardService.getDetailPage(token, boardId, currentPrice, viewCount, bidCount, bidderId, history);
 
-        Message.InitResponse response = Message.InitResponse.builder()
+        Message.Response response = Message.Response.builder()
                 .boardId(boardId)
                 .bidCount(bidCount)
                 .currentPrice(dto.getCurrentPrice())
                 .history(dto.getHistory())
-                .myPrice(myPrice)
                 .build();
 
 
