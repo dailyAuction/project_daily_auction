@@ -20,8 +20,6 @@ export const Bestproduct = () => {
     setIsClick(true);
   };
 
-  console.log(path);
-
   return (
     <div className="w-full">
       <div className="flex items-center">
