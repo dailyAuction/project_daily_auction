@@ -51,10 +51,11 @@ public class BoardService {
                 .thumbnail("")
                 .statusId(0)
                 .categoryId(postDto.getCategoryId())
-                .createdAt(LocalDateTime.now())
-                .finishedAt(LocalDateTime.now().plusDays(1))
+                .createdAt(LocalDateTime.now().plusHours(9))
+                .finishedAt(LocalDateTime.now().plusHours(33))
                 .sellerId(member.getMemberId())
                 .startingPrice(postDto.getStartingPrice())
+                .currentPrice(postDto.getStartingPrice())
                 .sellerId(member.getMemberId())
                 .history(String.valueOf(postDto.getStartingPrice()))
                 .build();
