@@ -395,10 +395,9 @@ public class BoardService {
     }
 
     public Page<Board> findBoardPage(long categoryId, int page, int size, int sort) {
-        Sort defaultSort = Sort.by("").descending();
-        if (sort == 0) {//기본 정렬
-            defaultSort = Sort.by("boardId").ascending();
-        } else if (sort == 1) {//마감임박순 정렬
+        Sort defaultSort = Sort.by("boardId").descending();
+
+        if (sort == 1) {//마감임박순 정렬
             defaultSort = Sort.by("createdAt").ascending();
         } else if (sort == 2) {//입찰수 기준 정렬
             cacheProcessor.updateBiddingToMySql();
