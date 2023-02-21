@@ -5,11 +5,14 @@ import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.Mapper.BoardMapper;
 import com.project.dailyAuction.board.service.BoardService;
 import com.project.dailyAuction.dto.PageDto;
+import com.project.dailyAuction.webSocket.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -18,6 +21,7 @@ import java.util.List;
 public class BoardController {
     private final BoardService boardService;
     private final BoardMapper boardMapper;
+    private final SimpMessageSendingOperations simpMessageSendingOperations;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -54,13 +58,25 @@ public class BoardController {
         return new PageDto(responses, boardPage);
     }
 
-//    @PatchMapping("/{board-id}/bidding")
-//    @ResponseStatus(HttpStatus.OK)
-//    private void bidBoard(@RequestHeader(name = "Authorization") String token,
-//                          @PathVariable("board-id") long boardId,
-//                          @RequestBody BoardDto.Patch patchDto) {
-//        boardService.bidBoard(token, boardId, patchDto.getNewPrice());
-//    }
+    @PatchMapping("/{board-id}/bidding")
+    @ResponseStatus(HttpStatus.OK)
+    private void bidBoard(@RequestHeader(name = "Authorization") String token,
+                          @PathVariable("board-id") long boardId,
+                          @RequestBody BoardDto.Patch patchDto) {
+        boardService.bidBoard(token, boardId, patchDto.getPrice());
+        int bidCount = boardService.getBidCountInRedis(boardId);
+        String history = boardService.getHistoryInRedis(boardId);
+        Integer[] histories = Arrays.stream(history.split(","))
+                .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
+
+        Message.Response response = Message.Response.builder()
+                .boardId(boardId)
+                .bidCount(bidCount)
+                .history(histories)
+                .currentPrice(patchDto.getPrice())
+                .build();
+        simpMessageSendingOperations.convertAndSend("/sub/board-id/" + boardId, response);
+    }
 
     @DeleteMapping("/{board-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
