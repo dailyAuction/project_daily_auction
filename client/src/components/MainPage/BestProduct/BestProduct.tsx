@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { ProductItem } from '../../_common/ProductItem/ProductItem';
 import { CATEGORIES } from '../../../constants/constants';
-import { bestProductAPI } from '../../../api/bestProductAPI';
+import { mainPageAPI } from '../../../api/mainPageAPI';
 
 export const Bestproduct = () => {
   const [categoryId, setCategoryId] = useState(0);
@@ -10,7 +10,7 @@ export const Bestproduct = () => {
 
   const path = categoryId ? `${categoryId}/popular-item` : 'all-popular-item';
 
-  const { isLoading, error, data } = useQuery(['bestProduct', `${categoryId}`], () => bestProductAPI.get({ path }), {
+  const { isLoading, error, data } = useQuery(['bestProduct', `${categoryId}`], () => mainPageAPI.getBest({ path }), {
     enabled: isClick,
     staleTime: 1000 * 20,
   });

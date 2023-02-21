@@ -5,8 +5,12 @@ type BestProductAPIFactor = {
   path: string;
 };
 
-export const bestProductAPI = {
-  get: async ({ path }: BestProductAPIFactor) => {
+export const mainPageAPI = {
+  getClosing: async () => {
+    const res = await httpClient.get<ProductDetailResp[]>('/imminent-item');
+    return res.data;
+  },
+  getBest: async ({ path }: BestProductAPIFactor) => {
     const res = await httpClient.get<ProductDetailResp[]>(`/${path}`);
     return res.data;
   },
