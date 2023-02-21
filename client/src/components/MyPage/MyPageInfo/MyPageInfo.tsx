@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
 import { accessTokenAtom, refreshTokenAtom } from '../../../atoms/token';
-import { userInfoAtom } from '../../../atoms/user';
+import { loginStateAtom, userInfoAtom } from '../../../atoms/user';
 import { SignOutModal } from './SignOutModal';
 
 export const MyPageInfo = () => {
@@ -11,12 +11,14 @@ export const MyPageInfo = () => {
 
   const resetAccessToken = useResetRecoilState(accessTokenAtom);
   const resetRefreshToken = useResetRecoilState(refreshTokenAtom);
-  const resetUserInfoAtom = useResetRecoilState(userInfoAtom);
+  const resetUserInfo = useResetRecoilState(userInfoAtom);
+  const resetLoginState = useResetRecoilState(loginStateAtom);
 
   const handleLogout = () => {
     resetAccessToken();
     resetRefreshToken();
-    resetUserInfoAtom();
+    resetUserInfo();
+    resetLoginState();
   };
 
   const myAuctionBtn = 'w-full bg-background-mobile p-6';
