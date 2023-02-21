@@ -1,32 +1,27 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 
 export const Banner = () => {
   const [currSlide, setCurrSlide] = useState(0);
   const slideRef = useRef(null);
 
-  const TOTAL_SLIDES = 1;
+  // 배너에 들어갈 이미지 개수
+  const TOTAL_SLIDES = 3;
 
   const handlerClickPrevBtn = () => {
-    if (currSlide === 0) setCurrSlide(TOTAL_SLIDES);
+    if (currSlide <= 0) setCurrSlide(0);
     else setCurrSlide(currSlide - 1);
   };
 
   const handlerClickNextBtn = () => {
-    if (currSlide >= TOTAL_SLIDES) setCurrSlide(0);
+    if (currSlide >= TOTAL_SLIDES - 1) setCurrSlide(0);
     else setCurrSlide(currSlide + 1);
   };
 
-  useEffect(() => {
-    slideRef.current.style.transition = 'all 0.5s ease-in-out';
-    slideRef.current.style.transform = `translateX(-${currSlide}00%)`;
-  }, [currSlide]);
-
   return (
     <div className="base-layout my-2">
-      <div className="base-layout relative overflow-hidden">
-        <div className="h-56 flex" ref={slideRef}>
-          <img className="duration-700 ease-in-out" src="/testImg/test1.jpeg" alt="1" />
-          <img className="duration-700 ease-in-out" src="/testImg/test2.jpg" alt="2" />
+      <div className="relative">
+        <div className="w-full h-56 " ref={slideRef}>
+          <img className="w-screen h-56 object-cover" src={`/testImg/test${currSlide + 1}.jpeg`} alt="" />
         </div>
         <div>
           <button type="button" className="absolute top-20 left-3" onClick={handlerClickPrevBtn}>

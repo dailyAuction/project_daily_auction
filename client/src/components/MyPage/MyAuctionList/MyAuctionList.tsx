@@ -5,14 +5,14 @@ import { TabBar } from '../../_common/TabBar/TabBar';
 import { MyAuctionBtn } from '../MyAuctionBtn/MyAuctionBtn';
 import { MyAuctionContent } from '../MyAuctionContent/MyAuctionContent';
 import { AUCTION_STATUS } from '../../../constants/constants';
-import { myAuctionListAPI } from '../../../api/myAuctionListAPI';
+import { myPageAPI } from '../../../api/myPageAPI';
 
 export const MyAuctionList = () => {
   const [status, setStatus] = useState(0);
 
   const { isLoading, error, data } = useQuery(
     'myAuction',
-    () => myAuctionListAPI.get({ sort: '', path: 'my-auction-list' }),
+    () => myPageAPI.getMyAuctionList({ sort: '', path: 'my-auction-list' }),
     { staleTime: 1000 * 20 }
   );
 

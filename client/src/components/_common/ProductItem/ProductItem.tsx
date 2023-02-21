@@ -11,7 +11,7 @@ type ProductItemProps = {
 };
 
 export const ProductItem = ({ productDetail }: ProductItemProps) => {
-  const { boardId, thumbnail, title, currentPrice, statusId, createdAt, finishedAt, authorId } = productDetail;
+  const { boardId, thumbnail, title, statusId, finishedAt, authorId } = productDetail;
 
   // 현재 유저가 Seller 인지 판단합니다.
   const { isMatchUserId } = useIsMatchUserId();
@@ -24,8 +24,7 @@ export const ProductItem = ({ productDetail }: ProductItemProps) => {
     <Link to={`/detail/${boardId}`}>
       <div className="flex justify-center items-end relative w-full rounded-[10px] bg-background-mobile cursor-pointer">
         <div className="p-[6px] flex-2">
-          {/* TODO: 남은 시간 데이터 props 전달 */}
-          <ProductItemImg thumbnail={thumbnail} statusId={statusId} />
+          <ProductItemImg thumbnail={thumbnail} statusId={statusId} finishedAt={finishedAt} />
         </div>
         <div className="flex-1 px-0.5">
           {!isUserSeller && statusId === 1 && page === 'participation' && (

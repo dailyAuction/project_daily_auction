@@ -1,10 +1,10 @@
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import { ProductItemImg } from '../../_common/ProductItemImg/ProductItemImg';
-import { closingProductAPI } from '../../../api/closingProductAPI';
+import { mainPageAPI } from '../../../api/mainPageAPI';
 
 export const ClosingProduct = () => {
-  const { isLoading, error, data } = useQuery('closingProduct', () => closingProductAPI.get(), {
+  const { isLoading, error, data } = useQuery('closingProduct', () => mainPageAPI.getClosing(), {
     // 현재 데이터가 없어서 쿼리를 1초단위로 보내는만큼 매초 에러가 발생해서 우선 주석처리 해두었습니다.
     // refetchOnMount: true,
     // refetchOnWindowFocus: true,
@@ -28,11 +28,11 @@ export const ClosingProduct = () => {
       <div className="flex gap-2 overflow-x-auto scrollbar-hide w-full">
         {isLoading && <div>Loading...</div>}
         {error && <div>마감 임박 상품이 없습니다.</div>}
-        {data?.map((el) => {
+        {data?.items.map((el) => {
           return (
             <Link key={el.boardId} to={`/detail/${el.boardId}`}>
               <div className="flex flex-col ml-2 min-w-[120px] w-[120px]">
-                <ProductItemImg thumbnail={el.thumbnail} statusId={el.statusId} />
+                <ProductItemImg thumbnail={el.thumbnail} statusId={el.statusId} finishedAt={el.finishedAt} />
                 <p className="text-xs line-clamp-1">{el.title}</p>
                 <p className="text-base text-main-orange">{el.currentPrice} coin</p>
               </div>
