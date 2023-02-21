@@ -1,8 +1,13 @@
 import { Client } from '@stomp/stompjs';
 import { useEffect, useState } from 'react';
 
-export const useWebsocket = (subEndpoint = '/sub/board-id/2') => {
+const TEMP_TOKEN =
+  'Bearer eyJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6InF3ZTVAZ21haWwuY29tIiwibWVtYmVySWQiOjcsInN1YiI6InF3ZTVAZ21haWwuY29tIiwiaWF0IjoxNjc2OTUyNzkzLCJleHAiOjE2NzY5NTQ1OTN9.gqXLYnDPjGjC7o-qYimuaHsJqisGijoOG8kFoN9D916OsAHNeNFHHg6u-Zc0Z6YIsVfgda1Uix2czgu_WqIgAQ';
+
+export const useWebsocket = (subEndpoint: string) => {
+  // TODO: 타입 선언 수정하기
   const [response, setResponse] = useState<any>({});
+  const boardId = subEndpoint.split('/').at(-1);
 
   // 웹소켓 연결을 위한 stomp 클라이언트 생성
   const client = new Client({
@@ -18,9 +23,20 @@ export const useWebsocket = (subEndpoint = '/sub/board-id/2') => {
   useEffect(() => {
     // 구독 주소로 연결, 받은 메시지를 상태값으로 저장
     client.activate();
+
     client.onConnect = (frame) => {
       console.log(`connected: ${frame}`);
-      client.subscribe(subEndpoint, (res) => setResponse(res.body));
+
+      // 받아온 데이터를 응답값에 저장한다.
+      client.subscribe(subEndpoint, (res) => setResponse(JSON.parse(res.body)));
+
+      client.publish({
+        destination: '/pub/init',
+        body: JSON.stringify({
+          boardId,
+          bidderToken: '',
+        }),
+      });
     };
 
     // 컴포넌트 언마운트시 연결을 해제
@@ -30,16 +46,23 @@ export const useWebsocket = (subEndpoint = '/sub/board-id/2') => {
   }, []);
 
   const sendBid = (price: string) => {
-    const boardId = subEndpoint.split('/').at(-1);
     const destination = '/pub/bid';
-    client.publish({
-      destination,
-      body: JSON.stringify({
-        boardId,
-        price,
-        bidderToken: '~~',
-      }),
-    });
+
+    client.activate();
+
+    client.onConnect = () => {
+      console.log('입찰!');
+      // FIXME: 입찰 요청 로직 완성하기
+      client.publish({
+        destination,
+        headers: { receipt: 'send-bid-receipt' },
+        body: JSON.stringify({
+          boardId,
+          price,
+          bidderToken: TEMP_TOKEN,
+        }),
+      });
+    };
   };
 
   return { response, sendBid };
