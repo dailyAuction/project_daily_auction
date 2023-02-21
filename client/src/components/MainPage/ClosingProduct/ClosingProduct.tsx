@@ -28,7 +28,7 @@ export const ClosingProduct = () => {
       <div className="flex gap-2 overflow-x-auto scrollbar-hide w-full">
         {isLoading && <div>Loading...</div>}
         {error && <div>마감 임박 상품이 없습니다.</div>}
-        {data?.map((el) => {
+        {data?.items.map((el) => {
           return (
             <Link key={el.boardId} to={`/detail/${el.boardId}`}>
               <div className="flex flex-col ml-2 min-w-[120px] w-[120px]">

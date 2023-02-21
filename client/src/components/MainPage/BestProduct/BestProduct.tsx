@@ -10,7 +10,7 @@ export const Bestproduct = () => {
 
   const path = categoryId ? `${categoryId}/popular-item` : 'all-popular-item';
 
-  const { isLoading, error, data } = useQuery(['bestProduct', `${categoryId}`], () => mainPageAPI.getBest({ path }), {
+  const { isLoading, error, data } = useQuery(['bestProduct', `${categoryId}`], () => mainPageAPI.getBest(path), {
     enabled: isClick,
     staleTime: 1000 * 20,
   });
@@ -59,7 +59,7 @@ export const Bestproduct = () => {
         </section>
       </div>
       <div className="flex flex-col gap-2 items-center">
-        {data?.map((el) => {
+        {data?.items.map((el) => {
           return (
             <div key={el.boardId} className="w-[96%]">
               <ProductItem productDetail={el} />
