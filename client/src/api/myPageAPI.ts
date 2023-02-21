@@ -8,9 +8,13 @@ type MyAuctionListAPIFactor = {
   size?: number;
 };
 
+type MyPageProduct = {
+  items: ProductDetailResp;
+};
+
 export const myPageAPI = {
   getMyAuctionList: async ({ sort, path, page = 1, size = 10 }: MyAuctionListAPIFactor) => {
-    const res = await httpClient.get<ProductDetailResp[]>(`/members/${sort}/${path}/?page=${page}&size=${size}`);
+    const res = await httpClient.get<MyPageProduct>(`/members/${sort}/${path}/?page=${page}&size=${size}`);
     return res.data;
   },
 };
