@@ -62,13 +62,12 @@ public class BoardDto {
         private LocalDateTime createdAt;
         private LocalDateTime finishedAt;
     }
+
     @Getter
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Patch {
-        private int newPrice;
-
-
+        private int price;
     }
 }
