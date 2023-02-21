@@ -36,10 +36,12 @@ export const useBidInformationModal = ({ bidValue, setBidValue, setValidationMsg
     }
     // 모든 조건을 통과한 경우
     else {
-      // TODO: 입찰 요청 로직 작성
-      setValidationMsg('딱 적당하네요~');
-      // useWebsocket으로 부터 온 sendBid 함수로 웹소켓을 통한 send
-      sendBid(+bidValue);
+      // eslint-disable-next-line no-restricted-globals, no-alert, no-lonely-if
+      if (confirm('입찰 하시겠습니까?')) {
+        setValidationMsg('입찰하였습니다!');
+        // useWebsocket으로 부터 온 sendBid 함수로 웹소켓을 통한 send
+        sendBid(+bidValue);
+      }
     }
   };
 
