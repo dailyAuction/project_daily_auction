@@ -1,6 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useMutation } from 'react-query';
+import { loginAPI } from '../../../api/loginAPI';
+import { REG_EMAIL } from '../../../constants/constants';
 import { userIdPassword } from '../../../mock/userIdPassword';
 
 type LeaveModalProps = {
@@ -17,21 +20,39 @@ export const FindPasswordModal = ({ handleClose }: LeaveModalProps) => {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<EmailData>();
 
+  const {
+    mutate: postForgotPassword,
+    isError: emailAuthFail,
+    isSuccess: emailAuthSuccess,
+  } = useMutation((email: string) => {
+    return loginAPI.postForgotPassword(email);
+  });
+
   // TODO : 이메일 전송 이벤트 추가.
-  const onSubmit = handleSubmit((data: EmailData) => {
+  const onSubmit = handleSubmit(() => {
+    const { email } = getValues();
+    postForgotPassword(email);
+
     /* 
       TODO
-      1. email 유효성 검사
-      2. email이 회원 가입된 아이디인지 확인.
+      1. email이 회원 가입된 아이디인지 확인.
         a. 안되어 있을 경우 회원가입 되어있지 않습니다 안내.
         b. 되어있을 경우 이메일로 비밀번호 전달.
     */
-    console.log(data);
+    // if(emailAuthFail){
+    //   setIsUser(false);
+    // }
+    // if(emailAuthSuccess){
+    //   setIsUser(true);
+    //   handleClose();
+    // }
+
     // 테스트용 전송 이벤트
-    if (userIdPassword.email !== data.email) {
+    if (userIdPassword.email !== email) {
       setIsUser(false);
     } else {
       handleClose();
@@ -54,7 +75,7 @@ export const FindPasswordModal = ({ handleClose }: LeaveModalProps) => {
               {...register('email', {
                 required: true,
                 pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  value: REG_EMAIL,
                   message: '이메일 형식으로 입력해주세요.',
                 },
               })}
