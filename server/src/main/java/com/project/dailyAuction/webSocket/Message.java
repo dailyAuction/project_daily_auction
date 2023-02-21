@@ -29,7 +29,7 @@ public class Message {
     @NoArgsConstructor
     public static class Response{
         private long boardId;
-        private int price;
+        private int currentPrice;
         private int bidCount;
         private Integer[] history;
     }

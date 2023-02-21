@@ -34,7 +34,7 @@ public class BidController {
                 .boardId(boardId)
                 .bidCount(bidCount)
                 .history(histories)
-                .price(message.getPrice())
+                .currentPrice(message.getPrice())
                 .build();
         simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
     }
