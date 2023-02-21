@@ -5,13 +5,23 @@ type MainPageProduct = {
   items: ProductDetailResp[];
 };
 
+type GetBestProduct = {
+  path: string;
+  page?: number;
+  size?: number;
+};
+
 export const mainPageAPI = {
   getClosing: async () => {
     const res = await httpClient.get<MainPageProduct>('/imminent-item');
     return res.data;
   },
-  getBest: async (path: string) => {
-    const res = await httpClient.get<MainPageProduct>(`/${path}`);
+  // getBest: async (path: string) => {
+  //   const res = await httpClient.get<MainPageProduct>(`/${path}`);
+  //   return res.data;
+  // },
+  getBest: async ({ path, page = 1, size = 10 }: GetBestProduct) => {
+    const res = await httpClient.get<MainPageProduct>(`/${path}/?page=${page}&size=${size}`);
     return res.data;
   },
 };

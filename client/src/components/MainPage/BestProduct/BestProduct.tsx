@@ -10,7 +10,7 @@ export const Bestproduct = () => {
 
   const path = categoryId ? `${categoryId}/popular-item` : 'all-popular-item';
 
-  const { isLoading, error, data } = useQuery(['bestProduct', `${categoryId}`], () => mainPageAPI.getBest(path), {
+  const { isLoading, error, data } = useQuery(['bestProduct', `${categoryId}`], () => mainPageAPI.getBest({ path }), {
     enabled: isClick,
     staleTime: 1000 * 20,
   });
@@ -19,6 +19,8 @@ export const Bestproduct = () => {
     setCategoryId(idx);
     setIsClick(true);
   };
+
+  console.log(path);
 
   return (
     <div className="w-full">
