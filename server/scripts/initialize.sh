@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-chmod +x /home/ubuntu/build/**
+chmod +x /home/project_daily_auction/server/build/**
