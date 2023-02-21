@@ -43,10 +43,16 @@ export const SignUp = () => {
   } = useForm<SignUpConfirmData>();
   const email = watch('email');
 
-  const { getAuthVerify, handleVerify, verifyError } = useVerify({ email, setModalOpen, verifyForm, setVerifyForm });
+  // TODO : verfySuccess로 모달 창 open으로 수정 - 성공시 isModalOpen 삭제
+  const { getAuthVerify, handleVerify, verifyError, verifySuccess } = useVerify({
+    email,
+    setModalOpen,
+    verifyForm,
+    setVerifyForm,
+  });
 
   const { mutate: postSignUp } = useMutation((signUpData: SignUpData) => {
-    return signupAPI.post(signUpData);
+    return signupAPI.postSignUp(signUpData);
   });
 
   const onSubmit = handleSubmit((data: SignUpConfirmData) => {
