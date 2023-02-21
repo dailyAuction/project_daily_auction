@@ -12,7 +12,7 @@ import { BidModal } from './BidModal';
 
 type BidInformationProps = {
   reatTimeData: ProductDetailRealtimeResp;
-  sendBid: (price: string) => void;
+  sendBid: (price: number) => void;
 };
 
 export const BidInformation = ({ reatTimeData, sendBid }: BidInformationProps) => {
@@ -53,9 +53,7 @@ export const BidInformation = ({ reatTimeData, sendBid }: BidInformationProps) =
     <>
       <section className="flex w-full justify-center bg-white px-2 py-3 space-y-4 flex-col">
         <article className="flex items-center space-x-2">
-          <span className="text-lg font-bold text-main-orange">
-            {currentPrice ? currentPrice?.toLocaleString() : Number(startingPrice).toLocaleString()} coin
-          </span>
+          <span className="text-lg font-bold text-main-orange">{currentPrice?.toLocaleString()} coin</span>
           <span className="text-sm">{myPrice ? `내 입찰가 : ${myPrice}` : `시작가 : ${startingPrice}`}</span>
         </article>
         <article className="flex w-full justify-between items-center">
@@ -83,11 +81,7 @@ export const BidInformation = ({ reatTimeData, sendBid }: BidInformationProps) =
         </article>
       </section>
       {isModalOpen && (
-        <BidModal
-          handleClose={() => setModalOpen(false)}
-          currentPrice={currentPrice || Number(startingPrice)}
-          sendBid={sendBid}
-        />
+        <BidModal handleClose={() => setModalOpen(false)} currentPrice={currentPrice} sendBid={sendBid} />
       )}
     </>
   );

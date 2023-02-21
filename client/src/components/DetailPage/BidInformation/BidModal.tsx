@@ -6,7 +6,7 @@ import { useBidInformationModal } from './useBidInformation';
 
 type BidModalProps = {
   currentPrice: number;
-  sendBid: (price: string) => void;
+  sendBid: (price: number) => void;
   handleClose: () => void;
 };
 
@@ -24,7 +24,7 @@ export const BidModal = ({ handleClose, currentPrice, sendBid }: BidModalProps) 
       <div className="modal-container">
         <article className="flex flex-col space-y-1">
           <span>현재 경매가</span>
-          <span className="text-xl font-bold text-main-orange">{currentPrice} coin</span>
+          <span className="text-xl font-bold text-main-orange">{currentPrice?.toLocaleString()} coin</span>
         </article>
         <article>
           <input
