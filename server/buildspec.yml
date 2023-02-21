@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+  build:
+    commands:
+      - echo Build Starting on `date`
+      - cd project_daily_auction/server
+      - chmod +x ./gradlew
+      - ./gradlew build
+  post_build:
+    commands:
+      - echo $(basename ./project_daily_auction/server/build/libs/*.jar)
+artifacts:
+  files:
+    - project_daily_auction/server/build/libs/*.jar
+    - project_daily_auction/server/scripts/**
+    - project_daily_auction/server/appspec.yml
+  discard-paths: yes
