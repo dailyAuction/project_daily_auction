@@ -47,7 +47,7 @@ export const DetailPage = () => {
           <span>조회수 : {viewCount}</span>
         </article>
 
-        <AuctionStatus finishedAt={finishedAt} statusId={statusId} />
+        <AuctionStatus />
 
         <BidInformation reatTimeData={response} sendBid={sendBid} />
 

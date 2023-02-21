@@ -20,7 +20,7 @@ export const options = {
 
 type ChartProps = {
   initData: number[];
-  realTimeData: ProductDetailRealtimeResp;
+  realTimeData: Partial<ProductDetailRealtimeResp>;
 };
 
 export const Chart = ({ realTimeData, initData }: ChartProps) => {

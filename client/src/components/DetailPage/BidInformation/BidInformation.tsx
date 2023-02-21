@@ -11,7 +11,7 @@ import { ProductDetailRealtimeResp } from '../../../types/product.type';
 import { BidModal } from './BidModal';
 
 type BidInformationProps = {
-  reatTimeData: ProductDetailRealtimeResp;
+  reatTimeData: Partial<ProductDetailRealtimeResp>;
   sendBid: (price: number) => void;
 };
 

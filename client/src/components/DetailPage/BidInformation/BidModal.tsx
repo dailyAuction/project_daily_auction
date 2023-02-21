@@ -17,6 +17,7 @@ export const BidModal = ({ handleClose, currentPrice, sendBid }: BidModalProps) 
 
   const { handleClickBid, handleChange } = useBidInformationModal({ bidValue, setBidValue, setValidationMsg });
 
+  // TODO: 입찰 성공시 코인 업데이트 로직 (API 만들어주실 예정)
   const { coin: myCoin } = useRecoilValue(userInfoAtom);
 
   return (

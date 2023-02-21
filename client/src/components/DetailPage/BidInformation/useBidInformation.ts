@@ -31,7 +31,7 @@ export const useBidInformationModal = ({ bidValue, setBidValue, setValidationMsg
       setValidationMsg('보유한 코인이 부족합니다.');
     }
     // 현재 경매가보다 입력한 코인이 더 적은 경우
-    else if (+bidValue < +currentPrice) {
+    else if (+bidValue <= +currentPrice) {
       setValidationMsg('현재 경매가보다 높은 가격을 입력해주세요.');
     }
     // 모든 조건을 통과한 경우
