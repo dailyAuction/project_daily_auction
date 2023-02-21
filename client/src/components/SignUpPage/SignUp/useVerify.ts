@@ -1,7 +1,7 @@
 import { useMutation } from 'react-query';
 import { SetStateAction } from 'react';
+import { signupAPI } from '../../../api/signupAPI';
 import { REG_EMAIL } from '../../../constants/constants';
-import { verifedAPI } from '../../../api/verifyAPI';
 
 type UseVerifyFactor = {
   email?: string;
@@ -19,10 +19,11 @@ export const useVerify = ({ email, setModalOpen, verifyForm, setVerifyForm }: Us
   const {
     mutate: getVerify,
     isError: verifyError,
+    isSuccess: verifySuccess,
     // TODO : 통신시 인증코드 넘어오는지 확인
-    data: verifyCode,
+    data: verifyCodeResp,
   } = useMutation((postEmail: string) => {
-    return verifedAPI.post(postEmail);
+    return signupAPI.postVerified(postEmail);
   });
 
   const getAuthVerify = () => {
@@ -43,5 +44,5 @@ export const useVerify = ({ email, setModalOpen, verifyForm, setVerifyForm }: Us
     }
   };
 
-  return { getAuthVerify, handleVerify, verifyError };
+  return { getAuthVerify, handleVerify, verifyError, verifySuccess };
 };
