@@ -25,7 +25,7 @@ export const useBidInformationModal = ({ bidValue, setBidValue, setValidationMsg
   };
 
   // 구매자가 입찰시 사용되는 핸들러
-  const handleClickBid = (currentPrice: string) => {
+  const handleClickBid = (currentPrice: string, sendBid: (price: string) => void) => {
     // 현재 가진 코인보다 입력한 코인이 더 많을 경우
     if (+bidValue > +myCoin) {
       setValidationMsg('보유한 코인이 부족합니다.');
@@ -38,6 +38,8 @@ export const useBidInformationModal = ({ bidValue, setBidValue, setValidationMsg
     else {
       // TODO: 입찰 요청 로직 작성
       setValidationMsg('딱 적당하네요~');
+      // useWebsocket으로 부터 온 sendBid 함수로 웹소켓을 통한 send
+      sendBid(currentPrice);
     }
   };
 

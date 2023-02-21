@@ -9,9 +9,13 @@ import { TabBar } from '../components/_common/TabBar/TabBar';
 import { SubHeader } from '../components/_common/Header/SubHeader/SubHeader';
 import { CATEGORIES } from '../constants/constants';
 import { productDetailAPI } from '../api/boardsAPI';
+import { useWebsocket } from '../hooks/useWebsocket';
 
 export const DetailPage = () => {
   const boardId = useLocation().pathname.split('/')[2];
+
+  // 웹소켓 연결
+  const { response, sendBid } = useWebsocket(`/sub/board-id/${boardId}`);
 
   const { isLoading, error, data } = useQuery(
     'productDetail',
@@ -21,21 +25,25 @@ export const DetailPage = () => {
     },
     {
       onError: (e) => console.error(e),
+      refetchOnMount: true,
+      refetchOnWindowFocus: true,
     }
   );
 
   // data가 undefined, null인 경우 TypeError 발생, 아닐 경우에만 분해되도록 함.
-  const { image, categoryId, viewCount, finishedAt, statusId, description, history } = data || {};
+  const { image, categoryId, viewCount, finishedAt, statusId, description, history, title } = data || {};
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>에러가 발생하였습니다.</div>;
-  // TODO: 웹소켓을 어떤 컴포넌트에서 연결하여 받아올 것인지 조사하고 적용할 필요 있음!
+
+  console.log(response);
+
   return (
     <main className="base-layout">
       <SubHeader>상세 페이지</SubHeader>
       <section className="content-layout">
         <ImageList url={image} />
-        <h1 className="text-xl font-semibold">아주 아름다운 모자 판매합니다.</h1>
+        <h1 className="text-xl font-semibold">{title}</h1>
         <CategoryBtn>{CATEGORIES[categoryId]}</CategoryBtn>
         <article className="flex justify-between px-2">
           <span>id : {boardId}</span>
@@ -44,9 +52,9 @@ export const DetailPage = () => {
 
         <AuctionStatus finishedAt={finishedAt} statusId={statusId} />
 
-        <BidInformation />
+        <BidInformation reatTimeData={response} sendBid={sendBid} />
         <article className="py-8 bg-white px-2">{description}</article>
-        <Chart initData={history} />
+        <Chart realTimeData={response} initData={history} />
       </section>
       <TabBar />
     </main>
