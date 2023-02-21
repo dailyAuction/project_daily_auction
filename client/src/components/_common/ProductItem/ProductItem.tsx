@@ -25,7 +25,7 @@ export const ProductItem = ({ productDetail }: ProductItemProps) => {
       <div className="flex justify-center items-end relative w-full rounded-[10px] bg-background-mobile cursor-pointer">
         <div className="p-[6px] flex-2">
           {/* TODO: 남은 시간 데이터 props 전달 */}
-          <ProductItemImg thumbnail={thumbnail} statusId={statusId} />
+          <ProductItemImg thumbnail={thumbnail} statusId={statusId} finishedAt={finishedAt} />
         </div>
         <div className="flex-1 px-0.5">
           {!isUserSeller && statusId === 1 && page === 'participation' && (

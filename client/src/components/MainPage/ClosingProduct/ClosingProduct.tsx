@@ -32,7 +32,7 @@ export const ClosingProduct = () => {
           return (
             <Link key={el.boardId} to={`/detail/${el.boardId}`}>
               <div className="flex flex-col ml-2 min-w-[120px] w-[120px]">
-                <ProductItemImg thumbnail={el.thumbnail} statusId={el.statusId} />
+                <ProductItemImg thumbnail={el.thumbnail} statusId={el.statusId} finishedAt={el.finishedAt} />
                 <p className="text-xs line-clamp-1">{el.title}</p>
                 <p className="text-base text-main-orange">{el.currentPrice} coin</p>
               </div>

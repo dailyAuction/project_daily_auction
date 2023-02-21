@@ -1,14 +1,17 @@
 import { useLocation } from 'react-router-dom';
+import { useGetTimeRemain } from '../../../hooks/useGetTimeRemain';
 import { TimeRemain } from '../TimeRemain/TemiRemain';
 
 type ProductImgProps = {
   thumbnail: string;
+  finishedAt: string;
   statusId: number;
 };
 
-export const ProductItemImg = ({ thumbnail, statusId }: ProductImgProps) => {
+export const ProductItemImg = ({ thumbnail, statusId, finishedAt }: ProductImgProps) => {
   const location = useLocation().pathname.split('/')[2];
   const myBidWin = statusId === 1 && location === 'joinList';
+  const timeRemain = useGetTimeRemain(finishedAt);
 
   return (
     <div className="relative">
@@ -19,8 +22,7 @@ export const ProductItemImg = ({ thumbnail, statusId }: ProductImgProps) => {
       />
       {myBidWin && <div className="absolute top-10 left-10 text-red-600 text-lg">낙찰!</div>}
       <div className="absolute bottom-[95px] left-[5px]">
-        {/* TODO: 남은 시간 계산하는 함수 만들어서 값 전달하기 */}
-        <TimeRemain>00:23:23</TimeRemain>
+        <TimeRemain>{timeRemain.timeRemain}</TimeRemain>
       </div>
     </div>
   );
