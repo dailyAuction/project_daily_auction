@@ -30,9 +30,8 @@ public class Message {
     public static class Response{
         private long boardId;
         private int price;
-        private String bidderToken;
         private int bidCount;
-        private String history;
+        private Integer[] history;
     }
 
     @Getter

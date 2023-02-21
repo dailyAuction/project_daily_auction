@@ -110,9 +110,10 @@ public class SecurityConfig implements WebMvcConfigurer {
         configuration.setAllowedOrigins(Arrays.asList("*"));
         // 파라미터로 지정한 HTTP Method에 대한 HTTP 통신을 허용
         configuration.setAllowedMethods(Arrays.asList("*"));
-        //헤더
+        // 헤더
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setExposedHeaders(List.of("*"));
+        // 커스텀 헤더를 허용
+        configuration.setExposedHeaders(Arrays.asList("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         // 패턴에 해당하는 URL에 해당 CORS 정책을 적용한다.
