@@ -1,11 +1,11 @@
-package com.project.dailyAuction.main;
+package com.project.dailyAuction.Main;
 
-import com.project.dailyAuction.Search.dto.TopKeywordsDto;
-import com.project.dailyAuction.Search.entity.Keyword;
-import com.project.dailyAuction.Search.mapper.KeywordMapper;
-import com.project.dailyAuction.Search.service.SearchService;
-import com.project.dailyAuction.board.dto.BoardDto;
-import com.project.dailyAuction.board.mapper.BoardMapper;
+import com.project.dailyAuction.search.dto.TopKeywordsDto;
+import com.project.dailyAuction.search.entity.Keyword;
+import com.project.dailyAuction.search.mapper.KeywordMapper;
+import com.project.dailyAuction.search.service.SearchService;
+import com.project.dailyAuction.board.Dto.BoardDto;
+import com.project.dailyAuction.board.Mapper.BoardMapper;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.service.BoardService;
 import com.project.dailyAuction.dto.MultiResponseDto;

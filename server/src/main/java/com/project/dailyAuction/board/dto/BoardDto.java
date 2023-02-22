@@ -70,4 +70,12 @@ public class BoardDto {
     public static class Patch {
         private int price;
     }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class IdDto {
+        private long boardId;
+    }
 }

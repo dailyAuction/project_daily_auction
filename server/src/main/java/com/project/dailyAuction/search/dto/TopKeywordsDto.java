@@ -1,4 +1,4 @@
-package com.project.dailyAuction.Search.dto;
+package com.project.dailyAuction.search.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
