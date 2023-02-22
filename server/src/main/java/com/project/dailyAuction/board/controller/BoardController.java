@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,13 +39,18 @@ public class BoardController {
     @GetMapping("/{board-id}")
     @ResponseStatus(HttpStatus.OK)
     public BoardDto.Response getBoard(@RequestHeader(name = "Authorization", required = false) String token,
-                                      @PathVariable("board-id") long boardId) {
-        int viewCount = boardService.addViewCntToRedis(boardId);
+                                      @PathVariable("board-id") long boardId,
+                                      HttpServletRequest httpRequest,
+                                      HttpServletResponse httpResponse) {
+        int viewCount = 0;
         int bidCount = boardService.getBidCountInRedis(boardId);
         long bidderId = boardService.getBidderInRedis(boardId);
         int currentPrice = boardService.getPriceInRedis(boardId);
         String history = boardService.getHistoryInRedis(boardId);
-        BoardDto.Response response = boardService.getDetailPage(token, boardId,currentPrice, viewCount,bidCount,bidderId,history);
+
+        viewCount = boardService.getViewCount(boardId, httpRequest, httpResponse);
+
+        BoardDto.Response response = boardService.getDetailPage(token, boardId, currentPrice, viewCount, bidCount, bidderId, history);
         return response;
     }
 
