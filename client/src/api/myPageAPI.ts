@@ -2,10 +2,10 @@ import { ProductDetailResp } from '../types/product.type';
 import { httpClient } from '../utils/httpClient';
 
 type MyAuctionListAPIFactor = {
-  sort: string;
   path: string;
   page?: number;
   size?: number;
+  token?: string;
 };
 
 type MyPageProduct = {
@@ -13,8 +13,12 @@ type MyPageProduct = {
 };
 
 export const myPageAPI = {
-  getMyAuctionList: async ({ sort, path, page = 1, size = 10 }: MyAuctionListAPIFactor) => {
-    const res = await httpClient.get<MyPageProduct>(`/members/${sort}/${path}/?page=${page}&size=${size}`);
+  getMyAuctionList: async ({ path, page = 1, size = 10, token }: MyAuctionListAPIFactor) => {
+    const res = await httpClient.get<MyPageProduct>(`/members/${path}/?page=${page}&size=${size}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
     return res.data;
   },
 };
