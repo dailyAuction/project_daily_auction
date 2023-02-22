@@ -24,12 +24,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,10 +57,11 @@ public class BoardService {
                 .thumbnail("")
                 .statusId(0)
                 .categoryId(postDto.getCategoryId())
-                .createdAt(LocalDateTime.now())
-                .finishedAt(LocalDateTime.now().plusDays(1))
+                .createdAt(LocalDateTime.now().plusHours(9))
+                .finishedAt(LocalDateTime.now().plusHours(33))
                 .sellerId(member.getMemberId())
                 .startingPrice(postDto.getStartingPrice())
+                .currentPrice(postDto.getStartingPrice())
                 .sellerId(member.getMemberId())
                 .history(String.valueOf(postDto.getStartingPrice()))
                 .build();
@@ -109,6 +114,60 @@ public class BoardService {
         return response;
     }
 
+    public int getViewCount(long boardId, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        int viewCount;
+        // 조회수 로직
+        Cookie oldCookie = null;
+        Cookie[] cookies = httpRequest.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("postView")) {
+                    oldCookie = cookie;
+                }
+            }
+        }
+
+        if (oldCookie != null) { // 쿠키 묶음이 있는 경우 -> 체크 후 증가
+            if (!oldCookie.getValue().contains("[" + boardId + "]")) {  // 그 중에서 해당 보드 쿠키가 없는 경우
+                viewCount = addViewCntToRedis(boardId);
+                oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60 * 24);
+                httpResponse.addCookie(oldCookie);
+            } else {  // 해당 보드 쿠키는 있는 경우
+                viewCount = getViewCntToRedis(boardId);
+            }
+        } else { // 쿠키 묶음이 없는 경우 -> 무조건 증가
+            viewCount = addViewCntToRedis(boardId);
+            Cookie newCookie = new Cookie("postView", "[" + boardId + "]");
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60 * 60 * 24);
+            httpResponse.addCookie(newCookie);
+        }
+        return viewCount;
+    }
+
+    public int getViewCntToRedis(long boardId) {
+        String key = "boardViewCount::" + boardId;
+        //캐시에 값이 없으면 레포지토리에서 조회 & 있으면 값을 증가시킨다.
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        if (valueOperations.get(key) == null) {
+            Board board = boardRepository.findById(boardId)
+                    .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
+                            ExceptionCode.BOARD_NOT_FOUND.getMessage(),
+                            new IllegalArgumentException()));
+
+            valueOperations.set(
+                    key,
+                    String.valueOf(board.getViewCount()));
+            log.info("value:{}", valueOperations.get(key));
+            return Integer.parseInt(valueOperations.get(key));
+        } else {
+            valueOperations.get(key);
+            log.info("value:{}", valueOperations.get(key));
+            return Integer.parseInt(valueOperations.get(key));
+        }
+    }
     public int addViewCntToRedis(long boardId) {
         String key = "boardViewCount::" + boardId;
         //캐시에 값이 없으면 레포지토리에서 조회 & 있으면 값을 증가시킨다.
@@ -328,15 +387,15 @@ public class BoardService {
         addHistoryToRedis(board.getBoardId(), newPrice);
 
         //기록용 남기기
-        BoardMember boardMember = boardMemberRepository.findByBoardAndMember(board, member);
-        if (boardMember == null) {
+        Optional<BoardMember> optionalBoardMember = boardMemberRepository.findByBoardAndMember(board, member);
+        if (optionalBoardMember.isEmpty()) {
             boardMemberRepository.save(BoardMember.builder()
                     .board(board)
                     .member(member)
                     .myPrice(newPrice)
                     .build());
         } else {
-            boardMember.changeMyPrice(newPrice);
+            optionalBoardMember.get().changeMyPrice(newPrice);
         }
 
         //코인 감소
@@ -374,15 +433,18 @@ public class BoardService {
     public int findMyPrice(String token, long boardId) {
         Board board = find(boardId);
         Member member = memberService.findByAccessToken(token);
-        BoardMember boardMember = boardMemberRepository.findByBoardAndMember(board, member);
-        return boardMember.getMyPrice();
+        Optional<BoardMember> optionalBoardMember = boardMemberRepository.findByBoardAndMember(board, member);
+        if (optionalBoardMember.isEmpty()) {
+            return 0;
+        } else {
+            return optionalBoardMember.get().getMyPrice();
+        }
     }
 
     public Page<Board> findBoardPage(long categoryId, int page, int size, int sort) {
-        Sort defaultSort = Sort.by("").descending();
-        if (sort == 0) {//기본 정렬
-            defaultSort = Sort.by("boardId").ascending();
-        } else if (sort == 1) {//마감임박순 정렬
+        Sort defaultSort = Sort.by("boardId").descending();
+
+        if (sort == 1) {//마감임박순 정렬
             defaultSort = Sort.by("createdAt").ascending();
         } else if (sort == 2) {//입찰수 기준 정렬
             cacheProcessor.updateBiddingToMySql();

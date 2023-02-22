@@ -29,21 +29,19 @@ public class Message {
     @NoArgsConstructor
     public static class Response{
         private long boardId;
-        private int price;
-        private String bidderToken;
+        private int currentPrice;
         private int bidCount;
-        private String history;
+        private Integer[] history;
     }
 
-    @Getter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class InitResponse {
-        private long boardId;
-        private int bidCount;
-        private int currentPrice;
-        private Integer[] history;
-        private int myPrice;
-    }
+//    @Getter
+//    @Builder
+//    @AllArgsConstructor
+//    @NoArgsConstructor
+//    public static class InitResponse {
+//        private long boardId;
+//        private int bidCount;
+//        private int currentPrice;
+//        private Integer[] history;
+//    }
 }

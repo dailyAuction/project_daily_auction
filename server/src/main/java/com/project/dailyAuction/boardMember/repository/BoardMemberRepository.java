@@ -7,9 +7,10 @@ import com.project.dailyAuction.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BoardMemberRepository extends JpaRepository<BoardMember, Long> {
-    BoardMember findByBoardAndMember(Board board, Member member);
+    Optional<BoardMember> findByBoardAndMember(Board board, Member member);
 
     List<BoardMapping> findAllByMember(Member member);
 }
