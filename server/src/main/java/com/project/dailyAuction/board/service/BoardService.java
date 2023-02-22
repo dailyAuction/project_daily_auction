@@ -53,7 +53,7 @@ public class BoardService {
                 //todo: 이미지 변환 필요, 썸네일 생성 필요
                 .image(postDto.getImage())
                 .thumbnail("")
-                .statusId(0)
+                .statusId(1)
                 .categoryId(postDto.getCategoryId())
                 .createdAt(LocalDateTime.now().plusHours(9))
                 .finishedAt(LocalDateTime.now().plusHours(33))
