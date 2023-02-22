@@ -1,7 +1,7 @@
 package com.project.dailyAuction.member.service;
 
 
-import com.project.dailyAuction.board.Mapper.BoardMapping;
+import com.project.dailyAuction.board.mapper.BoardMapping;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.boardMember.repository.BoardMemberRepository;
@@ -55,7 +55,6 @@ public class MemberService {
         String newPassword = passwordEncoder().encode(dto.getNewPassword());
         member.changePassword(newPassword);
         return member;
-//        return memberRepository.save(member);
     }
 
     // 비밀번호 체크

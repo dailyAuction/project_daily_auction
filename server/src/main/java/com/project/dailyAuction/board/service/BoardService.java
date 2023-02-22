@@ -1,6 +1,6 @@
 package com.project.dailyAuction.board.service;
 
-import com.project.dailyAuction.board.Dto.BoardDto;
+import com.project.dailyAuction.board.dto.BoardDto;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.boardMember.entity.BoardMember;
@@ -67,7 +67,6 @@ public class BoardService {
         return boardRepository.save(createdBoard);
     }
 
-    //    @Cacheable(key = "#boardId", value = "findBoard")
     public BoardDto.Response getDetailPage(String token, long boardId,int currentPrice, int viewCount, int bidCount, long bidderId, String history) {
         Board target = find(boardId);
 
