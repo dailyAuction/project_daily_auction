@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
-import { Link, useNavigate } from 'react-router-dom';
-import { AuthModal } from '../SignUpModal/AuthModal';
+import { Link } from 'react-router-dom';
+import { AuthFailModal, AuthSccuessModal } from '../SignUpModal/AuthModal';
 import { REG_EMAIL, REG_PASSWORD } from '../../../constants/constants';
 import { MemberAuthData } from '../../../types/member.type';
 import { signupAPI } from '../../../api/signupAPI';
 import { useVerify } from './useVerify';
+import { SuccessModal } from '../../_common/Modal/SuccessModal';
 
 type SignUpData = MemberAuthData;
 
@@ -23,9 +24,9 @@ type VerifyFormData = {
 };
 
 export const SignUp = () => {
-  const navigate = useNavigate();
-
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isSignOkModalOpen, setSignOkModalOpen] = useState(false);
+
   const [isAgreeCheck, setIsAgreeCheck] = useState(false);
 
   const [verifyForm, setVerifyForm] = useState<VerifyFormData>({
@@ -43,7 +44,6 @@ export const SignUp = () => {
   } = useForm<SignUpConfirmData>();
   const email = watch('email');
 
-  // TODO : verfySuccess로 모달 창 open으로 수정 - 성공시 isModalOpen 삭제
   const { getAuthVerify, handleVerify, verifyError, verifySuccess } = useVerify({
     email,
     setModalOpen,
@@ -51,9 +51,19 @@ export const SignUp = () => {
     setVerifyForm,
   });
 
-  const { mutate: postSignUp } = useMutation((signUpData: SignUpData) => {
-    return signupAPI.postSignUp(signUpData);
-  });
+  const { mutate: postSignUp } = useMutation(
+    (signUpData: SignUpData) => {
+      return signupAPI.postSignUp(signUpData);
+    },
+    {
+      onSuccess: () => {
+        setSignOkModalOpen(true);
+      },
+      onError: (error) => {
+        console.log('SignUp error : ', error);
+      },
+    }
+  );
 
   const onSubmit = handleSubmit((data: SignUpConfirmData) => {
     const signUpData: SignUpData = { email: data.email, password: data.password };
@@ -61,7 +71,6 @@ export const SignUp = () => {
       setError('confirmPassword', { message: '비밀번호가 일치하지 않습니다.' }, { shouldFocus: true });
     } else {
       postSignUp(signUpData);
-      navigate('/login');
     }
   });
 
@@ -183,7 +192,11 @@ export const SignUp = () => {
           </article>
         </section>
       </main>
-      {isModalOpen ? <AuthModal verifyError={verifyError} handleClose={() => setModalOpen(false)} /> : <></>}
+      {verifySuccess && isModalOpen ? <AuthSccuessModal handleClose={() => setModalOpen(false)} /> : <></>}
+      {verifyError && isModalOpen ? <AuthFailModal handleClose={() => setModalOpen(false)} /> : <></>}
+      {isSignOkModalOpen && (
+        <SuccessModal modalName="회원 가입 성공" routeName="/login" handleClose={() => setSignOkModalOpen(false)} />
+      )}
     </>
   );
 };
