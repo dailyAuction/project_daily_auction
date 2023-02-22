@@ -1,8 +1,8 @@
 package com.project.dailyAuction.board.controller;
 
-import com.project.dailyAuction.board.Dto.BoardDto;
+import com.project.dailyAuction.board.dto.BoardDto;
 import com.project.dailyAuction.board.entity.Board;
-import com.project.dailyAuction.board.Mapper.BoardMapper;
+import com.project.dailyAuction.board.mapper.BoardMapper;
 import com.project.dailyAuction.board.service.BoardService;
 import com.project.dailyAuction.dto.PageDto;
 import com.project.dailyAuction.webSocket.Message;

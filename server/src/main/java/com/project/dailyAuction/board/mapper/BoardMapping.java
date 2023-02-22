@@ -1,4 +1,4 @@
-package com.project.dailyAuction.board.Mapper;
+package com.project.dailyAuction.board.mapper;
 
 import com.project.dailyAuction.board.entity.Board;
 
