@@ -14,7 +14,7 @@ export const signupAPI = {
   },
 
   postVerified: async (email: string) => {
-    const res = await httpClient.post<VerifyCodeFactor>(`${signupAPI.url}/verification`, email);
-    return res.data;
+    const res = await httpClient.post<VerifyCodeFactor>(`${signupAPI.url}/verification`, { email });
+    return res.data.verifyCode;
   },
 };
