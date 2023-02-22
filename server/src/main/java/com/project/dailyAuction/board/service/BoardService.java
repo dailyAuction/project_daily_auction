@@ -90,7 +90,7 @@ public class BoardService {
                 .history(histories)
                 .statusId(target.getStatusId())
                 .bidderId(bidderId)
-                .sellerId(target.getSellerId())
+                .authorId(target.getSellerId())
                 .build();
 
         if (token != null) {

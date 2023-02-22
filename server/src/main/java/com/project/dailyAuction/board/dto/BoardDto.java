@@ -26,7 +26,7 @@ public class BoardDto {
     @NoArgsConstructor
     public static class Response {
         private long boardId;
-        private long sellerId;
+        private long authorId;
         private long bidderId;
         private String title;
         private String description;

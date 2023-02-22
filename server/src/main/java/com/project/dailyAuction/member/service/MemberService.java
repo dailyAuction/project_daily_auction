@@ -4,6 +4,7 @@ package com.project.dailyAuction.member.service;
 import com.project.dailyAuction.board.mapper.BoardMapping;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
+import com.project.dailyAuction.boardMember.entity.BoardMember;
 import com.project.dailyAuction.boardMember.repository.BoardMemberRepository;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.etcService.EmailService;
@@ -211,5 +212,18 @@ public class MemberService {
         String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
 
         return accessToken;
+    }
+
+    public List<Integer> findMyPrices(String token, List<Board> boards) {
+        List<Integer> list = new ArrayList<>();
+        Member member = findByAccessToken(token);
+
+        for (int i = 0; i < boards.size(); i++) {
+            Board board = boards.get(i);
+            BoardMember boardMember = boardMemberRepository.findByBoardAndMember(board, member);
+            int price = boardMember.getMyPrice();
+            list.add(price);
+        }
+        return list;
     }
 }
