@@ -3,12 +3,15 @@ package com.project.dailyAuction.member.entity;
 
 //import com.project.dailyAuction.boardNotice.entity.Notice;
 import com.project.dailyAuction.code.MemberStatusCode;
+import com.project.dailyAuction.notice.Notice;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,9 +35,8 @@ public class Member {
     @Column
     private String status;
 
-//    @ManyToOne
-//    @JoinColumn(name = "notice_id")
-//    private Notice notice;
+    @OneToMany(mappedBy = "receiver")
+    private List<Notice> notices = new ArrayList<>();
 
     public void setUserDetails(long memberId, String email, String password,int coin){
         this.memberId = memberId;
