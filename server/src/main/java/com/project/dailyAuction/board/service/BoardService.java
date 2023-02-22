@@ -126,13 +126,13 @@ public class BoardService {
         }
 
         if (oldCookie != null) { // 쿠키 묶음이 있는 경우 -> 체크 후 증가
-            if (!oldCookie.getValue().contains("[" + boardId + "]")) {  // 그 중에서 해당 보드 쿠키가 있는 경우
+            if (!oldCookie.getValue().contains("[" + boardId + "]")) {  // 그 중에서 해당 보드 쿠키가 없는 경우
                 viewCount = addViewCntToRedis(boardId);
                 oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
                 oldCookie.setPath("/");
                 oldCookie.setMaxAge(60 * 60 * 24);
                 httpResponse.addCookie(oldCookie);
-            } else {  // 해당 보드 쿠키는 없는 경우
+            } else {  // 해당 보드 쿠키는 있는 경우
                 viewCount = getViewCntToRedis(boardId);
             }
         } else { // 쿠키 묶음이 없는 경우 -> 무조건 증가
