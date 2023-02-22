@@ -1,6 +1,6 @@
 package com.project.dailyAuction.member.controller;
 
-import com.project.dailyAuction.board.Mapper.BoardMapper;
+import com.project.dailyAuction.board.mapper.BoardMapper;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.dto.PageDto;
 import com.project.dailyAuction.member.dto.MemberDto;
@@ -103,8 +103,9 @@ public class MemberController {
                                  @RequestParam int size){
         Page<Board> boardPages = memberService.getParticipation(token,page,size);
         List<Board> boards = boardPages.getContent();
+        List<Integer> myPrices = memberService.findMyPrices(token, boards);
 
-        return new PageDto(boardMapper.boardListToBoardDtoList(boards),boardPages);
+        return new PageDto(boardMapper.boardListToBoardDtoListWithMyPrice(boards,myPrices),boardPages);
     }
 
     // 토큰 갱신

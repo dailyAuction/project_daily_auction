@@ -1,4 +1,4 @@
-package com.project.dailyAuction.Search.entity;
+package com.project.dailyAuction.search.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

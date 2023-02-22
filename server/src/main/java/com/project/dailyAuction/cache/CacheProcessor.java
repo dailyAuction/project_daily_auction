@@ -1,6 +1,6 @@
 package com.project.dailyAuction.cache;
 
-import com.project.dailyAuction.Search.repository.KeywordRepository;
+import com.project.dailyAuction.search.repository.KeywordRepository;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.code.ExceptionCode;

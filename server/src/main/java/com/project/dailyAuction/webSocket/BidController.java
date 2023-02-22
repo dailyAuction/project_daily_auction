@@ -1,6 +1,6 @@
 package com.project.dailyAuction.webSocket;
 
-import com.project.dailyAuction.board.Dto.BoardDto;
+import com.project.dailyAuction.board.dto.BoardDto;
 import com.project.dailyAuction.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

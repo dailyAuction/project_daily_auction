@@ -1,4 +1,4 @@
-package com.project.dailyAuction.board.Dto;
+package com.project.dailyAuction.board.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +26,7 @@ public class BoardDto {
     @NoArgsConstructor
     public static class Response {
         private long boardId;
-        private long sellerId;
+        private long authorId;
         private long bidderId;
         private String title;
         private String description;
@@ -69,5 +69,13 @@ public class BoardDto {
     @NoArgsConstructor
     public static class Patch {
         private int price;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class IdDto {
+        private long boardId;
     }
 }
