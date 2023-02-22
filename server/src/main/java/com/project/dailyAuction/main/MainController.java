@@ -1,4 +1,4 @@
-package com.project.dailyAuction.Main;
+package com.project.dailyAuction.main;
 
 import com.project.dailyAuction.search.dto.TopKeywordsDto;
 import com.project.dailyAuction.search.entity.Keyword;
