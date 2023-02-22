@@ -1,6 +1,6 @@
-package com.project.dailyAuction.board.Mapper;
+package com.project.dailyAuction.board.mapper;
 
-import com.project.dailyAuction.board.Dto.BoardDto;
+import com.project.dailyAuction.board.dto.BoardDto;
 import com.project.dailyAuction.board.entity.Board;
 import org.mapstruct.Mapper;
 
@@ -9,9 +9,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface BoardMapper {
-    Board postDtoToEntity(BoardDto.Post postDto);
-    BoardDto.Post entityToPostDto(Board board);
-
     default List<BoardDto.Response> boardListToBoardDtoList(List<Board> boards){
         List<BoardDto.Response> responses = new ArrayList<>();
         for (Board board : boards) {

@@ -1,4 +1,4 @@
-package com.project.dailyAuction.board.Dto;
+package com.project.dailyAuction.board.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -62,13 +62,12 @@ public class BoardDto {
         private LocalDateTime createdAt;
         private LocalDateTime finishedAt;
     }
+
     @Getter
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Patch {
-        private int newPrice;
-
-
+        private int price;
     }
 }
