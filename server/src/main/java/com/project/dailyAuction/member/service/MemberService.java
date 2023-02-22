@@ -220,8 +220,13 @@ public class MemberService {
 
         for (int i = 0; i < boards.size(); i++) {
             Board board = boards.get(i);
-            BoardMember boardMember = boardMemberRepository.findByBoardAndMember(board, member);
-            int price = boardMember.getMyPrice();
+            Optional<BoardMember> optionalBoardMember = boardMemberRepository.findByBoardAndMember(board, member);
+
+            int price = 0;
+
+            if (optionalBoardMember.isEmpty()) {
+                price = optionalBoardMember.get().getMyPrice();
+            }
             list.add(price);
         }
         return list;
