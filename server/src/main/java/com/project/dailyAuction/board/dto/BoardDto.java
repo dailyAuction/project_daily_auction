@@ -1,4 +1,4 @@
-package com.project.dailyAuction.board.Dto;
+package com.project.dailyAuction.board.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

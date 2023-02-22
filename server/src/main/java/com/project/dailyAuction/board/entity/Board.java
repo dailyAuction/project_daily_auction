@@ -67,20 +67,4 @@ public class Board implements Serializable {
     public void updatePrice(int price) {
         this.currentPrice = price;
     }
-
-//    public void updateHistory(int newPrice) {
-//        this.history = this.history + "," + newPrice;
-//    }
-
-//    public void upBidCount(){
-//        this.bidCount++;
-//    }
-
-    public void upViewCount(int viewCount) {
-        this.viewCount += viewCount;
-    }
-
-    public void changeStatus(long statusId){
-        this.statusId = statusId;
-    }
 }
