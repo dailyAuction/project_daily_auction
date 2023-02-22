@@ -27,10 +27,12 @@ public class BoardController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void postBoard(@RequestHeader(name = "Authorization") String token,
+    public BoardDto.IdDto postBoard(@RequestHeader(name = "Authorization") String token,
                           @RequestBody BoardDto.Post postDto) {
         Board board = boardService.saveBoard(token, postDto);
         boardService.setFinishedTimeToRedis(board.getBoardId(), board.getFinishedAt());
+        BoardDto.IdDto response = BoardDto.IdDto.builder().boardId(board.getBoardId()).build();
+        return response;
     }
 
     @GetMapping("/{board-id}")
