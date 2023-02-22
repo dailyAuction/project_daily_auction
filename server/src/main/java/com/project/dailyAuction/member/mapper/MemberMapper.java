@@ -13,7 +13,7 @@ public interface MemberMapper {
         return Member.builder()
                 .email(dto.getEmail())
                 .password(dto.getPassword())
-                .status(MemberStatusCode.활동회원.getMessage())
+                .statusId(MemberStatusCode.활동회원.getCode())
                 .coin(0)
                 .build();
     }
