@@ -7,6 +7,7 @@ import com.project.dailyAuction.boardMember.entity.BoardMember;
 import com.project.dailyAuction.boardMember.repository.BoardMemberRepository;
 import com.project.dailyAuction.cache.CacheProcessor;
 import com.project.dailyAuction.code.ExceptionCode;
+import com.project.dailyAuction.code.NoticeStatusCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import com.project.dailyAuction.notice.Notice;
@@ -349,7 +350,7 @@ public class BoardService {
             lastMember.changeCoin(currentPrice);
 
             //알림 발송
-            noticeService.send(lastMember, board, 3, lastMember.getCoin());
+            noticeService.send(lastMember, board, NoticeStatusCode.상회입찰.getCode(), lastMember.getCoin());
         }
 
         //코인이 부족하면 에러
