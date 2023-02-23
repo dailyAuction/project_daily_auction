@@ -39,7 +39,7 @@ export const MyPageInfo = () => {
       <section className="w-full px-[10px] py-3 bg-white">
         <span className="text-base font-bold">내 코인</span>
         <article className="flex flex-row justify-between my-2">
-          <span className="text-xl font-bold text-main-orange">{coin} coin</span>
+          <span className="text-xl font-bold text-main-orange">{Number(coin).toLocaleString()} coin</span>
           <Link to="/charge">
             <button type={'button'} className="red-btn text-sm font-bold">
               충전하기
