@@ -33,7 +33,7 @@ public class Member {
     private int coin;
 
     @Column
-    private String status;
+    private long statusId;
 
     @OneToMany(mappedBy = "receiver")
     private List<Notice> notices = new ArrayList<>();
@@ -49,7 +49,7 @@ public class Member {
     }
 
     public void changeStatus(MemberStatusCode status) {
-        this.status = status.getMessage();
+        this.statusId = status.getCode();
     }
 
     public void changeCoin(int newCoin){
