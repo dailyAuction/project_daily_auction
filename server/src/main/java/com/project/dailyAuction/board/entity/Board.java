@@ -1,6 +1,5 @@
 package com.project.dailyAuction.board.entity;
 
-//import com.project.dailyAuction.boardNotice.entity.Notice;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
