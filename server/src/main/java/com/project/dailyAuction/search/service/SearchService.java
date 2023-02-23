@@ -1,7 +1,7 @@
-package com.project.dailyAuction.Search.service;
+package com.project.dailyAuction.search.service;
 
-import com.project.dailyAuction.Search.entity.Keyword;
-import com.project.dailyAuction.Search.repository.KeywordRepository;
+import com.project.dailyAuction.search.entity.Keyword;
+import com.project.dailyAuction.search.repository.KeywordRepository;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.cache.CacheProcessor;

@@ -1,8 +1,10 @@
 package com.project.dailyAuction.board.service;
 
-import com.project.dailyAuction.board.Dto.BoardDto;
+import com.project.dailyAuction.board.dto.BoardDto;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
+import com.project.dailyAuction.boardImage.entity.BoardImage;
+import com.project.dailyAuction.boardImage.repository.BoardImageRepository;
 import com.project.dailyAuction.boardMember.entity.BoardMember;
 import com.project.dailyAuction.boardMember.repository.BoardMemberRepository;
 import com.project.dailyAuction.cache.CacheProcessor;
@@ -29,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -45,16 +48,15 @@ public class BoardService {
     private final RedisTemplate<String, String> redisTemplate;
     private final NoticeRepository noticeRepository;
     private final CacheProcessor cacheProcessor;
+    private final BoardImageRepository boardImageRepository;
 
     public Board saveBoard(String token, BoardDto.Post postDto) {
         Member member = memberService.findByAccessToken(token);
         Board createdBoard = Board.builder()
                 .title(postDto.getTitle())
                 .description(postDto.getDescription())
-                //todo: 이미지 변환 필요, 썸네일 생성 필요
-                .image(postDto.getImage())
                 .thumbnail("")
-                .statusId(0)
+                .statusId(1)
                 .categoryId(postDto.getCategoryId())
                 .createdAt(LocalDateTime.now().plusHours(9))
                 .finishedAt(LocalDateTime.now().plusHours(33))
@@ -68,7 +70,6 @@ public class BoardService {
         return boardRepository.save(createdBoard);
     }
 
-    //    @Cacheable(key = "#boardId", value = "findBoard")
     public BoardDto.Response getDetailPage(String token, long boardId,int currentPrice, int viewCount, int bidCount, long bidderId, String history) {
         Board target = find(boardId);
 
@@ -81,7 +82,7 @@ public class BoardService {
                 .title(target.getTitle())
                 .description(target.getDescription())
                 .categoryId(target.getCategoryId())
-                .image(target.getImage())
+                .imageUrls(findImageUrls(target))
                 .thumbnail(target.getThumbnail())
                 .startingPrice(target.getStartingPrice())
                 .currentPrice(currentPrice)
@@ -92,7 +93,7 @@ public class BoardService {
                 .history(histories)
                 .statusId(target.getStatusId())
                 .bidderId(bidderId)
-                .sellerId(target.getSellerId())
+                .authorId(target.getSellerId())
                 .build();
 
         if (token != null) {
@@ -159,11 +160,9 @@ public class BoardService {
             valueOperations.set(
                     key,
                     String.valueOf(board.getViewCount()));
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         } else {
             valueOperations.get(key);
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         }
     }
@@ -180,11 +179,9 @@ public class BoardService {
             valueOperations.set(
                     key,
                     String.valueOf(board.getViewCount() + 1));
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         } else {
             valueOperations.increment(key);
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         }
     }
@@ -202,11 +199,9 @@ public class BoardService {
             valueOperations.set(
                     key,
                     String.valueOf(board.getBidCount() + 1));
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         } else {
             valueOperations.increment(key);
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         }
     }
@@ -224,11 +219,9 @@ public class BoardService {
             valueOperations.set(
                     key,
                     String.valueOf(board.getHistory()) + "," + newPrice);
-            log.info("value:{}", valueOperations.get(key));
         } else {
             String lastHistory = valueOperations.get(key);
             valueOperations.set(key, lastHistory + "," + newPrice);
-            log.info("value:{}", valueOperations.get(key));
         }
     }
 
@@ -236,7 +229,6 @@ public class BoardService {
         String key = "boardLeadingBidder::" + boardId;
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         valueOperations.set(key, String.valueOf(bidderId));
-        log.info("value:{}", valueOperations.get(key));
     }
 
     public int getBidCountInRedis(long boardId) {
@@ -306,11 +298,9 @@ public class BoardService {
             valueOperations.set(
                     key,
                     parsedFinishedAt);
-            log.info("value:{}", valueOperations.get(key));
         } else {
             String parsedFinishedAt = finishedTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             valueOperations.set(key, parsedFinishedAt);
-            log.info("value:{}", valueOperations.get(key));
         }
     }
 
@@ -406,7 +396,6 @@ public class BoardService {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
         valueOperations.set(key, String.valueOf(newPrice));
-        log.info("value:{}", valueOperations.get(key));
     }
 
     public Board find(long boardId) {
@@ -465,5 +454,15 @@ public class BoardService {
             return boardRepository.findBoardsByCategoryIdAndCreatedAt(categoryId,
                     LocalDateTime.now().minusDays(1), PageRequest.of(page, size, defaultSort));
         }
+    }
+
+    public List<String> findImageUrls(Board board) {
+        List<String> imageUrls = new ArrayList<>();
+        List<BoardImage> boardImages = boardImageRepository.findAllByBoard(board);
+        for (BoardImage boardImage : boardImages) {
+            imageUrls.add(boardImage.getStoredFilePath());
+        }
+
+        return imageUrls;
     }
 }

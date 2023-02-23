@@ -1,6 +1,6 @@
-package com.project.dailyAuction.Search.repository;
+package com.project.dailyAuction.search.repository;
 
-import com.project.dailyAuction.Search.entity.Keyword;
+import com.project.dailyAuction.search.entity.Keyword;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
