@@ -106,6 +106,7 @@ public class MemberService {
                 .email(email)
                 .password(passwordEncoder().encode("epdlffldhrtusthtufqlalfqjsgh"))
                 .coin(0)
+                .statusId(1)
                 .build()
         );
     }

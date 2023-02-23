@@ -73,8 +73,8 @@ public class MemberController {
         return memberService.getMyPage(token);
     }
 
-    // post코인 충전 - 1000원단위 충전 (토큰, 충전량 필요) 변경된 코인 리턴
-    @PostMapping("/coin")
+    // patch코인 충전 - 1000원단위 충전 (토큰, 충전량 필요) 변경된 코인 리턴
+    @PatchMapping("/coin")
     @ResponseStatus(HttpStatus.OK)
     public MemberDto.Coin addCoin(@RequestHeader(name = "Authorization")String token,
                         @RequestBody MemberDto.Coin coin){
