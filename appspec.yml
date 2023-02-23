@@ -3,7 +3,7 @@ os: linux
 
 files:
   - source: /
-    destination: /home/ec-2user/project_daily_auction/server/build/libs
+    destination: /home/ec2-user/project_daily_auction/server/build/libs
 
 hooks:
   BeforeInstall:
