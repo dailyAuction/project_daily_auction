@@ -72,18 +72,8 @@ public class BoardController {
     private void bidBoard(@RequestHeader(name = "Authorization") String token,
                           @PathVariable("board-id") long boardId,
                           @RequestBody BoardDto.Patch patchDto) {
-        boardService.bidBoard(token, boardId, patchDto.getPrice());
-        int bidCount = boardService.getBidCountInRedis(boardId);
-        String history = boardService.getHistoryInRedis(boardId);
-        Integer[] histories = Arrays.stream(history.split(","))
-                .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
+        Message.Response response = boardService.bidBoard(token, boardId, patchDto.getPrice());
 
-        Message.Response response = Message.Response.builder()
-                .boardId(boardId)
-                .bidCount(bidCount)
-                .history(histories)
-                .currentPrice(patchDto.getPrice())
-                .build();
         simpMessageSendingOperations.convertAndSend("/sub/board-id/" + boardId, response);
     }
 
