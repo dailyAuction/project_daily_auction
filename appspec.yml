@@ -3,7 +3,7 @@ os: amzn2
 
 files:
   - source: /
-    destination: /home/ec-2user/project_daily_auction/server/build
+    destination: /home/ec-2user/project_daily_auction/server/build/libs
 
 hooks:
   BeforeInstall:
