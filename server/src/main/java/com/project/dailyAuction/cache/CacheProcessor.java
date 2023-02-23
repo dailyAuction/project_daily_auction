@@ -41,12 +41,12 @@ public class CacheProcessor {
         Iterator<String> it = redisKeys.iterator();
         while (it.hasNext()) {
             String data = it.next();
-            Long boardId = Long.parseLong(data.split("::")[1]);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime finishedAt = LocalDateTime.parse(redisTemplate.opsForValue().get(data), formatter);
-            Board board = boardRepository.findById(boardId).get();
             if ((LocalDateTime.now().isAfter(finishedAt.minusMinutes(5)) ||
                     LocalDateTime.now().isEqual(finishedAt.minusMinutes(5))) && LocalDateTime.now().isBefore(finishedAt.minusMinutes(4))) {
+                Long boardId = Long.parseLong(data.split("::")[1]);
+                Board board = boardRepository.findById(boardId).get();
                 Member buyer = memberService.find(getBidderInRedis(boardId));
                 log.info(boardId + "번 게시글 마감 5분 전");
 
@@ -55,6 +55,8 @@ public class CacheProcessor {
             }
             // 경매 종료
             else if (LocalDateTime.now().isAfter(finishedAt)) {
+                Long boardId = Long.parseLong(data.split("::")[1]);
+                Board board = boardRepository.findById(boardId).get();
                 Member seller = memberService.find(board.getSellerId());
                 updateViewToMySql(boardId);
                 boardRepository.updateStatus(boardId, checkFinishCode(boardId));

@@ -157,11 +157,9 @@ public class BoardService {
             valueOperations.set(
                     key,
                     String.valueOf(board.getViewCount()));
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         } else {
             valueOperations.get(key);
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         }
     }
@@ -178,11 +176,9 @@ public class BoardService {
             valueOperations.set(
                     key,
                     String.valueOf(board.getViewCount() + 1));
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         } else {
             valueOperations.increment(key);
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         }
     }
@@ -200,11 +196,9 @@ public class BoardService {
             valueOperations.set(
                     key,
                     String.valueOf(board.getBidCount() + 1));
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         } else {
             valueOperations.increment(key);
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         }
     }
@@ -222,11 +216,9 @@ public class BoardService {
             valueOperations.set(
                     key,
                     String.valueOf(board.getHistory()) + "," + newPrice);
-            log.info("value:{}", valueOperations.get(key));
         } else {
             String lastHistory = valueOperations.get(key);
             valueOperations.set(key, lastHistory + "," + newPrice);
-            log.info("value:{}", valueOperations.get(key));
         }
     }
 
@@ -234,7 +226,6 @@ public class BoardService {
         String key = "boardLeadingBidder::" + boardId;
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         valueOperations.set(key, String.valueOf(bidderId));
-        log.info("value:{}", valueOperations.get(key));
     }
 
     public int getBidCountInRedis(long boardId) {
@@ -304,11 +295,9 @@ public class BoardService {
             valueOperations.set(
                     key,
                     parsedFinishedAt);
-            log.info("value:{}", valueOperations.get(key));
         } else {
             String parsedFinishedAt = finishedTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             valueOperations.set(key, parsedFinishedAt);
-            log.info("value:{}", valueOperations.get(key));
         }
     }
 
@@ -404,7 +393,6 @@ public class BoardService {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
         valueOperations.set(key, String.valueOf(newPrice));
-        log.info("value:{}", valueOperations.get(key));
     }
 
     public Board find(long boardId) {
