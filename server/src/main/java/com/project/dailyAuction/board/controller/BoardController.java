@@ -1,8 +1,8 @@
 package com.project.dailyAuction.board.controller;
 
-import com.project.dailyAuction.board.Dto.BoardDto;
+import com.project.dailyAuction.board.dto.BoardDto;
 import com.project.dailyAuction.board.entity.Board;
-import com.project.dailyAuction.board.Mapper.BoardMapper;
+import com.project.dailyAuction.board.mapper.BoardMapper;
 import com.project.dailyAuction.board.service.BoardService;
 import com.project.dailyAuction.dto.PageDto;
 import com.project.dailyAuction.webSocket.Message;
@@ -27,10 +27,12 @@ public class BoardController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void postBoard(@RequestHeader(name = "Authorization") String token,
+    public BoardDto.IdDto postBoard(@RequestHeader(name = "Authorization") String token,
                           @RequestBody BoardDto.Post postDto) {
         Board board = boardService.saveBoard(token, postDto);
         boardService.setFinishedTimeToRedis(board.getBoardId(), board.getFinishedAt());
+        BoardDto.IdDto response = BoardDto.IdDto.builder().boardId(board.getBoardId()).build();
+        return response;
     }
 
     @GetMapping("/{board-id}")

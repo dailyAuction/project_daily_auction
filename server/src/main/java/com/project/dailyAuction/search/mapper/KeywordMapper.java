@@ -1,7 +1,7 @@
-package com.project.dailyAuction.Search.mapper;
+package com.project.dailyAuction.search.mapper;
 
-import com.project.dailyAuction.Search.dto.TopKeywordsDto;
-import com.project.dailyAuction.Search.entity.Keyword;
+import com.project.dailyAuction.search.dto.TopKeywordsDto;
+import com.project.dailyAuction.search.entity.Keyword;
 import org.mapstruct.Mapper;
 
 import java.util.List;
