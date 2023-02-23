@@ -1,6 +1,6 @@
 package com.project.dailyAuction.board.service;
 
-import com.project.dailyAuction.board.Dto.BoardDto;
+import com.project.dailyAuction.board.dto.BoardDto;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.boardImage.entity.BoardImage;
@@ -55,7 +55,7 @@ public class BoardService {
                 .title(postDto.getTitle())
                 .description(postDto.getDescription())
                 .thumbnail("")
-                .statusId(0)
+                .statusId(1)
                 .categoryId(postDto.getCategoryId())
                 .createdAt(LocalDateTime.now().plusHours(9))
                 .finishedAt(LocalDateTime.now().plusHours(33))
@@ -69,7 +69,6 @@ public class BoardService {
         return boardRepository.save(createdBoard);
     }
 
-    //    @Cacheable(key = "#boardId", value = "findBoard")
     public BoardDto.Response getDetailPage(String token, long boardId,int currentPrice, int viewCount, int bidCount, long bidderId, String history) {
         Board target = find(boardId);
 
@@ -93,7 +92,7 @@ public class BoardService {
                 .history(histories)
                 .statusId(target.getStatusId())
                 .bidderId(bidderId)
-                .sellerId(target.getSellerId())
+                .authorId(target.getSellerId())
                 .build();
 
         if (token != null) {

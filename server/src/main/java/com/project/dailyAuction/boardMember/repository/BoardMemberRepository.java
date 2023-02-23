@@ -1,6 +1,6 @@
 package com.project.dailyAuction.boardMember.repository;
 
-import com.project.dailyAuction.board.Mapper.BoardMapping;
+import com.project.dailyAuction.board.mapper.BoardMapping;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.boardMember.entity.BoardMember;
 import com.project.dailyAuction.member.entity.Member;
