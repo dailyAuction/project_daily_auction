@@ -10,6 +10,7 @@ import com.project.dailyAuction.boardMember.entity.BoardMember;
 import com.project.dailyAuction.boardMember.repository.BoardMemberRepository;
 import com.project.dailyAuction.cache.CacheProcessor;
 import com.project.dailyAuction.code.ExceptionCode;
+import com.project.dailyAuction.code.NoticeStatusCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import com.project.dailyAuction.notice.Notice;
@@ -49,9 +50,9 @@ public class BoardService {
     private final BoardMemberRepository boardMemberRepository;
     private final RedisTemplate<String, String> redisTemplate;
     private final NoticeRepository noticeRepository;
-    private final ImageHandler imageHandler;
-    private final BoardImageRepository boardImageRepository;
     private final CacheProcessor cacheProcessor;
+    private final BoardImageRepository boardImageRepository;
+    private final ImageHandler imageHandler;
 
     public Board saveBoard(String token, BoardDto.Post postDto, List<MultipartFile> images) throws IOException {
         Member member = memberService.findByAccessToken(token);
@@ -174,11 +175,9 @@ public class BoardService {
             valueOperations.set(
                     key,
                     String.valueOf(board.getViewCount()));
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         } else {
             valueOperations.get(key);
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         }
     }
@@ -195,11 +194,9 @@ public class BoardService {
             valueOperations.set(
                     key,
                     String.valueOf(board.getViewCount() + 1));
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         } else {
             valueOperations.increment(key);
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         }
     }
@@ -217,11 +214,9 @@ public class BoardService {
             valueOperations.set(
                     key,
                     String.valueOf(board.getBidCount() + 1));
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         } else {
             valueOperations.increment(key);
-            log.info("value:{}", valueOperations.get(key));
             return Integer.parseInt(valueOperations.get(key));
         }
     }
@@ -239,11 +234,9 @@ public class BoardService {
             valueOperations.set(
                     key,
                     String.valueOf(board.getHistory()) + "," + newPrice);
-            log.info("value:{}", valueOperations.get(key));
         } else {
             String lastHistory = valueOperations.get(key);
             valueOperations.set(key, lastHistory + "," + newPrice);
-            log.info("value:{}", valueOperations.get(key));
         }
     }
 
@@ -251,7 +244,6 @@ public class BoardService {
         String key = "boardLeadingBidder::" + boardId;
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         valueOperations.set(key, String.valueOf(bidderId));
-        log.info("value:{}", valueOperations.get(key));
     }
 
     public int getBidCountInRedis(long boardId) {
@@ -321,11 +313,9 @@ public class BoardService {
             valueOperations.set(
                     key,
                     parsedFinishedAt);
-            log.info("value:{}", valueOperations.get(key));
         } else {
             String parsedFinishedAt = finishedTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             valueOperations.set(key, parsedFinishedAt);
-            log.info("value:{}", valueOperations.get(key));
         }
     }
 
@@ -365,7 +355,7 @@ public class BoardService {
             lastMember.changeCoin(currentPrice);
 
             //알림 발송
-            noticeService.send(lastMember, board, 3, lastMember.getCoin());
+            noticeService.send(lastMember, board, NoticeStatusCode.상회입찰.getCode(), lastMember.getCoin());
         }
 
         //코인이 부족하면 에러
@@ -421,7 +411,6 @@ public class BoardService {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
         valueOperations.set(key, String.valueOf(newPrice));
-        log.info("value:{}", valueOperations.get(key));
     }
 
     public Board find(long boardId) {

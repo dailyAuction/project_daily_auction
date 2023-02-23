@@ -1,6 +1,5 @@
 package com.project.dailyAuction.board.entity;
 
-//import com.project.dailyAuction.boardNotice.entity.Notice;
 import com.project.dailyAuction.boardImage.entity.BoardImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,8 +50,6 @@ public class Board implements Serializable {
     private long bidderId;
     @Column
     private String history;
-//    @OneToMany(mappedBy = "board")
-//    private List<Notice> notices = new ArrayList<>();
 
     public void changeLeadingBidder(long memberId) {
         this.bidderId = memberId;
@@ -68,14 +65,6 @@ public class Board implements Serializable {
     public void updatePrice(int price) {
         this.currentPrice = price;
     }
-
-//    public void updateHistory(int newPrice) {
-//        this.history = this.history + "," + newPrice;
-//    }
-
-//    public void upBidCount(){
-//        this.bidCount++;
-//    }
 
     public void upViewCount(int viewCount) {
         this.viewCount += viewCount;

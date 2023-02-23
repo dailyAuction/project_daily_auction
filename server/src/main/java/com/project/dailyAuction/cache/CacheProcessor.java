@@ -4,6 +4,7 @@ import com.project.dailyAuction.search.repository.KeywordRepository;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.code.ExceptionCode;
+import com.project.dailyAuction.code.NoticeStatusCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import com.project.dailyAuction.notice.NoticeService;
@@ -41,20 +42,22 @@ public class CacheProcessor {
         Iterator<String> it = redisKeys.iterator();
         while (it.hasNext()) {
             String data = it.next();
-            Long boardId = Long.parseLong(data.split("::")[1]);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime finishedAt = LocalDateTime.parse(redisTemplate.opsForValue().get(data), formatter);
-            Board board = boardRepository.findById(boardId).get();
             if ((LocalDateTime.now().isAfter(finishedAt.minusMinutes(5)) ||
                     LocalDateTime.now().isEqual(finishedAt.minusMinutes(5))) && LocalDateTime.now().isBefore(finishedAt.minusMinutes(4))) {
+                Long boardId = Long.parseLong(data.split("::")[1]);
+                Board board = boardRepository.findById(boardId).get();
                 Member buyer = memberService.find(getBidderInRedis(boardId));
                 log.info(boardId + "번 게시글 마감 5분 전");
 
                 //마감 임박 알림 전송
-                noticeService.send(buyer, board, 5);
+                noticeService.send(buyer, board, NoticeStatusCode.마감임박.getCode());
             }
             // 경매 종료
             else if (LocalDateTime.now().isAfter(finishedAt)) {
+                Long boardId = Long.parseLong(data.split("::")[1]);
+                Board board = boardRepository.findById(boardId).get();
                 Member seller = memberService.find(board.getSellerId());
                 updateViewToMySql(boardId);
                 boardRepository.updateStatus(boardId, checkFinishCode(boardId));
@@ -64,14 +67,14 @@ public class CacheProcessor {
                 if (board.getBidderId() != 0L) {
                     Member buyer = memberService.find(getBidderInRedis(boardId));
                     //구매자 경매 낙찰 알림 전송
-                    noticeService.send(buyer, board, 2);
+                    noticeService.send(buyer, board, NoticeStatusCode.구매자낙찰.getCode());
 
                     //판매자 경매 낙찰 알림 전송
-                    noticeService.send(seller, board, 1);
+                    noticeService.send(seller, board, NoticeStatusCode.판매자낙찰.getCode());
 
                 } else {
                     //판매자 경매 유찰 알림 전송
-                    noticeService.send(seller, board, 3);
+                    noticeService.send(seller, board, NoticeStatusCode.유찰.getCode());
                 }
             }
         }
