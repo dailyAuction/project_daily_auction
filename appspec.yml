@@ -1,5 +1,5 @@
 version: 0.0
-os: amzn2
+os: linux
 
 files:
   - source: /
