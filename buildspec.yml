@@ -7,8 +7,7 @@ phases:
   build:
     commands:
       - echo Build Starting on `date`
-      - ls -al
-      - cd home/ec2-user/project_daily_auction/server
+      - cd server
       - chmod +x ./gradlew
       - ./gradlew build
   post_build:
