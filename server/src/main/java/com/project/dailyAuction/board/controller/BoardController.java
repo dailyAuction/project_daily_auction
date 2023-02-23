@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -30,7 +29,7 @@ public class BoardController {
     public BoardDto.IdDto postBoard(@RequestHeader(name = "Authorization") String token,
                           @RequestBody BoardDto.Post postDto) {
         Board board = boardService.saveBoard(token, postDto);
-        boardService.setFinishedTimeToRedis(board.getBoardId(), board.getFinishedAt());
+        boardService.setFinishedTimeToRedis(board, board.getFinishedAt());
         BoardDto.IdDto response = BoardDto.IdDto.builder().boardId(board.getBoardId()).build();
         return response;
     }
@@ -42,14 +41,15 @@ public class BoardController {
                                       HttpServletRequest httpRequest,
                                       HttpServletResponse httpResponse) {
         int viewCount = 0;
-        int bidCount = boardService.getBidCountInRedis(boardId);
-        long bidderId = boardService.getBidderInRedis(boardId);
-        int currentPrice = boardService.getPriceInRedis(boardId);
-        String history = boardService.getHistoryInRedis(boardId);
+        Board board = boardService.find(boardId);
+        int bidCount = boardService.getBidCountInRedis(board);
+        long bidderId = boardService.getBidderInRedis(board);
+        int currentPrice = boardService.getPriceInRedis(board);
+        String history = boardService.getHistoryInRedis(board);
 
-        viewCount = boardService.getViewCount(boardId, httpRequest, httpResponse);
+        viewCount = boardService.getViewCount(board, httpRequest, httpResponse);
 
-        BoardDto.Response response = boardService.getDetailPage(token, boardId, currentPrice, viewCount, bidCount, bidderId, history);
+        BoardDto.Response response = boardService.getDetailPage(token, board, currentPrice, viewCount, bidCount, bidderId, history);
         return response;
     }
 
