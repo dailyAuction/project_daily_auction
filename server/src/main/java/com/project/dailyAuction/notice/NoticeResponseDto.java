@@ -14,7 +14,7 @@ public class NoticeResponseDto {
     private long noticeId;
     private long boardId;
     private String boardTitle;
-    private String image;
+    private String thumbnail;
     private long statusId;
     private String contact;
     private int coin;
@@ -25,7 +25,7 @@ public class NoticeResponseDto {
                 .noticeId(notice.getNoticeId())
                 .boardId(board.getBoardId())
                 .boardTitle(board.getTitle())
-                .image(board.getImage())
+                .thumbnail(board.getThumbnail())
                 .statusId(notice.getStatus())
                 .contact(notice.getContact())
                 .build();
@@ -38,7 +38,7 @@ public class NoticeResponseDto {
                 .noticeId(notice.getNoticeId())
                 .boardId(board.getBoardId())
                 .boardTitle(board.getTitle())
-                .image(board.getImage())
+                .thumbnail(board.getThumbnail())
                 .statusId(notice.getStatus())
                 .contact(notice.getContact())
                 .coin(coin)
