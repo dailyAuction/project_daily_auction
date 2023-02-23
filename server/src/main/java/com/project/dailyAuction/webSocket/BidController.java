@@ -1,14 +1,13 @@
 package com.project.dailyAuction.webSocket;
 
 import com.project.dailyAuction.board.dto.BoardDto;
+import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
-
-import java.util.Arrays;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,19 +22,8 @@ public class BidController {
         String token = message.getBidderToken();
         int newPrice = message.getPrice();
 
-        boardService.bidBoard(token, boardId, newPrice);
+        Message.Response response = boardService.bidBoard(token, boardId, newPrice);
 
-        int bidCount = boardService.getBidCountInRedis(boardId);
-        String history = boardService.getHistoryInRedis(boardId);
-        Integer[] histories = Arrays.stream(history.split(","))
-                .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
-
-        Message.Response response = Message.Response.builder()
-                .boardId(boardId)
-                .bidCount(bidCount)
-                .history(histories)
-                .currentPrice(message.getPrice())
-                .build();
         simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
     }
 
