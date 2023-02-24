@@ -7,8 +7,8 @@ import { useRecoilValue } from 'recoil';
 import { editPasswordAPI } from '../../../api/editPasswordAPI';
 import { accessTokenAtom } from '../../../atoms/token';
 import { REG_KOREA, REG_PASSWORD } from '../../../constants/constants';
+import { SuccessModal } from '../../_common/Modal/SuccessModal';
 import { OpenPassword } from '../../_common/OpenPassword/OpenPassword';
-import { CheckModal } from '../EditPasswordModal/CheckModal';
 
 type PasswordFactor = {
   currentPassword: string;
@@ -145,7 +145,14 @@ export const EditPassword = () => {
             </button>
           </article>
         </form>
-        {isModalOpen ? <CheckModal handleClose={() => setModalOpen(false)} /> : <></>}
+        {isModalOpen && (
+          <SuccessModal
+            modalName="비밀번호 변경 완료"
+            routeName="/my"
+            detail="입력하신 비밀번호로 변경되었습니다."
+            handleClose={() => setModalOpen(false)}
+          />
+        )}
       </section>
     </main>
   );
