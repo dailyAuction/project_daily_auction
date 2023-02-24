@@ -1,12 +1,21 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { loginStateAtom } from '../../../atoms/user';
 
 const TAB_TITLE = ['', 'category', 'search', 'postProduct', 'my'];
 
 const TabIcon = ({ children, idx }) => {
   const location = useLocation();
+  const loginState = useRecoilValue(loginStateAtom);
+
+  const getDestination = (endpoint: string) => {
+    if (!loginState && endpoint === 'my') return 'login';
+    return endpoint;
+  };
+
   return (
     <Link
-      to={`/${TAB_TITLE[idx]}`}
+      to={`/${getDestination(TAB_TITLE[idx])}`}
       className={`text-base flex flex-col justify-center items-center cursor-pointer ${
         location.pathname === `/${TAB_TITLE[idx]}` && 'text-main-red'
       }`}>
