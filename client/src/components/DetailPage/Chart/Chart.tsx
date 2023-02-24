@@ -20,7 +20,7 @@ export const options = {
 
 type ChartProps = {
   initData: number[];
-  realTimeData: ProductDetailRealtimeResp;
+  realTimeData: Partial<ProductDetailRealtimeResp>;
 };
 
 export const Chart = ({ realTimeData, initData }: ChartProps) => {
@@ -39,7 +39,7 @@ export const Chart = ({ realTimeData, initData }: ChartProps) => {
   });
 
   useEffect(() => {
-    if (history) setData(history.split('').map((price) => +price));
+    if (history) setData(history);
   }, [history]);
 
   // FIXME: 반응형으로 화면 크기 바뀔 때 너비가 달라지지 않는 현상 있음.

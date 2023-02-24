@@ -19,8 +19,8 @@ export interface ProductDetailResp {
 }
 
 export interface ProductDetailRealtimeResp {
-  boardId: string;
-  price: string;
-  bidCount: string;
-  history: string;
+  boardId: number;
+  currentPrice: number;
+  bidCount: number;
+  history: number[];
 }
