@@ -1,8 +1,8 @@
 package com.project.dailyAuction.board.controller;
 
+import com.project.dailyAuction.board.dto.BoardDto;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.mapper.BoardMapper;
-import com.project.dailyAuction.board.dto.BoardDto;
 import com.project.dailyAuction.board.service.BoardService;
 import com.project.dailyAuction.dto.PageDto;
 import com.project.dailyAuction.webSocket.Message;
@@ -45,14 +45,15 @@ public class BoardController {
                                       HttpServletRequest httpRequest,
                                       HttpServletResponse httpResponse) {
         int viewCount = 0;
-        int bidCount = boardService.getBidCountInRedis(boardId);
-        long bidderId = boardService.getBidderInRedis(boardId);
-        int currentPrice = boardService.getPriceInRedis(boardId);
-        String history = boardService.getHistoryInRedis(boardId);
+        Board board = boardService.find(boardId);
+        int bidCount = boardService.getBidCountInRedis(board);
+        long bidderId = boardService.getBidderInRedis(board);
+        int currentPrice = boardService.getPriceInRedis(board);
+        String history = boardService.getHistoryInRedis(board);
 
-        viewCount = boardService.getViewCount(boardId, httpRequest, httpResponse);
+        viewCount = boardService.getViewCount(board, httpRequest, httpResponse);
 
-        BoardDto.Response response = boardService.getDetailPage(token, boardId, currentPrice, viewCount, bidCount, bidderId, history);
+        BoardDto.Response response = boardService.getDetailPage(token, board, currentPrice, viewCount, bidCount, bidderId, history);
         return response;
     }
 
@@ -75,18 +76,8 @@ public class BoardController {
     private void bidBoard(@RequestHeader(name = "Authorization") String token,
                           @PathVariable("board-id") long boardId,
                           @RequestBody BoardDto.Patch patchDto) {
-        boardService.bidBoard(token, boardId, patchDto.getPrice());
-        int bidCount = boardService.getBidCountInRedis(boardId);
-        String history = boardService.getHistoryInRedis(boardId);
-        Integer[] histories = Arrays.stream(history.split(","))
-                .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
+        Message.Response response = boardService.bidBoard(token, boardId, patchDto.getPrice());
 
-        Message.Response response = Message.Response.builder()
-                .boardId(boardId)
-                .bidCount(bidCount)
-                .history(histories)
-                .currentPrice(patchDto.getPrice())
-                .build();
         simpMessageSendingOperations.convertAndSend("/sub/board-id/" + boardId, response);
     }
 

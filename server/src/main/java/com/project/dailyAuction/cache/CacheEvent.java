@@ -42,7 +42,7 @@ public class CacheEvent {
         cacheProcessor.updateTopKeywordToMySql();
         cacheProcessor.updateBoardPriceToMySql();
         cacheProcessor.deleteRedisPerHour();
-        log.info("조회수, 입찰 관련 반영-10분");
+        log.info("조회수, 입찰 관련 반영-1시간");
     }
 
     //    1분마다 실행
