@@ -1,6 +1,27 @@
+import { EventSourcePolyfill } from 'event-source-polyfill';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { accessTokenAtom } from '../../../../atoms/token';
 
 export const MainHeader = ({ children }) => {
+  // sse 이벤트 수신
+  const accessToken = useRecoilValue(accessTokenAtom);
+
+  useEffect(() => {
+    const eventSource = new EventSourcePolyfill(`${process.env.REACT_APP_URL}/subscribe`, {
+      headers: { Authorization: accessToken },
+    });
+
+    eventSource.onmessage = (event) => {
+      console.log(event.data);
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, []);
+
   return (
     <header className="h-14 w-full sticky bg-main-brown py-3">
       <div className="h-full mx-3 text-white flex justify-between items-center">

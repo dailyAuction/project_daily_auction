@@ -5,15 +5,6 @@ import { Notification } from '../components/NotificationPage/Notification/Notifi
 import { notificationResp } from '../mock/notificationResp';
 
 export const NotificationPage = () => {
-  const eventSource = new EventSource('/subscribe');
-
-  // sse 이벤트 수신
-  useEffect(() => {
-    eventSource.addEventListener('message', (event) => {
-      console.log(`이벤트 수신 : ${event.data}`);
-    });
-  }, []);
-
   return (
     <main className="base-layout">
       <SubHeader>알림</SubHeader>
