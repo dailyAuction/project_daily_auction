@@ -58,7 +58,8 @@ export const BidInformation = ({ reatTimeData, sendBid }: BidInformationProps) =
         </article>
         <article className="flex w-full justify-between items-center">
           <span className="text-sm">입찰 횟수 : {bidCount}</span>
-          {statusId === 0 && authorId !== userInfo.memberId && (
+          {/* 진행중이면서  */}
+          {statusId === 1 && authorId !== userInfo.memberId && (
             <button
               type="submit"
               className="red-btn"
@@ -68,7 +69,7 @@ export const BidInformation = ({ reatTimeData, sendBid }: BidInformationProps) =
               입찰
             </button>
           )}
-          {statusId === 2 && authorId === userInfo.memberId && (
+          {statusId === 3 && authorId === userInfo.memberId && (
             <article className="flex items-center space-x-2">
               <button type="submit" className="red-btn" onClick={() => handleClickRePost(boardId)}>
                 재등록
