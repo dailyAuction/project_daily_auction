@@ -1,5 +1,6 @@
 package com.project.dailyAuction.cache;
 
+import com.project.dailyAuction.code.BoardStatusCode;
 import com.project.dailyAuction.search.repository.KeywordRepository;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
@@ -54,7 +55,7 @@ public class CacheProcessor {
                                 new IllegalArgumentException()));
 
                 Member buyer = memberService.find(getBidderInRedis(board));
-                log.info(boardId + "번 게시글 마감 5분 전");
+                log.info("**Log : " + boardId + "번 게시글 마감 5분 전");
 
                 //마감 임박 알림 전송
                 noticeService.send(buyer, board, NoticeStatusCode.마감임박.getCode());
@@ -72,7 +73,7 @@ public class CacheProcessor {
                 updateViewToMySql(boardId);
                 boardRepository.updateStatus(boardId, checkFinishCode(board));
                 deleteInRedis("finishedTime", boardId);
-                log.info(boardId + "번 게시글 마감");
+                log.info("**Log : " + boardId + "번 게시글 마감");
 
                 if (board.getBidderId() != 0L) {
                     Member buyer = memberService.find(getBidderInRedis(board));
@@ -111,13 +112,13 @@ public class CacheProcessor {
             String data = it.next();
             Long currentBoardId = Long.parseLong(data.split("::")[1]);
             if (currentBoardId == boardId) {
-                return 2;
+                return BoardStatusCode.낙찰.code;
             }
         }
         if (board.getBidderId() != 0) {
-            return 2;
+            return BoardStatusCode.낙찰.code;
         } else {
-            return 1;
+            return BoardStatusCode.유찰.code;
         }
     }
 
@@ -130,7 +131,7 @@ public class CacheProcessor {
             String data = it.next();
             int viewCnt = Integer.parseInt(redisTemplate.opsForValue().get(data));
             boardRepository.updateViews(boardId, viewCnt);
-            deleteInRedis("boardViewCount",boardId);
+            deleteInRedis("boardViewCount", boardId);
         }
         redisKeys = redisTemplate.keys("boardPrice::" + boardId);
         it = redisKeys.iterator();
@@ -138,7 +139,7 @@ public class CacheProcessor {
             String data = it.next();
             int price = Integer.parseInt(redisTemplate.opsForValue().get(data));
             boardRepository.updatePrice(boardId, price);
-            deleteInRedis("boardPrice",boardId);
+            deleteInRedis("boardPrice", boardId);
         }
         redisKeys = redisTemplate.keys("boardBidCount::" + boardId);
         it = redisKeys.iterator();
@@ -146,7 +147,7 @@ public class CacheProcessor {
             String data = it.next();
             int bidCount = Integer.parseInt(redisTemplate.opsForValue().get(data));
             boardRepository.updateBidCnt(boardId, bidCount);
-            deleteInRedis("boardBidCount",boardId);
+            deleteInRedis("boardBidCount", boardId);
         }
     }
 
@@ -261,7 +262,7 @@ public class CacheProcessor {
     }
 
     public void deleteAllInRedis(String key) {
-        Set<String> redisKeys = redisTemplate.keys(key+"*");
+        Set<String> redisKeys = redisTemplate.keys(key + "*");
         Iterator<String> it = redisKeys.iterator();
         while (it.hasNext()) {
             String data = it.next();
