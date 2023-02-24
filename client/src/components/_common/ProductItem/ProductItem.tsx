@@ -38,7 +38,7 @@ export const ProductItem = ({ productDetail }: ProductItemProps) => {
             {statusId !== 1 ? '' : page === 'register' ? `시작가 ${startingPrice} coin` : `입찰가 ${currentPrice} coin`}
             <div className="flex items-center gap-0.5">
               {statusId === 1 ? '현재가' : ''}
-              <p className="text-base text-main-orange">{currentPrice}</p>
+              <p className="text-base text-main-orange">{currentPrice} coin</p>
             </div>
           </div>
           <div className="absolute top-2 right-2">

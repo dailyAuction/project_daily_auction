@@ -17,7 +17,7 @@ export const PostProductPage = () => {
     title: '',
     startingPrice: 0,
     description: '',
-    category: '',
+    categoryId: '',
   });
   const [token] = useRecoilState(accessTokenAtom);
   const [errMessage, setErrMessage] = useState('');
