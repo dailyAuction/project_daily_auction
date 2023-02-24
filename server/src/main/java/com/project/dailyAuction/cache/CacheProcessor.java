@@ -1,5 +1,6 @@
 package com.project.dailyAuction.cache;
 
+import com.project.dailyAuction.code.BoardStatusCode;
 import com.project.dailyAuction.search.repository.KeywordRepository;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
@@ -111,13 +112,13 @@ public class CacheProcessor {
             String data = it.next();
             Long currentBoardId = Long.parseLong(data.split("::")[1]);
             if (currentBoardId == boardId) {
-                return 2;
+                return BoardStatusCode.낙찰.code;
             }
         }
         if (board.getBidderId() != 0) {
-            return 2;
+            return BoardStatusCode.낙찰.code;
         } else {
-            return 3;
+            return BoardStatusCode.유찰.code;
         }
     }
 
