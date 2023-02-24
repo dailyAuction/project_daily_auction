@@ -13,13 +13,13 @@ import javax.sql.DataSource;
 @Configuration
 public class DatasourceConfig {
 
-    @Value("${spring.datasource-oing.username}")
+    @Value("${spring.datasource.username}")
     private String username;
 
-    @Value("${spring.datasource-oing.password}")
+    @Value("${spring.datasource.password}")
     private String password;
 
-    @Value("${spring.datasource-oing.url}")
+    @Value("${spring.datasource.url}")
     private String url;
 
     @Bean
