@@ -8,7 +8,6 @@ type CoinChargeFactor = {
 export const coinAPI = {
   url: '/members/coin',
   patchCoinCharge: async ({ coin, token }: CoinChargeFactor) => {
-    // console.log(accessToken);
     const res = await httpClient.patch(
       coinAPI.url,
       { coin },

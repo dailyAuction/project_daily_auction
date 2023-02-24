@@ -100,7 +100,6 @@ export const SignUp = () => {
                     },
                   })}
                 />
-                {/* TODO : 인증코드 요청 로직 필요 */}
                 <button type="button" className="white-btn w-2/6" onClick={getAuthVerify}>
                   요청
                 </button>
@@ -117,7 +116,6 @@ export const SignUp = () => {
               <span className="text-sm">인증번호</span>
               <div className="flex space-x-2">
                 <input type="text" className="input" placeholder="인증번호" onChange={handleVerifyCode} />
-                {/* TODO : 인증코드 확인 로직 필요 */}
                 <button type="button" className="white-btn w-2/6" onClick={handleVerify}>
                   인증
                 </button>
