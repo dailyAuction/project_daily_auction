@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
 import { accessTokenAtom, refreshTokenAtom } from '../../../atoms/token';
 import { loginStateAtom, userInfoAtom } from '../../../atoms/user';
 import { SignOutModal } from './SignOutModal';
 
 export const MyPageInfo = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setModalOpen] = useState(false);
   const { email, coin } = useRecoilValue(userInfoAtom);
 
@@ -19,6 +20,7 @@ export const MyPageInfo = () => {
     resetRefreshToken();
     resetUserInfo();
     resetLoginState();
+    navigate('/');
   };
 
   const myAuctionBtn = 'w-full bg-background-mobile p-6';
