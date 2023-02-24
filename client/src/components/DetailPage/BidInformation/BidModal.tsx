@@ -5,8 +5,8 @@ import { blockInvalidChar } from '../../../utils/blockInvalidChar';
 import { useBidInformationModal } from './useBidInformation';
 
 type BidModalProps = {
-  currentPrice: string;
-  sendBid: (price: string) => void;
+  currentPrice: number;
+  sendBid: (price: number) => void;
   handleClose: () => void;
 };
 
@@ -17,6 +17,7 @@ export const BidModal = ({ handleClose, currentPrice, sendBid }: BidModalProps) 
 
   const { handleClickBid, handleChange } = useBidInformationModal({ bidValue, setBidValue, setValidationMsg });
 
+  // TODO: 입찰 성공시 코인 업데이트 로직 (API 만들어주실 예정)
   const { coin: myCoin } = useRecoilValue(userInfoAtom);
 
   return (
@@ -24,7 +25,7 @@ export const BidModal = ({ handleClose, currentPrice, sendBid }: BidModalProps) 
       <div className="modal-container">
         <article className="flex flex-col space-y-1">
           <span>현재 경매가</span>
-          <span className="text-xl font-bold text-main-orange">{currentPrice} coin</span>
+          <span className="text-xl font-bold text-main-orange">{currentPrice?.toLocaleString()} coin</span>
         </article>
         <article>
           <input
@@ -37,9 +38,9 @@ export const BidModal = ({ handleClose, currentPrice, sendBid }: BidModalProps) 
           />
           <span className="text-xs text-main-red">{validationMsg}</span>
         </article>
-        <article className="flex self-end space-x-1 items-center">
+        <article className="self-end">
           <span className="text-sm">현재 내 코인 : </span>
-          <span className="text-bold text-main-orange h-3">{myCoin} coin</span>
+          <span className="text-bold text-main-orange h-3">{Number(myCoin).toLocaleString()} coin</span>
         </article>
         <article className="flex justify-between pt-3">
           <button type="submit" className="red-btn" onClick={() => handleClickBid(currentPrice, sendBid)}>

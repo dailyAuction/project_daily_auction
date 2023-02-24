@@ -12,7 +12,7 @@ export const NOTIFICATION_STATUS_MSG = [
   '해당 물품의 마감이 얼마 남지 않았습니다.',
 ];
 
-export const CHARGECOIN_STATUS = ['50,000원', '30,000원', '10,000원', '5,000원'];
+export const CHARGECOIN_STATUS = [50000, 30000, 10000, 5000];
 
 export const CATEGORIE_SORT_STATUS = ['마감 임박', 'TOP 입찰', 'TOP 조회', '높은 가격', '낮은 가격'];
 

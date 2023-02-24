@@ -18,7 +18,8 @@ export const DetailPage = () => {
   const { response, sendBid } = useWebsocket(`/sub/board-id/${boardId}`);
 
   const { isLoading, error, data } = useQuery(
-    'productDetail',
+    // 각 상품 데이터가 unique한 key 값을 갖도록 배열로 정했습니다.
+    ['productDetail', boardId],
     async () => {
       const res = await productDetailAPI.get(boardId);
       return res.data;
@@ -26,7 +27,6 @@ export const DetailPage = () => {
     {
       onError: (e) => console.error(e),
       refetchOnMount: true,
-      refetchOnWindowFocus: true,
     }
   );
 
@@ -35,8 +35,6 @@ export const DetailPage = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>에러가 발생하였습니다.</div>;
-
-  console.log(response);
 
   return (
     <main className="base-layout">
@@ -50,11 +48,12 @@ export const DetailPage = () => {
           <span>조회수 : {viewCount}</span>
         </article>
 
-        <AuctionStatus finishedAt={finishedAt} statusId={statusId} />
+        <AuctionStatus />
 
         <BidInformation reatTimeData={response} sendBid={sendBid} />
+
         <article className="py-8 bg-white px-2">{description}</article>
-        <Chart realTimeData={response} initData={history} />
+        <Chart realTimeData={response} />
       </section>
       <TabBar />
     </main>
