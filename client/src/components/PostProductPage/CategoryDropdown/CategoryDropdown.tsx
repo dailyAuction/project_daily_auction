@@ -10,18 +10,18 @@ export const CategoryDropdown = ({ productInfo, setProductInfo }) => {
   };
 
   const handlerOnClickCategory = (idx: number) => {
-    setProductInfo({ ...productInfo, category: CATEGORIES[idx] });
+    setProductInfo({ ...productInfo, categoryId: idx + 1 });
     setOpen(false);
   };
 
   return (
-    <div className="w-full border-b-2">
+    <div className="w-full border-y-2">
       <div className="relative">
         <button
           type="button"
           className={`relative flex justify-between align-middle p-2.5 w-full cursor-auto ${open && 'bg-white'}`}>
           <p className="">카테고리</p>
-          <div className="flex flex-1 ml-6">{productInfo.category}</div>
+          <div className="flex flex-1 ml-6">{CATEGORIES[productInfo.categoryId]}</div>
           {open ? (
             <svg
               onClick={handlerOnClickDropdown}
@@ -48,11 +48,11 @@ export const CategoryDropdown = ({ productInfo, setProductInfo }) => {
           {}
         </button>
         {open && (
-          <div className="absolute flex flex-wrap items-center h-20 mt-2 pl-2 py-2 bg-white rounded-md z-20">
-            {CATEGORIES.map((item, idx) => {
+          <div className="absolute flex flex-wrap items-center w-full h-20 mt-2 pl-2 py-2 bg-white rounded-md z-20">
+            {CATEGORIES.slice(1).map((item, idx) => {
               return (
                 <div key={item} onClick={() => handlerOnClickCategory(idx)}>
-                  <CategoryBtn key={item}>{item}</CategoryBtn>
+                  <CategoryBtn key={item}>{CATEGORIES[idx + 1]}</CategoryBtn>
                 </div>
               );
             })}
