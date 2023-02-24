@@ -117,7 +117,7 @@ public class CacheProcessor {
         if (board.getBidderId() != 0) {
             return 2;
         } else {
-            return 1;
+            return 3;
         }
     }
 
