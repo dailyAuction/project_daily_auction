@@ -19,7 +19,7 @@ export const CheckModal = ({ handleClose }: CheckModalProps) => {
           <span>현재 예치금 : </span>
         </article>
         <article>
-          <span className="text-2xl text-main-orange font-bold">{myCoin.toLocaleString()} coin</span>
+          <span className="text-2xl text-main-orange font-bold">{Number(myCoin).toLocaleString()} coin</span>
         </article>
         <article className="w-full flex justify-around font-bold">
           <button
