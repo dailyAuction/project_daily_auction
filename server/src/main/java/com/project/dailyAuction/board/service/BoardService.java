@@ -198,12 +198,30 @@ public class BoardService {
         if (valueOperations.get(key) == null) {
             valueOperations.set(
                     key,
-                    board.getHistory() + "," + newPrice);
+                    getUpdatedHistory(board.getHistory(), newPrice));
         } else {
             String lastHistory = valueOperations.get(key);
-            valueOperations.set(key, lastHistory + "," + newPrice);
+            valueOperations.set(key,
+                    getUpdatedHistory(lastHistory ,newPrice));
         }
         return valueOperations.get(key);
+    }
+
+    public String getUpdatedHistory(String history, int newPrice) {
+        String[] histories = history.split(",");
+        StringBuilder sb = new StringBuilder();
+        int start = histories.length - 19;
+        if (start < 0) {
+            start = 0;
+        }
+        for (int i = start; i < start + 19; i++) {
+            if (i >= histories.length) {
+                break;
+            }
+            sb.append(histories[i] + ",");
+        }
+        sb.append(newPrice);
+        return sb.toString();
     }
 
     private void changeLeadingBidderToRedis(long boardId, long bidderId) {
