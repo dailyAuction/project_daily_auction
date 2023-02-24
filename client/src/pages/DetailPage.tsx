@@ -18,7 +18,8 @@ export const DetailPage = () => {
   const { response, sendBid } = useWebsocket(`/sub/board-id/${boardId}`);
 
   const { isLoading, error, data } = useQuery(
-    'productDetail',
+    // 각 상품 데이터가 unique한 key 값을 갖도록 배열로 정했습니다.
+    ['productDetail', boardId],
     async () => {
       const res = await productDetailAPI.get(boardId);
       return res.data;
@@ -52,7 +53,7 @@ export const DetailPage = () => {
         <BidInformation reatTimeData={response} sendBid={sendBid} />
 
         <article className="py-8 bg-white px-2">{description}</article>
-        <Chart realTimeData={response} initData={history} />
+        <Chart realTimeData={response} />
       </section>
       <TabBar />
     </main>
