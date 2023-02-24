@@ -15,7 +15,7 @@ export const CategoryDropdown = ({ productInfo, setProductInfo }) => {
   };
 
   return (
-    <div className="w-full border-b-2">
+    <div className="w-full border-y-2">
       <div className="relative">
         <button
           type="button"

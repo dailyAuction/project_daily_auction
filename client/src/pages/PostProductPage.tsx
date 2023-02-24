@@ -1,5 +1,7 @@
+import { useRecoilState } from 'recoil';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 import { CategoryDropdown } from '../components/PostProductPage/CategoryDropdown/CategoryDropdown';
 import { RegisterItemImg } from '../components/PostProductPage/RegisterItemImg/RegisterItemImg';
 import { SubHeader } from '../components/_common/Header/SubHeader/SubHeader';
@@ -7,6 +9,7 @@ import { RegisterProductInfo } from '../components/PostProductPage/RegisterProdu
 import { TabBar } from '../components/_common/TabBar/TabBar';
 import { RegisterBtn } from '../components/PostProductPage/RegisterBtn/RegisterBtn';
 import { postProductAPI } from '../api/postProductAPI';
+import { accessTokenAtom } from '../atoms/token';
 
 export const PostProductPage = () => {
   const [myImage, setMyImage] = useState([]);
@@ -16,22 +19,26 @@ export const PostProductPage = () => {
     description: '',
     category: '',
   });
+  const [token] = useRecoilState(accessTokenAtom);
+  const [errMessage, setErrMessage] = useState('');
+  const navigate = useNavigate();
 
   const formData = new FormData();
   Array.from(myImage).forEach((img) => formData.append('files', img));
-  formData.append('data', JSON.stringify(productInfo));
+  formData.append('data', new Blob([JSON.stringify(productInfo)], { type: 'application/json' }));
 
-  const { mutate } = useMutation(() => postProductAPI.post(formData));
+  const { mutate } = useMutation(() => postProductAPI.post(formData, token));
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>, data) => {
     e.preventDefault();
-    mutate(data, {
-      onSuccess: (message) => console.log(message),
-      // onSuccess: () => navigate(`/detail/${authorId}`),
-      onError: (error) => alert(error),
-    });
-
-    // Array.from(formData.entries()).forEach((el) => console.log(el));
+    if (myImage.length <= 0) setErrMessage('이미지를 등록해주세요');
+    else if (Object.values(productInfo).filter((val) => val).length < 4) setErrMessage('내용을 전부 입력해주세요');
+    else {
+      mutate(data, {
+        onSuccess: (res) => navigate(`/detail/${res.boardId}`),
+        onError: () => setErrMessage('잠시후 다시 시도해주세요'),
+      });
+    }
   };
 
   return (
@@ -41,6 +48,7 @@ export const PostProductPage = () => {
         <RegisterItemImg myImage={myImage} setMyImage={setMyImage} />
         <CategoryDropdown productInfo={productInfo} setProductInfo={setProductInfo} />
         <RegisterProductInfo productInfo={productInfo} setProductInfo={setProductInfo} />
+        <p className="h-0 text-sm text-main-red">{errMessage}</p>
         <RegisterBtn />
       </form>
       <TabBar />
