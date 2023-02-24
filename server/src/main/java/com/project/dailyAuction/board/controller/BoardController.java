@@ -33,7 +33,7 @@ public class BoardController {
                                     @RequestPart("data") BoardDto.Post postDto,
                                     @RequestPart("files") List<MultipartFile> images) throws IOException {
         Board board = boardService.saveBoard(token, postDto, images);
-        boardService.setFinishedTimeToRedis(board.getBoardId(), board.getFinishedAt());
+        boardService.setFinishedTimeToRedis(board, board.getFinishedAt());
         BoardDto.IdDto response = BoardDto.IdDto.builder().boardId(board.getBoardId()).build();
         return response;
     }
