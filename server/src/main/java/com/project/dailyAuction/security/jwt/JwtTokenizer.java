@@ -111,7 +111,7 @@ public class JwtTokenizer {
                     .parseClaimsJws(jws)
                     .getBody();
         } catch (ExpiredJwtException e){
-            log.info("# Expired JWT token");
+            log.info("**Log : Expired JWT token");
             throw new ResponseStatusException(ExceptionCode.EXPIRED_TOKEN.getCode(), ExceptionCode.EXPIRED_TOKEN.getMessage(), new IllegalArgumentException());
         }
     }
