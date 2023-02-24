@@ -27,7 +27,7 @@ export const ProductItem = ({ productDetail }: ProductItemProps) => {
           <ProductItemImg thumbnail={thumbnail} statusId={statusId} finishedAt={finishedAt} />
         </div>
         <div className="flex-1 px-0.5">
-          {statusId === 1 && page === 'participation' && (
+          {statusId === 2 && page === 'participation' && (
             <div className="text-xs font-bold py-2">
               <p>판매자 이메일</p>
               <p>:aaaa@aaaa.com</p>
@@ -35,14 +35,14 @@ export const ProductItem = ({ productDetail }: ProductItemProps) => {
           )}
           <p className="text-sm sm:text-base font-bold line-clamp-2">{getShortString(title, 40)}</p>
           <div className="pb-2 pt-3 text-xs">
-            {statusId !== 0 ? '' : page === 'register' ? `시작가 ${startingPrice} coin` : `입찰가 ${currentPrice} coin`}
+            {statusId !== 1 ? '' : page === 'register' ? `시작가 ${startingPrice} coin` : `입찰가 ${currentPrice} coin`}
             <div className="flex items-center gap-0.5">
-              {statusId === 0 ? '현재가' : ''}
+              {statusId === 1 ? '현재가' : ''}
               <p className="text-base text-main-orange">{currentPrice}</p>
             </div>
           </div>
           <div className="absolute top-2 right-2">
-            <ProductStatus>{AUCTION_STATUS[statusId]}</ProductStatus>
+            <ProductStatus>{AUCTION_STATUS[statusId - 1]}</ProductStatus>
           </div>
         </div>
       </div>
