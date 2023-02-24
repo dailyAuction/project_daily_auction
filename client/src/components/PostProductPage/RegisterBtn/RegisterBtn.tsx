@@ -1,8 +1,4 @@
-import { useState } from 'react';
-
-export const RegisterBtn = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-
+export const RegisterBtn = ({ modalOpen, setModalOpen }) => {
   return (
     <>
       <button type="button" className="red-btn m-2 ml-auto mb-3" onClick={() => setModalOpen(true)}>

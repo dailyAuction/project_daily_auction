@@ -22,6 +22,7 @@ export const PostProductPage = () => {
   const [token] = useRecoilState(accessTokenAtom);
   const [errMessage, setErrMessage] = useState('');
   const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
 
   const formData = new FormData();
   Array.from(myImage).forEach((img) => formData.append('files', img));
@@ -31,12 +32,19 @@ export const PostProductPage = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>, data) => {
     e.preventDefault();
-    if (myImage.length <= 0) setErrMessage('이미지를 등록해주세요');
-    else if (Object.values(productInfo).filter((val) => val).length < 4) setErrMessage('내용을 전부 입력해주세요');
-    else {
+    if (myImage.length <= 0) {
+      setErrMessage('이미지를 등록해주세요');
+      setModalOpen(false);
+    } else if (Object.values(productInfo).filter((val) => val).length < 4) {
+      setErrMessage('내용을 전부 입력해주세요');
+      setModalOpen(false);
+    } else {
       mutate(data, {
         onSuccess: (res) => navigate(`/detail/${res.boardId}`),
-        onError: () => setErrMessage('잠시후 다시 시도해주세요'),
+        onError: () => {
+          setErrMessage('잠시후 다시 시도해주세요');
+          setModalOpen(false);
+        },
       });
     }
   };
@@ -49,7 +57,7 @@ export const PostProductPage = () => {
         <CategoryDropdown productInfo={productInfo} setProductInfo={setProductInfo} />
         <RegisterProductInfo productInfo={productInfo} setProductInfo={setProductInfo} />
         <p className="h-0 text-sm text-main-red">{errMessage}</p>
-        <RegisterBtn />
+        <RegisterBtn modalOpen={modalOpen} setModalOpen={setModalOpen} />
       </form>
       <TabBar />
     </main>
