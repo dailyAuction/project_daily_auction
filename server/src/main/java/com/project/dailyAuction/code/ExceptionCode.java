@@ -15,6 +15,7 @@ public enum ExceptionCode {
     NOT_VERIFIED(409,"Not Verified"),
     CANT_BID_SELF(409, "Can't bid self"),
     NOTICE_NOT_FOUND(404, "Notice not found"),
+    CLOSED_AUCTION(409, "Can't bid Closed Auction"),
     KEYWORD_NOT_FOUND(404,"Keyword not found")
     ;
 
