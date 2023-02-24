@@ -2,6 +2,7 @@ package com.project.dailyAuction.notice;
 
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.code.ExceptionCode;
+import com.project.dailyAuction.code.NoticeStatusCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -87,9 +88,9 @@ public class NoticeService {
                 .status(status)
                 .isRead(false)
                 .build();
-        if (status == 1) {
+        if (status == NoticeStatusCode.판매자낙찰.getCode()) {
             notice.inputContact(memberService.find(getBidderInRedis(board)).getEmail());
-        } else if(status == 2) {
+        } else if(status == NoticeStatusCode.구매자낙찰.getCode()) {
             notice.inputContact(memberService.find(board.getSellerId()).getEmail());
         }
         return notice;
