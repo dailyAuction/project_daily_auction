@@ -1,6 +1,6 @@
 export interface ProductDetailResp {
   boardId: string;
-  image: string[];
+  imageUrls?: string[];
   thumbnail: string;
   authorId: number;
   bidderId: number;
