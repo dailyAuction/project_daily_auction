@@ -9,6 +9,7 @@ import com.project.dailyAuction.boardImage.service.ImageHandler;
 import com.project.dailyAuction.boardMember.entity.BoardMember;
 import com.project.dailyAuction.boardMember.repository.BoardMemberRepository;
 import com.project.dailyAuction.cache.CacheProcessor;
+import com.project.dailyAuction.code.BoardStatusCode;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.code.NoticeStatusCode;
 import com.project.dailyAuction.member.entity.Member;
@@ -329,6 +330,13 @@ public class BoardService {
         if (member.getMemberId() == board.getSellerId()) {
             throw new ResponseStatusException(ExceptionCode.CANT_BID_SELF.getCode(),
                     ExceptionCode.CANT_BID_SELF.getMessage(),
+                    new IllegalArgumentException());
+        }
+
+        // 마감된 글에 입찰 불가
+        if (board.getStatusId() != BoardStatusCode.경매중.code) {
+            throw new ResponseStatusException(ExceptionCode.CLOSED_AUCTION.getCode(),
+                    ExceptionCode.CLOSED_AUCTION.getMessage(),
                     new IllegalArgumentException());
         }
 

@@ -52,10 +52,10 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         if (member == null) {
             Member newMember = memberService.saveOauthMember(email);
             memberId = newMember.getMemberId();
-            log.info("# Create new member");
+            log.info("**Log : Create new member");
         } else {
             memberId = member.getMemberId();
-            log.info("# Already exits");
+            log.info("**Log : Member already exits");
         }
         String accessToken = delegateAccessToken(email, memberId);
         String refreshToken = delegateRefreshToken(email);
@@ -66,7 +66,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         response.addHeader("Coin", String.valueOf(memberId));
         redirect(request, response, accessToken, refreshToken);
 
-        log.info("# Authenticated successfully!");
+        log.info("**Log : Authenticated successfully!");
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
