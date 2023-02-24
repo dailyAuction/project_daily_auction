@@ -10,7 +10,7 @@ export const CategoryDropdown = ({ productInfo, setProductInfo }) => {
   };
 
   const handlerOnClickCategory = (idx: number) => {
-    setProductInfo({ ...productInfo, category: CATEGORIES[idx] });
+    setProductInfo({ ...productInfo, categoryId: idx });
     setOpen(false);
   };
 
@@ -21,7 +21,7 @@ export const CategoryDropdown = ({ productInfo, setProductInfo }) => {
           type="button"
           className={`relative flex justify-between align-middle p-2.5 w-full cursor-auto ${open && 'bg-white'}`}>
           <p className="">카테고리</p>
-          <div className="flex flex-1 ml-6">{productInfo.category}</div>
+          <div className="flex flex-1 ml-6">{CATEGORIES[productInfo.categoryId]}</div>
           {open ? (
             <svg
               onClick={handlerOnClickDropdown}
