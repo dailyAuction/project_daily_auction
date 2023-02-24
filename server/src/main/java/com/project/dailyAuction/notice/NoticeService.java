@@ -5,6 +5,8 @@ import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -20,7 +22,7 @@ public class NoticeService {
     private final MemberService memberService;
     private final EmitterRepository emitterRepository;
     private final NoticeRepository noticeRepository;
-
+    private final RedisTemplate redisTemplate;
     public SseEmitter subscribe(Long memberId) {
         String emitterId = makeTimeIncludeId(memberId);
         SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(86400000l));//timeout:24시간
@@ -78,13 +80,19 @@ public class NoticeService {
     }
 
     private Notice createNotice(Member receiver, Board board, long status) {
-        return Notice.builder()
+        Notice notice = Notice.builder()
                 .receiver(receiver)
-                .contact(memberService.find(board.getSellerId()).getEmail())
+                .contact("")
                 .board(board)
                 .status(status)
                 .isRead(false)
                 .build();
+        if (status == 1) {
+            notice.inputContact(memberService.find(getBidderInRedis(board)).getEmail());
+        } else if(status == 2) {
+            notice.inputContact(memberService.find(board.getSellerId()).getEmail());
+        }
+        return notice;
     }
 
     public void deleteNotice(String token, long noticeId) {
@@ -99,5 +107,16 @@ public class NoticeService {
     public Notice find(long noticeId) {
         return noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new ResponseStatusException(ExceptionCode.NOTICE_NOT_FOUND.getCode(), ExceptionCode.NOTICE_NOT_FOUND.getMessage(), new IllegalArgumentException()));
+    }
+
+    public long getBidderInRedis(Board board) {
+        long boardId = board.getBoardId();
+        String key = "boardLeadingBidder::" + boardId;
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        if (valueOperations.get(key) == null) {
+            return board.getBidderId();
+        } else {
+            return Long.parseLong(valueOperations.get(key));
+        }
     }
 }
