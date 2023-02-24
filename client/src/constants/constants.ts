@@ -18,3 +18,4 @@ export const CATEGORIE_SORT_STATUS = ['마감 임박', 'TOP 입찰', 'TOP 조회
 
 export const REG_EMAIL = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 export const REG_PASSWORD = /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+export const REG_KOREA = /[ㄱ-ㅎㅏ-ㅣ가-힣]+/g;
