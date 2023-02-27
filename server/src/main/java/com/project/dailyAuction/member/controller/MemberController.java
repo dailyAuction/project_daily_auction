@@ -2,6 +2,7 @@ package com.project.dailyAuction.member.controller;
 
 import com.project.dailyAuction.board.mapper.BoardMapper;
 import com.project.dailyAuction.board.entity.Board;
+import com.project.dailyAuction.board.service.BoardService;
 import com.project.dailyAuction.dto.PageDto;
 import com.project.dailyAuction.member.dto.MemberDto;
 import com.project.dailyAuction.member.mapper.MemberMapper;
@@ -24,8 +25,8 @@ import java.util.List;
 @Slf4j
 public class MemberController {
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
+    private final BoardService boardService;
     private final BoardMapper boardMapper;
 
     // post 회원가입 (이메일, 비밀번호 필요)
@@ -104,8 +105,9 @@ public class MemberController {
         Page<Board> boardPages = memberService.getParticipation(token,page,size);
         List<Board> boards = boardPages.getContent();
         List<Integer> myPrices = memberService.findMyPrices(token, boards);
+        List<String> sellerEmails = boardService.findSellerEmails(boards);
 
-        return new PageDto(boardMapper.boardListToBoardDtoListWithMyPrice(boards,myPrices),boardPages);
+        return new PageDto(boardMapper.boardListToBoardDtoListWithMyPriceAndEmail(boards,myPrices,sellerEmails),boardPages);
     }
 
     // 토큰 갱신
