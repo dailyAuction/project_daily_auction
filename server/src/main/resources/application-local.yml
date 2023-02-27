@@ -55,5 +55,5 @@ jwt:
 
 logging:
   level:
-  com.zaxxer.hikari.HikariConfig: DEBUG
-  com.zaxxer.hikari: TRACE
+    com.zaxxer.hikari.HikariConfig: DEBUG
+    com.zaxxer.hikari: TRACE
