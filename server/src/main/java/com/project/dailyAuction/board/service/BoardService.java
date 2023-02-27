@@ -419,6 +419,7 @@ public class BoardService {
     }
 
     public List<Board> getImminentItem() {
+        cacheProcessor.updateBiddingToMySql();
         return boardRepository.findTop5ByStatusIdOrderByCreatedAtDesc(1);
     }
 

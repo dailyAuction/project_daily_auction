@@ -32,7 +32,7 @@ public interface BoardMapper {
         }
         return responses;
     }
-    default List<BoardDto.Response> boardListToBoardDtoListWithMyPrice(List<Board> boards, List<Integer> myPrices){
+    default List<BoardDto.Response> boardListToBoardDtoListWithMyPriceAndEmail(List<Board> boards, List<Integer> myPrices,List<String> emails){
         List<BoardDto.Response> responses = new ArrayList<>();
         for (int i = 0; i < boards.size(); i++) {
             Board board = boards.get(i);
