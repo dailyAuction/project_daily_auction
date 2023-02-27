@@ -434,6 +434,7 @@ public class BoardService {
     }
 
     public List<Board> getImminentItem() {
+        cacheProcessor.updateBiddingToMySql();
         return boardRepository.findTop5ByStatusIdOrderByCreatedAtDesc(1);
     }
 
@@ -483,5 +484,14 @@ public class BoardService {
         }
 
         return imageUrls;
+    }
+
+    public List<String> findSellerEmails(List<Board> boards) {
+        List<String> emails = new ArrayList<>();
+        for (Board board : boards) {
+            Member seller = memberService.find(board.getSellerId());
+            emails.add(seller.getEmail());
+        }
+        return emails;
     }
 }
