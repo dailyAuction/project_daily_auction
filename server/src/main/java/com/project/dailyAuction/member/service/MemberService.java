@@ -160,6 +160,7 @@ public class MemberService {
         return MemberDto.MyPage.builder()
                 .email(member.getEmail())
                 .coin(member.getCoin())
+                .memberId(member.getMemberId())
                 .build();
     }
 
