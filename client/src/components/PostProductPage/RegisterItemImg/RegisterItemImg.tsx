@@ -1,18 +1,18 @@
 import { useState } from 'react';
+import imageCompression from 'browser-image-compression';
 
 export const RegisterItemImg = ({ myImage, setMyImage }) => {
   const [viewImage, setViewImage] = useState([]);
 
-  const handleAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const nowSelectImageList = e.target.files[0];
     const nowImgURLList = [...myImage];
     const nowImageUrl = URL.createObjectURL(nowSelectImageList);
-    if (myImage.length > 4) alert('이미지는 5개까지 등록 가능합니다');
-    else {
-      nowImgURLList.push(nowSelectImageList);
-      setViewImage([...viewImage, nowImageUrl]);
-      setMyImage(nowImgURLList);
-    }
+
+    if (myImage.length > 4) return alert('이미지는 5개까지 등록 가능합니다');
+    setViewImage([...viewImage, nowImageUrl]);
+    nowImgURLList.push(await imageCompression(nowSelectImageList, { maxSizeMB: 0.2 })); // image resize
+    setMyImage(nowImgURLList);
   };
 
   return (

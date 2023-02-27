@@ -31,7 +31,6 @@ export const PostProductPage = () => {
   const { mutate } = useMutation(() => postProductAPI.post(formData, token));
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>, data) => {
-    e.preventDefault();
     if (myImage.length <= 0) {
       setErrMessage('이미지를 등록해주세요');
       setModalOpen(false);

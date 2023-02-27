@@ -9,6 +9,7 @@ export const ClosingProduct = () => {
     // refetchOnMount: true,
     // refetchOnWindowFocus: true,
     // refetchInterval: 1000,
+    // refetchIntervalInBackground: true,
   });
 
   return (
@@ -34,7 +35,7 @@ export const ClosingProduct = () => {
               <div className="flex flex-col ml-2 min-w-[120px] w-[120px]">
                 <ProductItemImg thumbnail={el.thumbnail} statusId={el.statusId} finishedAt={el.finishedAt} />
                 <p className="text-xs line-clamp-1">{el.title}</p>
-                <p className="text-base text-main-orange">{el.currentPrice} coin</p>
+                <p className="text-base text-main-orange">{el.currentPrice.toLocaleString()} coin</p>
               </div>
             </Link>
           );
