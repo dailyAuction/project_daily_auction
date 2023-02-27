@@ -17,7 +17,7 @@ export const useWebsocket = (subEndpoint: string) => {
       brokerURL: `ws:${process.env.REACT_APP_WEBSOCKET_URL}/ws`,
       debug: (str) => console.log(str),
       // 자동 재연결을 위한 옵션
-      reconnectDelay: 1,
+      reconnectDelay: -1,
       // server와 client의 연결상태 확인을 위한 auto send 기능
       heartbeatIncoming: 10000,
       heartbeatOutgoing: 10000,
