@@ -64,3 +64,8 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+
+logging:
+  level:
+  com.zaxxer.hikari.HikariConfig: DEBUG
+  com.zaxxer.hikari: TRACE
