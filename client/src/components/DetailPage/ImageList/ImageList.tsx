@@ -56,24 +56,15 @@ type ImageListProps = {
   url: string[];
 };
 
-const URL_TEMP = [
-  'https://images.unsplash.com/photo-1521369909029-2afed882baee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-  'https://images.unsplash.com/photo-1514327605112-b887c0e61c0a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-  'https://images.unsplash.com/photo-1582791694770-cbdc9dda338f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-  'https://plus.unsplash.com/premium_photo-1671658221680-6eedc3804834?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=686&q=80',
-  'https://images.unsplash.com/photo-1622445275576-721325763afe?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-  'https://images.unsplash.com/photo-1618354691792-d1d42acfd860?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=715&q=80',
-];
-
 export const ImageList = ({ url }: ImageListProps) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const { moveCarouosel } = useClickCarousel(setSelectedIndex, selectedIndex, URL_TEMP.length);
+  const { moveCarouosel } = useClickCarousel(setSelectedIndex, selectedIndex, url.length);
 
   return (
     <>
       <section className="flex h-[150px] justify-cente w-full items-center overflow-x-scroll space-x-3">
-        {URL_TEMP.map((src: string, idx: number) => (
+        {url.map((src: string, idx: number) => (
           <img
             key={src}
             src={src}

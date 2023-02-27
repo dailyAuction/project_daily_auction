@@ -31,7 +31,7 @@ export const DetailPage = () => {
   );
 
   // data가 undefined, null인 경우 TypeError 발생, 아닐 경우에만 분해되도록 함.
-  const { image, categoryId, viewCount, finishedAt, statusId, description, history, title } = data || {};
+  const { imageUrls, categoryId, viewCount, finishedAt, statusId, description, history, title } = data || {};
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>에러가 발생하였습니다.</div>;
@@ -40,7 +40,7 @@ export const DetailPage = () => {
     <main className="base-layout">
       <SubHeader>상세 페이지</SubHeader>
       <section className="content-layout">
-        <ImageList url={image} />
+        <ImageList url={imageUrls} />
         <h1 className="text-xl font-semibold">{title}</h1>
         <CategoryBtn>{CATEGORIES[categoryId]}</CategoryBtn>
         <article className="flex justify-between px-2">
