@@ -18,6 +18,8 @@ public class CacheEvent {
     public void initCache(){
         cacheProcessor.updateViewCntToMySql();
         cacheProcessor.updateBiddingToMySql();
+        cacheProcessor.updateTopKeywordToMySql();
+        cacheProcessor.updateBoardPriceToMySql();
         cacheProcessor.deleteRedisPerHour();
         cacheProcessor.updateBoardStatusToMySql();
         log.info("**Log : Update To DB - Init");
