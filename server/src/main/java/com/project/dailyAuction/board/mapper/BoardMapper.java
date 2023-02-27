@@ -32,7 +32,7 @@ public interface BoardMapper {
         }
         return responses;
     }
-    default List<BoardDto.Response> boardListToBoardDtoListWithMyPriceAndEmail(List<Board> boards, List<Integer> myPrices,List<String> emails){
+    default List<BoardDto.Response> boardListToBoardDtoListWithMyPriceAndEmail(List<Board> boards, List<Integer> myPrices,List<String> sellerEmails){
         List<BoardDto.Response> responses = new ArrayList<>();
         for (int i = 0; i < boards.size(); i++) {
             Board board = boards.get(i);
@@ -51,6 +51,7 @@ public interface BoardMapper {
                     .title(board.getTitle())
                     .statusId(board.getStatusId())
                     .myPrice(myPrices.get(i))
+                    .sellerEmail(sellerEmails.get(i))
                     .build();
 
             responses.add(response);
