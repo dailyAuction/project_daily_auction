@@ -46,6 +46,7 @@ public class MemberDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MyPage {
+        private long memberId;
         private String email;
         private int coin;
     }
