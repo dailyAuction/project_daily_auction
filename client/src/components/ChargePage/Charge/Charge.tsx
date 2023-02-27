@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import {} from '../../../api/coinAPI';
 import { userInfoAtom } from '../../../atoms/user';
 import { CHARGECOIN_STATUS } from '../../../constants/constants';
 import { blockInvalidChar } from '../../../utils/blockInvalidChar';
