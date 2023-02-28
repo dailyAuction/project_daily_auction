@@ -13,18 +13,18 @@ permissions:
    
 hooks:
   BeforeInstall:
-    - location: server_clear.sh
+    - location: /home/ec2-user/build/server_clear.sh
       timeout: 3000
-      runas: root
+      runas: ec2-user
   AfterInstall:
-    - location: initialize.sh
+    - location: /home/ec2-user/build/initialize.sh
       timeout: 3000
-      runas: root
+      runas: ec2-user
   ApplicationStart:
-    - location: server_start.sh
+    - location: /home/ec2-user/build/server_start.sh
       timeout: 3000
-      runas: root
+      runas: ec2-user
   ApplicationStop:
-    - location: server_stop.sh
+    - location: /home/ec2-user/build/server_stop.sh
       timeout: 3000
-      runas: root
+      runas: ec2-user
