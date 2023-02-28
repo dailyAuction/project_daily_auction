@@ -4,6 +4,7 @@ import { myInfoAPI } from '../../../api/myPageAPI';
 import { userInfoAtom } from '../../../atoms/user';
 import { blockInvalidChar } from '../../../utils/blockInvalidChar';
 import { useBidInfoModal } from './useBidInfoModal';
+import { accessTokenAtom } from '../../../atoms/token';
 
 type BidModalProps = {
   currentPrice: number;
@@ -21,13 +22,15 @@ export const BidModal = ({ handleClose, currentPrice, sendBid }: BidModalProps) 
   const { coin: myCoin } = useRecoilValue(userInfoAtom);
 
   // TODO: 입찰 성공 후 코인 업데이트 요청하기
+  const accessToken = useRecoilValue(accessTokenAtom);
+
   useEffect(() => {
-    const token = localStorage.getItem('access');
+    const get = async () => {
+      const res = await myInfoAPI.get(accessToken);
+      return res;
+    };
     try {
-      (async () => {
-        const res = await myInfoAPI.get(token);
-        console.log(res.data);
-      })();
+      const res = get();
     } catch (err) {
       console.error(err);
     }
