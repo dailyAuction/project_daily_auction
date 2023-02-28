@@ -6,6 +6,7 @@ import com.project.dailyAuction.code.NoticeStatusCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class NoticeService {
@@ -26,7 +28,8 @@ public class NoticeService {
     private final RedisTemplate redisTemplate;
     public SseEmitter subscribe(Long memberId) {
         String emitterId = makeTimeIncludeId(memberId);
-        SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(86400000l));//timeout:24시간
+        SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(300000l));
+        log.info("**Log : SSE 구독");
         emitter.onCompletion(() -> emitterRepository.deleteById(emitterId));
         emitter.onTimeout(() -> emitterRepository.deleteById(emitterId));
 

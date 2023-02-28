@@ -152,7 +152,7 @@ public class BoardService {
                 oldCookie.setMaxAge(60 * 60 * 24);
                 httpResponse.addCookie(oldCookie);
             } else {  // 해당 보드 쿠키는 있는 경우
-                viewCount = getViewCntToRedis(board);
+                viewCount = getViewCntInRedis(board);
             }
         } else { // 쿠키 묶음이 없는 경우 -> 무조건 증가
             viewCount = addViewCntToRedis(board);
@@ -164,7 +164,7 @@ public class BoardService {
         return viewCount;
     }
 
-    public int getViewCntToRedis(Board board) {
+    public int getViewCntInRedis(Board board) {
         long boardId = board.getBoardId();
         String key = "boardViewCount::" + boardId;
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
@@ -429,13 +429,13 @@ public class BoardService {
         if (categoryId == 0) {
             return boardRepository.findTop5ByStatusIdOrderByViewCountDesc(1);
         } else {
-            return boardRepository.findTop5ByCategoryIdAndStatusIdOrderByViewCountDesc(categoryId, 1);
+            return boardRepository.findTop5ByCategoryIdAndStatusIdOrderByViewCountDesc(categoryId, BoardStatusCode.경매중.code);
         }
     }
 
     public List<Board> getImminentItem() {
         cacheProcessor.updateBiddingToMySql();
-        return boardRepository.findTop5ByStatusIdOrderByCreatedAtDesc(1);
+        return boardRepository.findTop5ByStatusIdOrderByCreatedAtAsc(BoardStatusCode.경매중.code);
     }
 
     public int findMyPrice(String token, long boardId) {

@@ -37,7 +37,7 @@ public class BidController {
 
         String history = boardService.getHistoryInRedis(board);
         int currentPrice = boardService.getPriceInRedis(board);
-        int viewCount = boardService.addViewCntToRedis(board);
+        int viewCount = boardService.getViewCntInRedis(board);
 
         BoardDto.Response dto = boardService.getDetailPage(token, board, currentPrice, viewCount, bidCount, bidderId, history);
 

@@ -32,7 +32,7 @@ public class DatasourceConfig {
         hikariConfig.setPassword(password);
         hikariConfig.setJdbcUrl(url);
         hikariConfig.setMaximumPoolSize(20);
-        hikariConfig.setConnectionTimeout(60000);
+        hikariConfig.setConnectionTimeout(40000);
 
         return new HikariDataSource(hikariConfig);
     }
