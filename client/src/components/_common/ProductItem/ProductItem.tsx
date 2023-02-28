@@ -11,12 +11,11 @@ type ProductItemProps = {
 };
 
 export const ProductItem = ({ productDetail }: ProductItemProps) => {
-  const { boardId, thumbnail, title, statusId, startingPrice, currentPrice, finishedAt } = productDetail;
+  const { boardId, thumbnail, title, statusId, startingPrice, currentPrice, finishedAt, sellerEmail } = productDetail;
 
   // 현재 유저가 Seller 인지 판단합니다.
   // const { isMatchUserId } = useIsMatchUserId();
   // const isUserSeller = isMatchUserId(authorId);
-
   const location = useLocation().pathname;
   const page = location.includes('auctionList') ? 'register' : location.includes('joinList') ? 'participation' : '';
 
@@ -30,7 +29,7 @@ export const ProductItem = ({ productDetail }: ProductItemProps) => {
           {statusId === 2 && page === 'participation' && (
             <div className="text-xs font-bold py-2">
               <p>판매자 이메일</p>
-              <p>:aaaa@aaaa.com</p>
+              <p>:{sellerEmail}</p>
             </div>
           )}
           <p className="text-sm sm:text-base font-bold line-clamp-2">{getShortString(title, 40)}</p>
