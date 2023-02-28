@@ -1,25 +1,20 @@
-import { EventSourcePolyfill } from 'event-source-polyfill';
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { accessTokenAtom } from '../../../../atoms/token';
+import { loginStateAtom } from '../../../../atoms/user';
+import { useSSE } from '../../../../hooks/useSSE';
 
 export const MainHeader = ({ children }) => {
-  // sse 이벤트 수신
-  const accessToken = useRecoilValue(accessTokenAtom);
+  const loginState = useRecoilValue(loginStateAtom);
+  const { fetchSSE } = useSSE();
 
+  // 로그인이 되어있는 경우에만 알림을 수신하도록 SSE를 연결합니다.
   useEffect(() => {
-    const eventSource = new EventSourcePolyfill(`${process.env.REACT_APP_URL}/subscribe`, {
-      headers: { Authorization: accessToken },
-    });
+    if (loginState) {
+      fetchSSE();
+    }
 
-    eventSource.onmessage = (event) => {
-      console.log(event.data);
-    };
-
-    return () => {
-      eventSource.close();
-    };
+    return () => null;
   }, []);
 
   return (
