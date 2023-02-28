@@ -3,7 +3,7 @@ os: linux
 
 files:
   - source: /
-    destination: /home/ec2-user/project_daily_auction/build/libs
+    destination: /home/ec2-user/build
 
 permissions:
   - object: /
@@ -12,19 +12,7 @@ permissions:
     group: ec2-user
    
 hooks:
-  BeforeInstall:
-    - location: server_clear.sh
-      timeout: 3000
-      runas: ec2-user
   AfterInstall:
     - location: initialize.sh
-      timeout: 3000
-      runas: ec2-user
-  ApplicationStart:
-    - location: server_start.sh
-      timeout: 3000
-      runas: ec2-user
-  ApplicationStop:
-    - location: server_stop.sh
       timeout: 3000
       runas: ec2-user
