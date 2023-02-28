@@ -53,12 +53,13 @@ public class CacheProcessor {
                         .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
                                 ExceptionCode.BOARD_NOT_FOUND.getMessage(),
                                 new IllegalArgumentException()));
-
-                Member buyer = memberService.find(getBidderInRedis(board));
+                long bidderId = getBidderInRedis(board);
                 log.info("**Log : " + boardId + "번 게시글 마감 5분 전");
-
-                //마감 임박 알림 전송
-                noticeService.send(buyer, board, NoticeStatusCode.마감임박.getCode());
+                if (bidderId != 0) {
+                    Member buyer = memberService.find(bidderId);
+                    //마감 임박 알림 전송
+                    noticeService.send(buyer, board, NoticeStatusCode.마감임박.getCode());
+                }
             }
             // 경매 종료
             else if (LocalDateTime.now().plusHours(9).isAfter(finishedAt)) {
@@ -74,9 +75,9 @@ public class CacheProcessor {
                 boardRepository.updateStatus(boardId, checkFinishCode(board));
                 deleteInRedis("finishedTime", boardId);
                 log.info("**Log : " + boardId + "번 게시글 마감");
-
-                if (getBidderInRedis(board) != 0L) {
-                    Member buyer = memberService.find(getBidderInRedis(board));
+                long bidderId = getBidderInRedis(board);
+                if (bidderId != 0L) {
+                    Member buyer = memberService.find(bidderId);
                     //구매자 경매 낙찰 알림 전송
                     noticeService.send(buyer, board, NoticeStatusCode.구매자낙찰.getCode());
 
