@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 
 files:
-  - source: /
+  - source: /home/ec2-user/project_daily_auction/build/libs
     destination: /home/ec2-user/project_daily_auction/build/libs
 
 permissions:
