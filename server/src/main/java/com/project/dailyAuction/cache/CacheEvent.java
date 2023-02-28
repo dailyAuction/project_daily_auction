@@ -20,8 +20,8 @@ public class CacheEvent {
         cacheProcessor.updateBiddingToMySql();
         cacheProcessor.updateTopKeywordToMySql();
         cacheProcessor.updateBoardPriceToMySql();
-        cacheProcessor.deleteRedisPerHour();
         cacheProcessor.updateBoardStatusToMySql();
+        cacheProcessor.deleteRedisPerHour();
         log.info("**Log : Update To DB - Init");
     }
 

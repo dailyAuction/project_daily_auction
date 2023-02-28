@@ -45,8 +45,8 @@ public class CacheProcessor {
             String data = it.next();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime finishedAt = LocalDateTime.parse(redisTemplate.opsForValue().get(data), formatter);
-            if ((LocalDateTime.now().isAfter(finishedAt.minusMinutes(5)) ||
-                    LocalDateTime.now().isEqual(finishedAt.minusMinutes(5))) && LocalDateTime.now().isBefore(finishedAt.minusMinutes(4))) {
+            if ((LocalDateTime.now().plusHours(9).isAfter(finishedAt.minusMinutes(5)) ||
+                    LocalDateTime.now().plusHours(9).isEqual(finishedAt.minusMinutes(5))) && LocalDateTime.now().plusHours(9).isBefore(finishedAt.minusMinutes(4))) {
                 Long boardId = Long.parseLong(data.split("::")[1]);
 
                 Board board = boardRepository.findById(boardId)
@@ -61,7 +61,7 @@ public class CacheProcessor {
                 noticeService.send(buyer, board, NoticeStatusCode.마감임박.getCode());
             }
             // 경매 종료
-            else if (LocalDateTime.now().isAfter(finishedAt)) {
+            else if (LocalDateTime.now().plusHours(9).isAfter(finishedAt)) {
                 Long boardId = Long.parseLong(data.split("::")[1]);
 
                 Board board = boardRepository.findById(boardId)
