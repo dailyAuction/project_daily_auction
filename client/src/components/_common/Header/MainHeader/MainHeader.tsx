@@ -6,16 +6,17 @@ import { useSSE } from '../../../../hooks/useSSE';
 
 export const MainHeader = ({ children }) => {
   const loginState = useRecoilValue(loginStateAtom);
-  const { fetchSSE } = useSSE();
+  const { fetchSSE, eventSource } = useSSE();
 
   // 로그인이 되어있는 경우에만 알림을 수신하도록 SSE를 연결합니다.
+  // TODO: 어떤 컴포넌트에서든 연결을 유지하도록 변경할 것
   useEffect(() => {
     if (loginState) {
       fetchSSE();
     }
 
-    return () => null;
-  }, []);
+    return () => eventSource.current?.close();
+  }, [eventSource]);
 
   return (
     <header className="h-14 w-full sticky bg-main-brown py-3">

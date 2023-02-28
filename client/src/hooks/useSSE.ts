@@ -24,8 +24,9 @@ export const useSSE = () => {
 
     eventSource.current.onerror = (event) => {
       console.error(event);
+      eventSource.current.close();
     };
-  }, [accessToken]);
+  }, []);
 
   // TODO: SSE 알림 수신시 알림 데이터 저장
 
