@@ -28,7 +28,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     Page<Board> findByStatusIdOrderByViewCountDesc(long statusId, PageRequest of);
 
-    List<Board> findTop5ByStatusIdOrderByCreatedAtDesc(long statusId);
+    List<Board> findTop5ByStatusIdOrderByCreatedAtAsc(long statusId);
 
     @Modifying
     @Query(value = "update board set view_count =:viewCount where board_id =:boardId", nativeQuery = true)
