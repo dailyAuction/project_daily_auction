@@ -142,7 +142,7 @@ public class BoardService {
         } else { // 쿠키 묶음이 없는 경우 -> 무조건 증가
             viewCount = addViewCntToRedis(board);
             Cookie newCookie = new Cookie("postView", "[" + boardId + "]");
-            newCookie.setPath("/detail/"+boardId);
+            newCookie.setPath("/");
             newCookie.setMaxAge(60 * 60 * 24);
             httpResponse.addCookie(newCookie);
         }
