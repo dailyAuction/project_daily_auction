@@ -75,7 +75,7 @@ public class CacheProcessor {
                 deleteInRedis("finishedTime", boardId);
                 log.info("**Log : " + boardId + "번 게시글 마감");
 
-                if (board.getBidderId() != 0L) {
+                if (getBidderInRedis(board) != 0L) {
                     Member buyer = memberService.find(getBidderInRedis(board));
                     //구매자 경매 낙찰 알림 전송
                     noticeService.send(buyer, board, NoticeStatusCode.구매자낙찰.getCode());
