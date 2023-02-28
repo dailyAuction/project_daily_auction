@@ -15,11 +15,6 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false
 
-logging:
-  level:
-  com.zaxxer.hikari.HikariConfig: DEBUG
-  com.zaxxer.hikari: TRACE
-
   redis:
     host: localhost
     port: 6379
