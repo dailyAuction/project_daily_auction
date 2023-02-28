@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { myInfoAPI } from '../../../api/myPageAPI';
 import { userInfoAtom } from '../../../atoms/user';
 import { blockInvalidChar } from '../../../utils/blockInvalidChar';
-import { useBidInformationModal } from './useBidInformation';
+import { useBidInfoModal } from './useBidInfoModal';
 
 type BidModalProps = {
   currentPrice: number;
@@ -15,10 +16,22 @@ export const BidModal = ({ handleClose, currentPrice, sendBid }: BidModalProps) 
   const [bidValue, setBidValue] = useState('');
   const [validationMsg, setValidationMsg] = useState('');
 
-  const { handleClickBid, handleChange } = useBidInformationModal({ bidValue, setBidValue, setValidationMsg });
+  const { handleClickBid, handleChange } = useBidInfoModal({ bidValue, setBidValue, setValidationMsg });
 
-  // TODO: 입찰 성공시 코인 업데이트 로직 (API 만들어주실 예정)
   const { coin: myCoin } = useRecoilValue(userInfoAtom);
+
+  // TODO: 입찰 성공 후 코인 업데이트 요청하기
+  useEffect(() => {
+    const token = localStorage.getItem('access');
+    try {
+      (async () => {
+        const res = await myInfoAPI.get(token);
+        console.log(res.data);
+      })();
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
 
   return (
     <section className="bg-modal z-10">
