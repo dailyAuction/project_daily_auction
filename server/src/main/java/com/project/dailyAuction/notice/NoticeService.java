@@ -19,6 +19,7 @@ import java.util.Map;
 
 @Service
 @Slf4j
+@Transactional
 @RequiredArgsConstructor
 public class NoticeService {
     private final MemberService memberService;
