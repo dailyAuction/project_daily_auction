@@ -15,7 +15,7 @@ phases:
       - echo $(basename ./server/build/libs/*.jar)
 artifacts:
   files:
-    - project_daily_auction/server/build/libs/*.jar
-    - project_daily_auction/scripts/**
+    - server/build/libs/*.jar
+    - scripts/**
     - appspec.yml
   discard-paths: yes
