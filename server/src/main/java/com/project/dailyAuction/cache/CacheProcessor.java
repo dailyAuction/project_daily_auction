@@ -46,7 +46,7 @@ public class CacheProcessor {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime finishedAt = LocalDateTime.parse(redisTemplate.opsForValue().get(data), formatter);
             if ((LocalDateTime.now().plusHours(9).isAfter(finishedAt.minusMinutes(5)) ||
-                    LocalDateTime.now().plusHours(9).isEqual(finishedAt.minusMinutes(5))) && LocalDateTime.now().isBefore(finishedAt.minusMinutes(4))) {
+                    LocalDateTime.now().plusHours(9).isEqual(finishedAt.minusMinutes(5))) && LocalDateTime.now().plusHours(9).isBefore(finishedAt.minusMinutes(4))) {
                 Long boardId = Long.parseLong(data.split("::")[1]);
 
                 Board board = boardRepository.findById(boardId)
@@ -72,12 +72,12 @@ public class CacheProcessor {
 
                 Member seller = memberService.find(board.getSellerId());
                 updateViewToMySql(boardId);
-                boardRepository.updateStatus(boardId, checkFinishCode(board));
                 deleteInRedis("finishedTime", boardId);
                 log.info("**Log : " + boardId + "번 게시글 마감");
                 long bidderId = getBidderInRedis(board);
                 if (bidderId != 0L) {
                     Member buyer = memberService.find(bidderId);
+                    boardRepository.updateStatus(boardId, BoardStatusCode.낙찰.code);
                     //구매자 경매 낙찰 알림 전송
                     noticeService.send(buyer, board, NoticeStatusCode.구매자낙찰.getCode());
 
@@ -87,6 +87,7 @@ public class CacheProcessor {
                 } else {
                     //판매자 경매 유찰 알림 전송
                     noticeService.send(seller, board, NoticeStatusCode.유찰.getCode());
+                    boardRepository.updateStatus(boardId, BoardStatusCode.유찰.code);
                 }
             }
         }
@@ -100,26 +101,6 @@ public class CacheProcessor {
             return board.getBidderId();
         } else {
             return Long.parseLong(valueOperations.get(key));
-        }
-    }
-
-    // 입찰자 존재 여부 체크 메서드
-    @Transactional
-    public long checkFinishCode(Board board) {
-        long boardId = board.getBoardId();
-        Set<String> redisKeys = redisTemplate.keys("boardLeadingBidder*");
-        Iterator<String> it = redisKeys.iterator();
-        while (it.hasNext()) {
-            String data = it.next();
-            Long currentBoardId = Long.parseLong(data.split("::")[1]);
-            if (currentBoardId == boardId) {
-                return BoardStatusCode.낙찰.code;
-            }
-        }
-        if (board.getBidderId() != 0) {
-            return BoardStatusCode.낙찰.code;
-        } else {
-            return BoardStatusCode.유찰.code;
         }
     }
 
