@@ -161,6 +161,7 @@ public class BoardService {
             newCookie.setMaxAge(60 * 60 * 24);
             httpResponse.addCookie(newCookie);
         }
+
         return viewCount;
     }
 
