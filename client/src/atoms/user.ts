@@ -13,7 +13,7 @@ export const userInfoAtom = atom({
   key: 'userInfo',
   default: {
     memberId: 1,
-    coin: '1000000',
+    coin: 0,
     email: 'test@test.com',
   },
   effects: [localStorageEffect('userInfo')],
