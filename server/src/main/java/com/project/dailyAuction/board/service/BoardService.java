@@ -454,10 +454,10 @@ public class BoardService {
         }
         // 전체 리스트 조회
         if (categoryId == 0) {//최근 하루의 모든 경매 조회
-            return boardRepository.getBoardsByCreatedAtAfter(LocalDateTime.now().minusDays(1), PageRequest.of(page, size, defaultSort));
+            return boardRepository.getBoardsByCreatedAtAfter(LocalDateTime.now().plusHours(9).minusDays(1), PageRequest.of(page, size, defaultSort));
         } else {//카테고리면 최근 하루의 경매 조회
             return boardRepository.findBoardsByCategoryIdAndCreatedAtAfter(categoryId,
-                    LocalDateTime.now().minusDays(1), PageRequest.of(page, size, defaultSort));
+                    LocalDateTime.now().plusHours(9).minusDays(1), PageRequest.of(page, size, defaultSort));
         }
     }
 
