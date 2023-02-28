@@ -17,5 +17,5 @@ artifacts:
   files:
     - project_daily_auction/server/build/libs/*.jar
     - project_daily_auction/scripts/**
-    - project_daily_auction/appspec.yml
+    - appspec.yml
   discard-paths: yes
