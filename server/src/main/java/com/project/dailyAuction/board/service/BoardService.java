@@ -137,7 +137,7 @@ public class BoardService {
                 oldCookie.setMaxAge(60 * 60 * 24);
                 httpResponse.addCookie(oldCookie);
             } else {  // 해당 보드 쿠키는 있는 경우
-                viewCount = getViewCntToRedis(board);
+                viewCount = getViewCntInRedis(board);
             }
         } else { // 쿠키 묶음이 없는 경우 -> 무조건 증가
             viewCount = addViewCntToRedis(board);
@@ -149,7 +149,7 @@ public class BoardService {
         return viewCount;
     }
 
-    public int getViewCntToRedis(Board board) {
+    public int getViewCntInRedis(Board board) {
         long boardId = board.getBoardId();
         String key = "boardViewCount::" + boardId;
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
