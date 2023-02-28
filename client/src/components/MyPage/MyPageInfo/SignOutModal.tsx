@@ -1,8 +1,41 @@
+import { useMutation } from 'react-query';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { signoutAPI } from '../../../api/signoutAPI';
+import { accessTokenAtom, refreshTokenAtom } from '../../../atoms/token';
+import { loginStateAtom, userInfoAtom } from '../../../atoms/user';
+
 type SignOutModalProps = {
   handleClose: () => void;
 };
 
 export const SignOutModal = ({ handleClose }: SignOutModalProps) => {
+  const navigate = useNavigate();
+  const accessToken = useRecoilValue(accessTokenAtom);
+  const resetAccessToken = useResetRecoilState(accessTokenAtom);
+  const resetRefreshToken = useResetRecoilState(refreshTokenAtom);
+  const resetUserInfo = useResetRecoilState(userInfoAtom);
+  const resetLoginState = useResetRecoilState(loginStateAtom);
+
+  const { mutate: signOutOk } = useMutation(
+    () => {
+      return signoutAPI.patch({ token: accessToken });
+    },
+    {
+      onSuccess: () => {
+        console.log('회원탈퇴 성공');
+        resetAccessToken();
+        resetRefreshToken();
+        resetUserInfo();
+        resetLoginState();
+        navigate('/');
+      },
+      onError: (error) => {
+        console.log('회원탈퇴 실패 : ', error);
+      },
+    }
+  );
+
   return (
     <section className="bg-modal">
       <div className="modal-container justify-around items-center py-5">
@@ -14,10 +47,10 @@ export const SignOutModal = ({ handleClose }: SignOutModalProps) => {
           </p>
         </article>
         <article className="w-full flex justify-around font-bold">
-          <button type="submit" className="white-btn">
+          <button type="submit" className="white-btn" onClick={() => signOutOk()}>
             예
           </button>
-          <button type="submit" className="red-btn" onClick={handleClose}>
+          <button type="button" className="red-btn" onClick={handleClose}>
             아니오
           </button>
         </article>
