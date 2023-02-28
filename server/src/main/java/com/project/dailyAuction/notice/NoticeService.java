@@ -28,7 +28,7 @@ public class NoticeService {
     private final RedisTemplate redisTemplate;
     public SseEmitter subscribe(Long memberId) {
         String emitterId = makeTimeIncludeId(memberId);
-        SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(300000l));//timeout:24시간
+        SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(300000l));
         log.info("**Log : SSE 구독");
         emitter.onCompletion(() -> emitterRepository.deleteById(emitterId));
         emitter.onTimeout(() -> emitterRepository.deleteById(emitterId));
