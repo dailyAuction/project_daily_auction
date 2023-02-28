@@ -15,4 +15,3 @@ hooks:
   AfterInstall:
     - location: initialize.sh
       timeout: 3000
-      runas: ec2-user
