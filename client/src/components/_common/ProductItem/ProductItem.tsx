@@ -1,6 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
 import { AUCTION_STATUS } from '../../../constants/constants';
-import { useIsMatchUserId } from '../../../hooks/useIsMatchUserId';
 import { ProductDetailResp } from '../../../types/product.type';
 import { getShortString } from '../../../utils/getShortString';
 import { ProductItemImg } from '../ProductItemImg/ProductItemImg';
@@ -13,9 +12,6 @@ type ProductItemProps = {
 export const ProductItem = ({ productDetail }: ProductItemProps) => {
   const { boardId, thumbnail, title, statusId, startingPrice, currentPrice, finishedAt, sellerEmail } = productDetail;
 
-  // 현재 유저가 Seller 인지 판단합니다.
-  // const { isMatchUserId } = useIsMatchUserId();
-  // const isUserSeller = isMatchUserId(authorId);
   const location = useLocation().pathname;
   const page = location.includes('auctionList') ? 'register' : location.includes('joinList') ? 'participation' : '';
 
