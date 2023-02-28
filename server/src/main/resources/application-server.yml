@@ -13,6 +13,7 @@ spring:
         format_sql: true;
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
 
 logging:
   level:
