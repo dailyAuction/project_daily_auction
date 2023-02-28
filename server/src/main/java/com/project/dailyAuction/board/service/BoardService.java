@@ -414,13 +414,13 @@ public class BoardService {
         if (categoryId == 0) {
             return boardRepository.findTop5ByStatusIdOrderByViewCountDesc(1);
         } else {
-            return boardRepository.findTop5ByCategoryIdAndStatusIdOrderByViewCountDesc(categoryId, 1);
+            return boardRepository.findTop5ByCategoryIdAndStatusIdOrderByViewCountDesc(categoryId, BoardStatusCode.경매중.code);
         }
     }
 
     public List<Board> getImminentItem() {
         cacheProcessor.updateBiddingToMySql();
-        return boardRepository.findTop5ByStatusIdOrderByCreatedAtDesc(1);
+        return boardRepository.findTop5ByStatusIdOrderByCreatedAtAsc(BoardStatusCode.경매중.code);
     }
 
     public int findMyPrice(String token, long boardId) {
