@@ -5,10 +5,8 @@ import { mainPageAPI } from '../../../api/mainPageAPI';
 
 export const ClosingProduct = () => {
   const { isLoading, error, data } = useQuery('closingProduct', () => mainPageAPI.getClosing(), {
-    // 현재 데이터가 없어서 쿼리를 1초단위로 보내는만큼 매초 에러가 발생해서 우선 주석처리 해두었습니다.
-    // refetchOnMount: true,
-    // refetchOnWindowFocus: true,
-    // refetchInterval: 1000,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   return (
@@ -34,7 +32,7 @@ export const ClosingProduct = () => {
               <div className="flex flex-col ml-2 min-w-[120px] w-[120px]">
                 <ProductItemImg thumbnail={el.thumbnail} statusId={el.statusId} finishedAt={el.finishedAt} />
                 <p className="text-xs line-clamp-1">{el.title}</p>
-                <p className="text-base text-main-orange">{el.currentPrice} coin</p>
+                <p className="text-base text-main-orange">{el.currentPrice.toLocaleString()} coin</p>
               </div>
             </Link>
           );

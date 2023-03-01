@@ -10,7 +10,7 @@ type ProductImgProps = {
 
 export const ProductItemImg = ({ thumbnail, statusId, finishedAt }: ProductImgProps) => {
   const location = useLocation().pathname.split('/')[2];
-  const myBidWin = statusId === 1 && location === 'joinList';
+  const myBidWin = statusId === 2 && location === 'joinList';
   const timeRemain = useGetTimeRemain(finishedAt);
 
   return (

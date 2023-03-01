@@ -12,7 +12,8 @@ export const Bestproduct = () => {
 
   const { isLoading, error, data } = useQuery(['bestProduct', `${categoryId}`], () => mainPageAPI.getBest({ path }), {
     enabled: isClick,
-    staleTime: 1000 * 20,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   const handleClickCategory = (idx) => {

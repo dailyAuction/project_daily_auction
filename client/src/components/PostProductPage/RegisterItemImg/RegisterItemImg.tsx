@@ -1,18 +1,29 @@
 import { useState } from 'react';
+import imageCompression from 'browser-image-compression';
+import heic2any from 'heic2any';
 
 export const RegisterItemImg = ({ myImage, setMyImage }) => {
   const [viewImage, setViewImage] = useState([]);
 
-  const handleAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const nowSelectImageList = e.target.files[0];
+  const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    let nowSelectImageList = e.target.files[0];
     const nowImgURLList = [...myImage];
-    const nowImageUrl = URL.createObjectURL(nowSelectImageList);
-    if (myImage.length > 4) alert('이미지는 5개까지 등록 가능합니다');
-    else {
-      nowImgURLList.push(nowSelectImageList);
-      setViewImage([...viewImage, nowImageUrl]);
-      setMyImage(nowImgURLList);
+
+    // image 5개까지 등록가능
+    if (myImage.length > 4) return alert('이미지는 5개까지 등록 가능합니다');
+
+    // 확장자 heic인 경우 jpeg로 변환
+    const iphoneFile = ['HEIC', 'heic', 'HEIF', 'heif'];
+    const nowImgFile = nowSelectImageList.name.split('.').at(-1);
+    if (iphoneFile.includes(nowImgFile)) {
+      await heic2any({ blob: nowSelectImageList, toType: 'image/jpeg' }).then((converted: File) => {
+        nowSelectImageList = converted;
+      });
     }
+    const nowImageUrl = URL.createObjectURL(nowSelectImageList);
+    setViewImage([...viewImage, nowImageUrl]);
+    nowImgURLList.push(await imageCompression(nowSelectImageList, { maxSizeMB: 0.2 })); // 이미지 압축
+    setMyImage(nowImgURLList);
   };
 
   return (
@@ -31,7 +42,14 @@ export const RegisterItemImg = ({ myImage, setMyImage }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
             </div>
-            <input type="file" id="input-file" name="imgUpload" multiple accept="image/*" style={{ display: 'none' }} />
+            <input
+              type="file"
+              id="input-file"
+              name="imgUpload"
+              multiple
+              accept="image/* image/heic image/heif"
+              style={{ display: 'none' }}
+            />
           </label>
         </div>
 

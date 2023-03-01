@@ -1,10 +1,10 @@
-export const RegisterBtn = ({ modalOpen, setModalOpen }) => {
+export const RegisterBtn = ({ valid, setValid, handleClickBtn }) => {
   return (
     <>
-      <button type="button" className="red-btn m-2 ml-auto mb-3" onClick={() => setModalOpen(true)}>
+      <button type="button" className="red-btn m-2 ml-auto mb-3" onClick={handleClickBtn}>
         등록
       </button>
-      {modalOpen && (
+      {valid && (
         <div className="bg-modal">
           <div className="modal-container justify-center items-center gap-10">
             <span className="font-bold text-lg">경고</span>
@@ -13,7 +13,7 @@ export const RegisterBtn = ({ modalOpen, setModalOpen }) => {
               <button type="submit" className="white-btn">
                 예
               </button>
-              <button type="button" className="white-btn" onClick={() => setModalOpen(false)}>
+              <button type="button" className="white-btn" onClick={() => setValid(false)}>
                 아니오
               </button>
             </div>

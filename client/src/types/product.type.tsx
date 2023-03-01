@@ -16,6 +16,7 @@ export interface ProductDetailResp {
   bidCount: string;
   history: number[];
   myPrice?: string; // 내 입찰가
+  sellerEmail?: string;
 }
 
 export interface ProductDetailRealtimeResp {

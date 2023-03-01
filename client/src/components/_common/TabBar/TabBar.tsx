@@ -9,7 +9,7 @@ const TabIcon = ({ children, idx }) => {
   const loginState = useRecoilValue(loginStateAtom);
 
   const getDestination = (endpoint: string) => {
-    if (!loginState && endpoint === 'my') return 'login';
+    if (!loginState && (endpoint === 'my' || endpoint === 'postProduct')) return 'login';
     return endpoint;
   };
 
