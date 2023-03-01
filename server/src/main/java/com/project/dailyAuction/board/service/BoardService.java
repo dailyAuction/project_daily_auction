@@ -345,7 +345,12 @@ public class BoardService {
 
         if (board.getBidderId() != 0) {
             Member lastMember = memberService.find(board.getBidderId());
-            //코인 증가
+            if (lastMember.equals(member)) {
+                throw new ResponseStatusException(ExceptionCode.CANT_BID_IN_A_ROW.getCode(),
+                        ExceptionCode.CANT_BID_IN_A_ROW.getMessage(),
+                        new IllegalArgumentException());
+            }
+            //기존 입찰자에게 코인 반환
             lastMember.changeCoin(currentPrice);
 
             //알림 발송
@@ -494,5 +499,20 @@ public class BoardService {
             emails.add(seller.getEmail());
         }
         return emails;
+    }
+
+    public List<Integer> getPricesInRedis(List<Board> boards) {
+        List<Integer> prices = new ArrayList<>();
+        for (Board board : boards) {
+            long boardId = board.getBoardId();
+            String key = "boardPrice::" + boardId;
+            ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+            if (valueOperations.get(key) == null) {
+                prices.add(board.getCurrentPrice());
+            } else {
+                prices.add(Integer.parseInt(valueOperations.get(key)));
+            }
+        }
+        return prices;
     }
 }

@@ -66,7 +66,9 @@ public class BoardController {
                                       @RequestParam int size) {
         Page<Board> boardPage = boardService.findBoardPage(categoryId, page - 1, size, sort);
         List<Board> boards = boardPage.getContent();
-        List<BoardDto.Response> responses = boardMapper.boardListToBoardDtoList(boards);
+        List<Integer> prices = boardService.getPricesInRedis(boards);
+        List<BoardDto.Response> responses = boardMapper.boardListToBoardDtoList(boards,prices);
+
 
         return new PageDto(responses, boardPage);
     }
