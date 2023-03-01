@@ -485,4 +485,19 @@ public class BoardService {
         }
         return emails;
     }
+
+    public List<Integer> getPricesInRedis(List<Board> boards) {
+        List<Integer> prices = new ArrayList<>();
+        for (Board board : boards) {
+            long boardId = board.getBoardId();
+            String key = "boardPrice::" + boardId;
+            ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+            if (valueOperations.get(key) == null) {
+                prices.add(board.getCurrentPrice());
+            } else {
+                prices.add(Integer.parseInt(valueOperations.get(key)));
+            }
+        }
+        return prices;
+    }
 }

@@ -9,30 +9,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface BoardMapper {
-    default List<BoardDto.Response> boardListToBoardDtoList(List<Board> boards){
-        List<BoardDto.Response> responses = new ArrayList<>();
-        for (Board board : boards) {
-            BoardDto.Response response = BoardDto.Response.builder()
-                    .boardId(board.getBoardId())
-                    .authorId(board.getSellerId())
-                    .bidderId(board.getBidderId())
-                    .description(board.getDescription())
-                    .categoryId(board.getCategoryId())
-                    //todo: 썸네일
-                    .thumbnail(board.getThumbnail())
-                    .createdAt(board.getCreatedAt())
-                    .finishedAt(board.getFinishedAt())
-                    .startingPrice(board.getStartingPrice())
-                    .currentPrice(board.getCurrentPrice())
-                    .title(board.getTitle())
-                    .statusId(board.getStatusId())
-                    .build();
-
-            responses.add(response);
-        }
-        return responses;
-    }
-    default List<BoardDto.Response> boardListToBoardDtoListWithMyPriceAndEmail(List<Board> boards, List<Integer> myPrices,List<String> sellerEmails){
+    default List<BoardDto.Response> boardListToBoardDtoList(List<Board> boards, List<Integer> prices){
         List<BoardDto.Response> responses = new ArrayList<>();
         for (int i = 0; i < boards.size(); i++) {
             Board board = boards.get(i);
@@ -47,7 +24,31 @@ public interface BoardMapper {
                     .createdAt(board.getCreatedAt())
                     .finishedAt(board.getFinishedAt())
                     .startingPrice(board.getStartingPrice())
-                    .currentPrice(board.getCurrentPrice())
+                    .currentPrice(prices.get(i))
+                    .title(board.getTitle())
+                    .statusId(board.getStatusId())
+                    .build();
+
+            responses.add(response);
+        }
+        return responses;
+    }
+    default List<BoardDto.Response> boardListToBoardDtoListWithMyPriceAndEmail(List<Board> boards,List<Integer> prices ,List<Integer> myPrices,List<String> sellerEmails){
+        List<BoardDto.Response> responses = new ArrayList<>();
+        for (int i = 0; i < boards.size(); i++) {
+            Board board = boards.get(i);
+            BoardDto.Response response = BoardDto.Response.builder()
+                    .boardId(board.getBoardId())
+                    .authorId(board.getSellerId())
+                    .bidderId(board.getBidderId())
+                    .description(board.getDescription())
+                    .categoryId(board.getCategoryId())
+                    //todo: 썸네일
+                    .thumbnail(board.getThumbnail())
+                    .createdAt(board.getCreatedAt())
+                    .finishedAt(board.getFinishedAt())
+                    .startingPrice(board.getStartingPrice())
+                    .currentPrice(prices.get(i))
                     .title(board.getTitle())
                     .statusId(board.getStatusId())
                     .myPrice(myPrices.get(i))

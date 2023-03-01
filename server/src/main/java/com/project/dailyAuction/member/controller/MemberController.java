@@ -92,8 +92,9 @@ public class MemberController {
                                 @RequestParam int size){
         Page<Board> boardPages = memberService.getMyAuction(token,page,size);
         List<Board> boards = boardPages.getContent();
+        List<Integer> prices = boardService.getPricesInRedis(boards);
 
-        return new PageDto(boardMapper.boardListToBoardDtoList(boards),boardPages);
+        return new PageDto(boardMapper.boardListToBoardDtoList(boards, prices),boardPages);
     }
 
     // 참여 경매 -
@@ -104,10 +105,11 @@ public class MemberController {
                                  @RequestParam int size){
         Page<Board> boardPages = memberService.getParticipation(token,page,size);
         List<Board> boards = boardPages.getContent();
+        List<Integer> prices = boardService.getPricesInRedis(boards);
         List<Integer> myPrices = memberService.findMyPrices(token, boards);
         List<String> sellerEmails = boardService.findSellerEmails(boards);
 
-        return new PageDto(boardMapper.boardListToBoardDtoListWithMyPriceAndEmail(boards,myPrices,sellerEmails),boardPages);
+        return new PageDto(boardMapper.boardListToBoardDtoListWithMyPriceAndEmail(boards,prices, myPrices,sellerEmails),boardPages);
     }
 
     // 토큰 갱신
