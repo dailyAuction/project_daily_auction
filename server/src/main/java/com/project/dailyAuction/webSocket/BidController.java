@@ -51,4 +51,9 @@ public class BidController {
 
         simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
     }
+
+    @MessageExceptionHandler
+    public Exception handleException(Exception exception) {
+        return exception;
+    }
 }
