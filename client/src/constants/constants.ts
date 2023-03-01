@@ -14,7 +14,7 @@ export const NOTIFICATION_STATUS_MSG = [
 
 export const CHARGECOIN_STATUS = [50000, 30000, 10000, 5000];
 
-export const CATEGORIE_SORT_STATUS = ['마감 임박', 'TOP 입찰', 'TOP 조회', '높은 가격', '낮은 가격'];
+export const CATEGORIE_SORT_STATUS = ['마감 임박', 'TOP 입찰 횟수', 'TOP 조회', '높은 가격', '낮은 가격'];
 
 export const REG_EMAIL = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 export const REG_PASSWORD = /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
