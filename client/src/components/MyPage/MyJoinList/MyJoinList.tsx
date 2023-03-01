@@ -8,6 +8,7 @@ import { MyAuctionContent } from '../MyAuctionContent/MyAuctionContent';
 import { AUCTION_STATUS } from '../../../constants/constants';
 import { myPageAPI } from '../../../api/myPageAPI';
 import { accessTokenAtom } from '../../../atoms/token';
+import { Loading } from '../../_common/Loading/Loading';
 
 export const MyJoinList = () => {
   const [status, setStatus] = useState(0);
@@ -22,7 +23,7 @@ export const MyJoinList = () => {
     <div className="base-layout bg-white">
       <SubHeader>내가 참여한 경매</SubHeader>
       <MyAuctionBtn status={status} setStatus={setStatus} />
-      {isLoading && <div>Loading...</div>}
+      {isLoading && <Loading />}
       {error && <div>{`${AUCTION_STATUS[status]} 상품이 없습니다.`}</div>}
       <MyAuctionContent details={data} status={status} />
       <TabBar />

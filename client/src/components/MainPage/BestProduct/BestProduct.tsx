@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 import { ProductItem } from '../../_common/ProductItem/ProductItem';
 import { CATEGORIES } from '../../../constants/constants';
 import { mainPageAPI } from '../../../api/mainPageAPI';
+import { Loading } from '../../_common/Loading/Loading';
 
 export const Bestproduct = () => {
   const [categoryId, setCategoryId] = useState(0);
@@ -55,7 +56,7 @@ export const Bestproduct = () => {
               </span>
             );
           })}
-          {isLoading && <div>Loading...</div>}
+          {isLoading && <Loading />}
           {error && <div>카테고리별 인기상품이 없습니다.</div>}
         </section>
       </div>
