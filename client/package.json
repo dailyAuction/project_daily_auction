@@ -30,6 +30,7 @@
     "react-router-dom": "^6.8.0",
     "react-scripts": "5.0.1",
     "react-slick": "^0.29.0",
+    "react-spinners": "^0.13.8",
     "recoil": "^0.7.6",
     "slick-carousel": "^1.8.1",
     "tailwind-scrollbar-hide": "^1.1.7",
