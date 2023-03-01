@@ -10,7 +10,7 @@ export const TopSearchKeywords = () => {
     refetchOnWindowFocus: true,
   });
 
-  const { keywords } = data;
+  const { keywords } = data || {};
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>에러가 발생하였습니다.</div>;
