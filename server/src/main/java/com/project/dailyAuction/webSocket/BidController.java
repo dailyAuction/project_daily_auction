@@ -5,6 +5,7 @@ import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -18,7 +19,7 @@ public class BidController {
     private final SimpMessageSendingOperations simpMessageSendingOperations;
 
     @MessageMapping("/bid")
-    public void bidMessage(Message.Bid message) {
+    public void bidMessage(Message.Bid message) throws MessagingException {
         long boardId = message.getBoardId();
         String token = message.getBidderToken();
         int newPrice = message.getPrice();
