@@ -52,6 +52,7 @@ export const useBidInfoModal = ({ bidValue, setBidValue, setValidationMsg }: Use
 
         // 웹소켓을 통한 send
         sendBid(bidValuePer1000);
+        setBidValue('');
         // await로 코인이 업데이트 될 때까지 대기
         // 입찰을 완료한 후 곧바로 코인을 업데이트!
         await handleUpdateCoin();
