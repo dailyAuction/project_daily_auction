@@ -14,6 +14,7 @@ import { ChargePage } from '../pages/ChargePage';
 import { MainPage } from '../pages/MainPage';
 import { MyAuctionList } from '../components/MyPage/MyAuctionList/MyAuctionList';
 import { MyJoinList } from '../components/MyPage/MyJoinList/MyJoinList';
+import { SocialLogin } from '../components/LoginPage/SocialLogin/SocialLogin';
 
 export const Router = () => {
   return (
@@ -34,6 +35,7 @@ export const Router = () => {
         <Route path="/notification" element={<NotificationPage />} />
         <Route path="/categoryProduct/:id" element={<CategoryProductListPage />} />
         <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/callback/*" element={<SocialLogin />} />
       </Routes>
     </BrowserRouter>
   );

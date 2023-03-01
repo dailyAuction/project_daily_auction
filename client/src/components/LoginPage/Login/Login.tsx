@@ -2,7 +2,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { FindPasswordModal } from '../FindPasswordModal/FindPasswordModal';
 import { REG_EMAIL, REG_PASSWORD } from '../../../constants/constants';
@@ -22,6 +22,7 @@ export const Login = () => {
   const [, setLoginState] = useRecoilState(loginStateAtom);
 
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -34,15 +35,19 @@ export const Login = () => {
     },
     {
       onSuccess: (res) => {
-        setAccessToken(res.accesstoken);
-        setRefreshToken(res.refreshtoken);
-        setUserInfo({
-          memberId: Number(res.memberid),
-          coin: res.coin,
-          email: res.email,
-        });
-        setLoginState(true);
-        navigate(-1);
+        if (res.accesstoken !== res.refreshtoken) {
+          setAccessToken(res.accesstoken);
+          setRefreshToken(res.refreshtoken);
+          setUserInfo({
+            memberId: Number(res.memberid),
+            coin: res.coin,
+            email: res.email,
+          });
+          setLoginState(true);
+          navigate(-1);
+        } else {
+          console.log('엑세스 토큰과 리프레시 토큰이 동일합니다.');
+        }
       },
       onError: (error) => {
         console.log('Login error : ', error);
@@ -54,6 +59,15 @@ export const Login = () => {
   const onSubmit = handleSubmit((data: LoginData) => {
     postLogin(data);
   });
+
+  const googleLoginHandler = () => {
+    const GOOGLE_LOGIN_URL = `${process.env.REACT_APP_URL}/oauth2/authorization/google`;
+    window.location.href = GOOGLE_LOGIN_URL;
+  };
+  const kakaoLoginHandler = () => {
+    const KAKAO_LOGIN_URL = `${process.env.REACT_APP_URL}/oauth2/authorization/kakao`;
+    window.location.href = KAKAO_LOGIN_URL;
+  };
 
   return (
     <main className="w-full flex flex-col mt-11 items-center space-y-5">
@@ -86,15 +100,15 @@ export const Login = () => {
               placeholder="비밀번호"
               {...register('password', {
                 required: true,
-                // pattern: {
-                //   value: REG_PASSWORD,
-                //   message: '비밀번호를 8자 이상으로 숫자, 영문, 특수기호를 조합해서 사용하세요.',
-                // },
+                pattern: {
+                  value: REG_PASSWORD,
+                  message: '비밀번호를 8자 이상으로 숫자, 영문, 특수기호를 조합해서 사용하세요.',
+                },
               })}
             />
             <p className="text-xs text-[#FF0000]">
               {errors.password?.type === 'required' && '비밀번호를 입력해주세요'}
-              {/* {errors.password?.type === 'pattern' && errors.password?.message} */}
+              {errors.password?.type === 'pattern' && errors.password?.message}
             </p>
           </article>
           <article>
@@ -121,8 +135,12 @@ export const Login = () => {
         </article>
       </section>
       <section className="w-fit pt-12 flex space-x-4 justify-between">
-        <img src="/socialLogin/google_login.png" alt="google_login" className="h-10 cursor-pointer" />
-        <img src="/socialLogin/kakao_login.png" alt="kakao_login" className="h-10 cursor-pointer" />
+        <button type="button" onClick={googleLoginHandler}>
+          <img src="/socialLogin/google_login.png" alt="google_login" className="h-10 cursor-pointer" />
+        </button>
+        <button type="button" onClick={kakaoLoginHandler}>
+          <img src="/socialLogin/kakao_login.png" alt="kakao_login" className="h-10 cursor-pointer" />
+        </button>
       </section>
       <section>{isModalOpen && <FindPasswordModal handleClose={() => setModalOpen(false)} />}</section>
     </main>

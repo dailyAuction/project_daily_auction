@@ -2,24 +2,27 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
 import { accessTokenAtom, refreshTokenAtom } from '../../../atoms/token';
-import { loginStateAtom, userInfoAtom } from '../../../atoms/user';
+import { loginStateAtom, socialLoginStateAtom, userInfoAtom } from '../../../atoms/user';
 import { SignOutModal } from './SignOutModal';
 
 export const MyPageInfo = () => {
   const navigate = useNavigate();
   const [isModalOpen, setModalOpen] = useState(false);
   const { email, coin } = useRecoilValue(userInfoAtom);
+  const socialLoginState = useRecoilValue(socialLoginStateAtom);
 
   const resetAccessToken = useResetRecoilState(accessTokenAtom);
   const resetRefreshToken = useResetRecoilState(refreshTokenAtom);
   const resetUserInfo = useResetRecoilState(userInfoAtom);
   const resetLoginState = useResetRecoilState(loginStateAtom);
+  const resetSocialLoginState = useResetRecoilState(socialLoginStateAtom);
 
   const handleLogout = () => {
     resetAccessToken();
     resetRefreshToken();
     resetUserInfo();
     resetLoginState();
+    resetSocialLoginState();
     navigate('/');
   };
 
@@ -33,9 +36,13 @@ export const MyPageInfo = () => {
             <span>현재 로그인 : </span>
             <span className="font-bold">{email}</span>
           </div>
-          <Link to="/editPassword">
-            <span className="text-xs font-light">비밀번호 변경 &gt;</span>
-          </Link>
+          {socialLoginState ? (
+            <></>
+          ) : (
+            <Link to="/editPassword">
+              <span className="text-xs font-light">비밀번호 변경 &gt;</span>
+            </Link>
+          )}
         </article>
       </section>
       <section className="w-full px-[10px] py-3 bg-white">
