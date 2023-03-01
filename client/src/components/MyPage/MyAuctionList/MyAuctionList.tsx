@@ -1,4 +1,4 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { SubHeader } from '../../_common/Header/SubHeader/SubHeader';
@@ -11,7 +11,7 @@ import { accessTokenAtom } from '../../../atoms/token';
 
 export const MyAuctionList = () => {
   const [status, setStatus] = useState(0);
-  const [token] = useRecoilState(accessTokenAtom);
+  const token = useRecoilValue(accessTokenAtom);
 
   const { isLoading, error, data } = useQuery(
     'myAuction',

@@ -1,4 +1,4 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { useCallback, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ export const PostProductPage = () => {
     description: '',
     categoryId: '',
   });
-  const [token] = useRecoilState(accessTokenAtom);
+  const token = useRecoilValue(accessTokenAtom);
   const [valid, setValid] = useState(false);
   const [errMessage, setErrMessage] = useState('');
   const navigate = useNavigate();
