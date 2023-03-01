@@ -11,10 +11,6 @@ export const MyAuctionBtn = ({ status, setStatus }) => {
       : ['진행중인 경매', '낙찰된 경매', '실패한 경매']
   );
 
-  const handlerClickBtn = (idx) => {
-    setStatus(idx);
-  };
-
   return (
     <div className="flex gap-2 py-4 w-full px-2.5">
       {buttonList.map((el, i) => {
@@ -22,8 +18,8 @@ export const MyAuctionBtn = ({ status, setStatus }) => {
           <button
             key={el}
             type="button"
-            className={`${i === status ? 'red-btn' : 'white-btn'} text-xs font-bold cursor-pointer`}
-            onClick={() => handlerClickBtn(i)}>
+            className={`${i === status ? 'red-btn' : 'white-btn'} transition-none text-xs font-bold cursor-pointer`}
+            onClick={() => setStatus(i)}>
             {el}
           </button>
         );
