@@ -329,7 +329,7 @@ public class BoardService {
         int currentPrice = getPriceInRedis(board);
 
         if (board.getBidderId() != 0) {
-            Member lastMember = memberService.find(board.getBidderId());
+            Member lastMember = memberService.find(getBidderInRedis(board));
             if (lastMember.equals(member)) {
                 throw new ResponseStatusException(ExceptionCode.CANT_BID_IN_A_ROW.getCode(),
                         ExceptionCode.CANT_BID_IN_A_ROW.getMessage(),
