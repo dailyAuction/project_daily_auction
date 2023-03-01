@@ -13,8 +13,9 @@ export const RegisterItemImg = ({ myImage, setMyImage }) => {
     if (myImage.length > 4) return alert('이미지는 5개까지 등록 가능합니다');
 
     // 확장자 heic인 경우 jpeg로 변환
-    const fileExtension = nowSelectImageList.name.split('.').at(-1);
-    if (fileExtension === 'HEIC' || fileExtension === 'heic') {
+    const iphoneFile = ['HEIC', 'heic', 'HEIF', 'heif'];
+    const nowImgFile = nowSelectImageList.name.split('.').at(-1);
+    if (iphoneFile.includes(nowImgFile)) {
       await heic2any({ blob: nowSelectImageList, toType: 'image/jpeg' }).then((converted: File) => {
         nowSelectImageList = converted;
       });
@@ -46,7 +47,7 @@ export const RegisterItemImg = ({ myImage, setMyImage }) => {
               id="input-file"
               name="imgUpload"
               multiple
-              accept="image/* image/heic"
+              accept="image/* image/heic image/heif"
               style={{ display: 'none' }}
             />
           </label>
