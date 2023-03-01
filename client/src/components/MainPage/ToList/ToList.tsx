@@ -1,7 +1,13 @@
-export const ToList = () => {
+import { useNavigate } from 'react-router-dom';
+
+export const ToList = ({ categoryId }) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="base-layout w-full my-4 py-1">
-      <div className="flex flex-row justify-center items-center gap-2 cursor-pointer hover:opacity-80">
+    <div className="base-layout w-full h-8 my-4 py-1">
+      <div
+        className="flex flex-row justify-center items-center gap-2 cursor-pointer hover:opacity-60"
+        onClick={() => navigate(`/categoryProduct/${categoryId}`)}>
         <div className="text-base">목록으로 이동</div>
         <svg
           xmlns="http://www.w3.org/2000/svg"

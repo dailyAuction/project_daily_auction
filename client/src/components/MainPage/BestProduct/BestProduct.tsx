@@ -4,6 +4,7 @@ import { ProductItem } from '../../_common/ProductItem/ProductItem';
 import { CATEGORIES } from '../../../constants/constants';
 import { mainPageAPI } from '../../../api/mainPageAPI';
 import { Loading } from '../../_common/Loading/Loading';
+import { ToList } from '../ToList/ToList';
 
 export const Bestproduct = () => {
   const [categoryId, setCategoryId] = useState(0);
@@ -69,6 +70,7 @@ export const Bestproduct = () => {
           );
         })}
       </div>
+      <ToList categoryId={categoryId} />
     </div>
   );
 };
