@@ -1,11 +1,11 @@
 import { useLocation } from 'react-router-dom';
 
-type TokenFacotr = {
+type TokenFactor = {
   access: string;
   refresh: string;
 };
 
-export const useSocialToken = (): TokenFacotr => {
+export const useSocialToken = (): TokenFactor => {
   const location = useLocation();
   const tokenPath = location.search;
   const tokenInfo = tokenPath.split('&');
