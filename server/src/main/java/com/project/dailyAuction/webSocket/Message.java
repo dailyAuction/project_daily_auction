@@ -34,6 +34,16 @@ public class Message {
         private Integer[] history;
     }
 
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Error{
+        private long boardId;
+        private long memberId;
+        private String message;
+    }
+
     //    @Getter
 //    @Builder
 //    @AllArgsConstructor
