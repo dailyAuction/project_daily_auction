@@ -23,7 +23,7 @@ export const useCharge = ({ coinValue, setCoinValue, setModalOpen, setAdviceText
     },
     {
       onSuccess: (res) => {
-        setUserInfo((prev) => ({ ...prev, coin: String(res) }));
+        setUserInfo((prev) => ({ ...prev, coin: res }));
         setModalOpen(true);
       },
       onError: (error) => {
