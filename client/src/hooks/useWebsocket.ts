@@ -42,6 +42,7 @@ export const useWebsocket = (subEndpoint: string) => {
     };
 
     // FIXME: 서버에서 전송되는 에러 로그 찍을 수 있도록 수정
+    // HTTP 응답값으로 에러 데이터를 보내주고 계시기 때문에 받을 수 있도록 해보기.
     client.current.onStompError = (frame) => {
       console.log('Broker reported error: ' + frame.headers.message);
       console.log('Additional details: ' + frame.body);

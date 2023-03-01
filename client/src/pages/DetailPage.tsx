@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
+import { useQueryClient } from 'react-query';
 import { useLocation } from 'react-router-dom';
-import { useQuery } from 'react-query';
 import { CategoryBtn } from '../components/_common/CategoryBtn/CategoryBtn';
 import { AuctionStatus } from '../components/DetailPage/AuctionStatus/AuctionStatus';
 import { BidInformation } from '../components/DetailPage/BidInformation/BidInformation';
@@ -8,30 +9,23 @@ import { ImageList } from '../components/DetailPage/ImageList/ImageList';
 import { TabBar } from '../components/_common/TabBar/TabBar';
 import { SubHeader } from '../components/_common/Header/SubHeader/SubHeader';
 import { CATEGORIES } from '../constants/constants';
-import { productDetailAPI } from '../api/boardsAPI';
 import { useWebsocket } from '../hooks/useWebsocket';
+import { useGetProductDetail } from '../hooks/useGetProductDetail';
 
 export const DetailPage = () => {
   const boardId = useLocation().pathname.split('/')[2];
 
+  const { data, isLoading, error } = useGetProductDetail(boardId);
+  const { imageUrls, categoryId, viewCount, description, title } = data || {};
+
   // 웹소켓 연결
   const { response, sendBid } = useWebsocket(`/sub/board-id/${boardId}`);
 
-  const { isLoading, error, data } = useQuery(
-    // 각 상품 데이터가 unique한 key 값을 갖도록 배열로 정했습니다.
-    ['productDetail', boardId],
-    async () => {
-      const res = await productDetailAPI.get(boardId);
-      return res.data;
-    },
-    {
-      onError: (e) => console.error(e),
-      refetchOnMount: true,
-    }
-  );
-
-  // data가 undefined, null인 경우 TypeError 발생, 아닐 경우에만 분해되도록 함.
-  const { imageUrls, categoryId, viewCount, finishedAt, statusId, description, history, title } = data || {};
+  // 실시간 데이터 변경시에 상품 데이터 refetch
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    queryClient.refetchQueries(['productDetail', boardId]);
+  }, [response]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>에러가 발생하였습니다.</div>;
