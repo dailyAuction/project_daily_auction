@@ -53,7 +53,7 @@ public class BidController {
     }
 
     @MessageExceptionHandler
-    public String handleException(Exception exception) {
-        return "error";
+    public Exception handleException(Exception exception) {
+        return exception;
     }
 }
