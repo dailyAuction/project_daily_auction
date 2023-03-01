@@ -324,7 +324,7 @@ public class BoardService {
     }
 
 
-    public Message.Response bidBoard(String token, long boardId, int newPrice) {
+    public Message.Response bidBoard(String token, long boardId, int newPrice) throws Exception {
         Member member = memberService.findByAccessToken(token);
         Board board = find(boardId);
 
@@ -347,9 +347,7 @@ public class BoardService {
         if (board.getBidderId() != 0) {
             Member lastMember = memberService.find(getBidderInRedis(board));
             if (lastMember.equals(member)) {
-                throw new ResponseStatusException(ExceptionCode.CANT_BID_IN_A_ROW.getCode(),
-                        ExceptionCode.CANT_BID_IN_A_ROW.getMessage(),
-                        new MessagingException());
+                throw new Exception();
             }
             //기존 입찰자에게 코인 반환
             lastMember.changeCoin(currentPrice);

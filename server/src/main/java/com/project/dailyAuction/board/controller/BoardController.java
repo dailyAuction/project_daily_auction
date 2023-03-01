@@ -77,7 +77,7 @@ public class BoardController {
     @ResponseStatus(HttpStatus.OK)
     private void bidBoard(@RequestHeader(name = "Authorization") String token,
                           @PathVariable("board-id") long boardId,
-                          @RequestBody BoardDto.Patch patchDto) {
+                          @RequestBody BoardDto.Patch patchDto) throws Exception {
         Message.Response response = boardService.bidBoard(token, boardId, patchDto.getPrice());
 
         simpMessageSendingOperations.convertAndSend("/sub/board-id/" + boardId, response);

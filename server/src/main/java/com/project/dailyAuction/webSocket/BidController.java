@@ -29,7 +29,7 @@ public class BidController {
     private final SimpMessageSendingOperations simpMessageSendingOperations;
 
     @MessageMapping("/bid")
-    public void bidMessage(Message.Bid message) throws MessagingException {
+    public void bidMessage(Message.Bid message) throws Exception {
         long boardId = message.getBoardId();
         String token = message.getBidderToken();
         int newPrice = message.getPrice();
@@ -55,7 +55,7 @@ public class BidController {
             simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
         }
         // 연속입찰 불가
-        else if (memberService.find(boardService.getBidderInRedis(optionalBoard.get())).equals(member)) {
+        else if (boardService.getBidderInRedis(optionalBoard.get()) == member.getMemberId()) {
             Message.Error response = Message.Error.builder().boardId(boardId).memberId(member.getMemberId()).message("연속_입찰").build();
             log.info("**LOG: 입찰에러-연속입찰");
             simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
