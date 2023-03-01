@@ -5,6 +5,7 @@ import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
@@ -49,5 +50,10 @@ public class BidController {
                 .build();
 
         simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
+    }
+
+    @MessageExceptionHandler
+    public String handleException(Exception exception) {
+        return "error";
     }
 }
