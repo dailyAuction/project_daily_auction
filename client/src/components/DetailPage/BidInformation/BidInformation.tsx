@@ -42,7 +42,9 @@ export const BidInformation = ({ reatTimeData, sendBid }: BidInformationProps) =
         <article className="flex items-center space-x-2">
           <span className="text-lg font-bold text-main-orange">{currentPrice?.toLocaleString()} coin</span>
           <span className="text-sm">
-            {myPrice ? `내 입찰가 : ${myPrice.toLocaleString()}` : `시작가 : ${startingPrice.toLocaleString()}`}
+            {bidderId === memberId
+              ? `내 입찰가 : ${myPrice.toLocaleString()}`
+              : `시작가 : ${startingPrice.toLocaleString()}`}
           </span>
         </article>
         <article className="flex w-full justify-between items-center">

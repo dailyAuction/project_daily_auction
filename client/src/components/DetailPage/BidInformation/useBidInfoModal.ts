@@ -6,12 +6,13 @@ import { userInfoAtom } from '../../../atoms/user';
 import { useCoinCalc } from '../../../hooks/useCoinCalc';
 
 type UseBidInfoModalFactor = {
-  bidValue?: string;
-  setBidValue?: React.Dispatch<SetStateAction<string>>;
-  setValidationMsg?: React.Dispatch<SetStateAction<string>>;
+  bidValue: string;
+  setBidValue: React.Dispatch<SetStateAction<string>>;
+  setValidationMsg: React.Dispatch<SetStateAction<string>>;
+  handleClose: () => void;
 };
 
-export const useBidInfoModal = ({ bidValue, setBidValue, setValidationMsg }: UseBidInfoModalFactor) => {
+export const useBidInfoModal = ({ bidValue, setBidValue, setValidationMsg, handleClose }: UseBidInfoModalFactor) => {
   const [{ coin: myCoin }, setCoin] = useRecoilState(userInfoAtom);
   const accessToken = useRecoilValue(accessTokenAtom);
 
@@ -56,6 +57,8 @@ export const useBidInfoModal = ({ bidValue, setBidValue, setValidationMsg }: Use
         // await로 코인이 업데이트 될 때까지 대기
         // 입찰을 완료한 후 곧바로 코인을 업데이트!
         await handleUpdateCoin();
+        // 입찰 완료 후 모달 닫기
+        handleClose();
       }
     }
   };

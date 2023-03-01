@@ -14,7 +14,7 @@ export const BidModal = ({ handleClose, currentPrice, sendBid }: BidModalProps) 
   const [bidValue, setBidValue] = useState('');
   const [validationMsg, setValidationMsg] = useState('1000coin 단위로 입력해주세요!');
 
-  const { handleClickBid, handleChange } = useBidInfoModal({ bidValue, setBidValue, setValidationMsg });
+  const { handleClickBid, handleChange } = useBidInfoModal({ bidValue, setBidValue, setValidationMsg, handleClose });
 
   const { coin: myCoin } = useRecoilValue(userInfoAtom);
 
