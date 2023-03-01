@@ -34,4 +34,14 @@ public class Message {
         private Integer[] history;
     }
 
+    //    @Getter
+//    @Builder
+//    @AllArgsConstructor
+//    @NoArgsConstructor
+//    public static class InitResponse {
+//        private long boardId;
+//        private int bidCount;
+//        private int currentPrice;
+//        private Integer[] history;
+//    }
 }
