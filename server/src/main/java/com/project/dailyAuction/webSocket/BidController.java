@@ -39,41 +39,42 @@ public class BidController {
         // 존재하지 않는 보드
         if (optionalBoard.isEmpty()) {
             Message.Error response = Message.Error.builder().boardId(boardId).memberId(member.getMemberId()).message("미존재_게시글").build();
-            simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
             log.info("**LOG: 입찰에러-미존재게시글");
+            simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
         }
         // 자기글에 입찰 불가
         else if (member.getMemberId() == optionalBoard.get().getSellerId()) {
             Message.Error response = Message.Error.builder().boardId(boardId).memberId(member.getMemberId()).message("셀프_입찰").build();
-            simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
             log.info("**LOG: 입찰에러-셀프입찰");
+            simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
         }
         // 마감된 글에 입찰 불가
         else if (optionalBoard.get().getStatusId() != BoardStatusCode.경매중.code) {
             Message.Error response = Message.Error.builder().boardId(boardId).memberId(member.getMemberId()).message("마감된_게시글").build();
-            simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
             log.info("**LOG: 입찰에러-마감된게시글");
+            simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
         }
         // 연속입찰 불가
         else if (memberService.find(boardService.getBidderInRedis(optionalBoard.get())).equals(member)) {
             Message.Error response = Message.Error.builder().boardId(boardId).memberId(member.getMemberId()).message("연속_입찰").build();
-            simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
             log.info("**LOG: 입찰에러-연속입찰");
+            simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
         }
         //코인이 부족하면 에러
         else if (member.getCoin() < newPrice) {
             Message.Error response = Message.Error.builder().boardId(boardId).memberId(member.getMemberId()).message("코인_부족").build();
-            simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
             log.info("**LOG: 입찰에러-코인부족");
+            simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
         }
         //입찰가보다 낮거나 같으면 에러
         else if (boardService.getPriceInRedis(optionalBoard.get()) >= newPrice) {
             Message.Error response = Message.Error.builder().boardId(boardId).memberId(member.getMemberId()).message("낮은_입찰가").build();
-            simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
             log.info("**LOG: 입찰에러-낮은입찰가");
+            simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
         }
         // 에러 전혀 없음
         else {
+            log.info("**LOG: 정상입찰");
             Message.Response response = boardService.bidBoard(token, boardId, newPrice);
             simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
         }
