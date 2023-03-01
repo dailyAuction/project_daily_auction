@@ -6,7 +6,6 @@ import com.project.dailyAuction.board.service.BoardService;
 import com.project.dailyAuction.dto.PageDto;
 import com.project.dailyAuction.member.dto.MemberDto;
 import com.project.dailyAuction.member.mapper.MemberMapper;
-import com.project.dailyAuction.member.repository.MemberRepository;
 import com.project.dailyAuction.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
