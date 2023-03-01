@@ -25,3 +25,15 @@ export interface ProductDetailRealtimeResp {
   bidCount: number;
   history: number[];
 }
+
+export interface PageInfoResp {
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
+export interface ProductListResp {
+  items: ProductDetailResp[];
+  pageInfo: PageInfoResp;
+}
