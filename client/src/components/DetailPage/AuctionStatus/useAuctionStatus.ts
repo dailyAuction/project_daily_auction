@@ -1,26 +1,13 @@
-import { useQuery } from 'react-query';
 import { useLocation } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { productDetailAPI } from '../../../api/boardsAPI';
 import { userInfoAtom } from '../../../atoms/user';
+import { useGetProductDetail } from '../../../hooks/useGetProductDetail';
 
 export const useAuctionStatus = () => {
   // 게시글 데이터 요청 로직
   const boardId = useLocation().pathname.split('/')[2];
 
-  const { data } = useQuery(
-    'productDetail',
-    async () => {
-      const res = await productDetailAPI.get(boardId);
-      return res.data;
-    },
-    {
-      onError: (e) => console.error(e),
-      refetchOnMount: true,
-    }
-  );
-
-  // data가 undefined, null인 경우 TypeError 발생, 아닐 경우에만 분해되도록 함.
+  const { data } = useGetProductDetail(boardId);
   const { finishedAt, statusId, authorId, bidderId } = data || {};
   const { memberId } = useRecoilValue(userInfoAtom);
 
