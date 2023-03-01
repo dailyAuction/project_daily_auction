@@ -4,7 +4,12 @@ import { httpClient } from '../utils/httpClient';
 export const productDetailAPI = {
   url: `/boards`,
 
-  get: (path: string) => httpClient.get<ProductDetailResp>(`${productDetailAPI.url}/${path}`),
+  get: (path: string, token: string) =>
+    httpClient.get<ProductDetailResp>(`${productDetailAPI.url}/${path}`, {
+      headers: {
+        Authorization: token,
+      },
+    }),
 
   postBid: (path: string, newPrice: number) => httpClient.post(`${productDetailAPI.url}/${path}/bidding`, { newPrice }),
 
