@@ -329,16 +329,18 @@ public class BoardService {
 
         // 자기글에 입찰 불가
         if (member.getMemberId() == board.getSellerId()) {
-            throw new ResponseStatusException(ExceptionCode.CANT_BID_SELF.getCode(),
-                    ExceptionCode.CANT_BID_SELF.getMessage(),
-                    new IllegalArgumentException());
+//            throw new ResponseStatusException(ExceptionCode.CANT_BID_SELF.getCode(),
+//                    ExceptionCode.CANT_BID_SELF.getMessage(),
+//                    new IllegalArgumentException());
+            throw new IllegalArgumentException();
         }
 
         // 마감된 글에 입찰 불가
         if (board.getStatusId() != BoardStatusCode.경매중.code) {
-            throw new ResponseStatusException(ExceptionCode.CLOSED_AUCTION.getCode(),
-                    ExceptionCode.CLOSED_AUCTION.getMessage(),
-                    new IllegalArgumentException());
+//            throw new ResponseStatusException(ExceptionCode.CLOSED_AUCTION.getCode(),
+//                    ExceptionCode.CLOSED_AUCTION.getMessage(),
+//                    new IllegalArgumentException());
+            throw new IllegalArgumentException();
         }
 
         int currentPrice = getPriceInRedis(board);
@@ -346,9 +348,10 @@ public class BoardService {
         if (board.getBidderId() != 0) {
             Member lastMember = memberService.find(getBidderInRedis(board));
             if (lastMember.equals(member)) {
-                throw new ResponseStatusException(ExceptionCode.CANT_BID_IN_A_ROW.getCode(),
-                        ExceptionCode.CANT_BID_IN_A_ROW.getMessage(),
-                        new IllegalArgumentException());
+//                throw new ResponseStatusException(ExceptionCode.CANT_BID_IN_A_ROW.getCode(),
+//                        ExceptionCode.CANT_BID_IN_A_ROW.getMessage(),
+//                        new IllegalArgumentException());
+                throw new IllegalArgumentException();
             }
             //기존 입찰자에게 코인 반환
             lastMember.changeCoin(currentPrice);
