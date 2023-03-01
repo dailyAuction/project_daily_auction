@@ -19,7 +19,6 @@ public interface BoardMapper {
                     .bidderId(board.getBidderId())
                     .description(board.getDescription())
                     .categoryId(board.getCategoryId())
-                    //todo: 썸네일
                     .thumbnail(board.getThumbnail())
                     .createdAt(board.getCreatedAt())
                     .finishedAt(board.getFinishedAt())
