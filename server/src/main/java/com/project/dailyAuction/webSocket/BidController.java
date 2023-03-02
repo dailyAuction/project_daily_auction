@@ -104,7 +104,7 @@ public class BidController {
         Board board = boardService.find(boardId);
         int bidCount = boardService.getBidCountInRedis(board);
         long bidderId = boardService.getBidderInRedis(board);
-        int bidCount = boardService.getBidCountInRedis(board);
+
         String history = boardService.getHistoryInRedis(board);
         int currentPrice = boardService.getPriceInRedis(board);
         int viewCount = boardService.getViewCntInRedis(board);
