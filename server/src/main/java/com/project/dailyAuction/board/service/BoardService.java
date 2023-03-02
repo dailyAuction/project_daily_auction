@@ -52,16 +52,15 @@ public class BoardService {
     private final CacheProcessor cacheProcessor;
     private final BoardImageRepository boardImageRepository;
 
-    public Board saveBoard(String token, BoardDto.Post postDto) {
-        Member member = memberService.findByAccessToken(token);
+    public Board createBoard(Member member, BoardDto.Post postDto) {
         Board createdBoard = Board.builder()
                 .title(postDto.getTitle())
                 .description(postDto.getDescription())
                 .thumbnail("")
                 .statusId(1)
                 .categoryId(postDto.getCategoryId())
-                .createdAt(LocalDateTime.now().plusHours(9))
-                .finishedAt(LocalDateTime.now().plusHours(33))
+                .createdAt(LocalDateTime.now().plusHours(9).withSecond(0))
+                .finishedAt(LocalDateTime.now().plusHours(33).withSecond(0))
                 .sellerId(member.getMemberId())
                 .startingPrice(postDto.getStartingPrice())
                 .currentPrice(postDto.getStartingPrice())
@@ -69,11 +68,22 @@ public class BoardService {
                 .history(String.valueOf(postDto.getStartingPrice()))
                 .build();
 
-        return boardRepository.save(createdBoard);
+        return createdBoard;
     }
 
-    public BoardDto.Response getDetailPage(String token, Board board, int currentPrice, int viewCount, int bidCount, long bidderId, String history) {
+    public Board saveBoard(String token, BoardDto.Post postDto) {
+        Member member = memberService.findByAccessToken(token);
 
+        return boardRepository.save(createBoard(member, postDto));
+    }
+
+    public BoardDto.Response getDetailPage(String token, long boardId, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        Board board = find(boardId);
+        int bidCount = getBidCountInRedis(board);
+        long bidderId = getBidderInRedis(board);
+        int currentPrice = getPriceInRedis(board);
+        String history = getHistoryInRedis(board);
+        int viewCount = getViewCount(board, httpRequest, httpResponse);
         Integer[] histories = Arrays.stream(history.split(","))
                 .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
 
@@ -113,6 +123,22 @@ public class BoardService {
             }
         }
         return response;
+    }
+
+    public Message.Response createInitMessageResponse(long boardId) {
+        Board board = find(boardId);
+        int bidCount = getBidCountInRedis(board);
+        String history = getHistoryInRedis(board);
+        Integer[] histories = Arrays.stream(history.split(","))
+                .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
+        int currentPrice = getPriceInRedis(board);
+
+        return Message.Response.builder()
+                .boardId(boardId)
+                .bidCount(bidCount)
+                .currentPrice(currentPrice)
+                .history(histories)
+                .build();
     }
 
     public int getViewCount(Board board, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
@@ -204,7 +230,7 @@ public class BoardService {
         } else {
             String lastHistory = valueOperations.get(key);
             valueOperations.set(key,
-                    getUpdatedHistory(lastHistory ,newPrice));
+                    getUpdatedHistory(lastHistory, newPrice));
         }
         return valueOperations.get(key);
     }

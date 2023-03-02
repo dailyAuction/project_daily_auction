@@ -96,11 +96,6 @@ public class MemberService {
                 );
     }
 
-    // 이메일로 멤버 수 체크
-    public int countByEmail(String email) {
-        return memberRepository.countByEmail(email);
-    }
-
     public Member saveOauthMember(String email) {
         return memberRepository.save(Member.builder()
                 .email(email)
@@ -112,7 +107,6 @@ public class MemberService {
     }
 
     public Member findByEmailForOauth(String email) {
-
         return memberRepository.findByEmail(email).orElse(null);
     }
 
