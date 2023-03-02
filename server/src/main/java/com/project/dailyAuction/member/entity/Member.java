@@ -3,7 +3,7 @@ package com.project.dailyAuction.member.entity;
 
 //import com.project.dailyAuction.boardNotice.entity.Notice;
 import com.project.dailyAuction.code.MemberStatusCode;
-import com.project.dailyAuction.notice.Notice;
+import com.project.dailyAuction.notice.entity.Notice;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,10 +1,15 @@
-package com.project.dailyAuction.notice;
+package com.project.dailyAuction.notice.service;
 
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.code.NoticeStatusCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
+import com.project.dailyAuction.notice.dto.NoticeResponseDto;
+import com.project.dailyAuction.notice.entity.Notice;
+import com.project.dailyAuction.notice.mapper.NoticeMapper;
+import com.project.dailyAuction.notice.repository.EmitterRepository;
+import com.project.dailyAuction.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -14,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -23,6 +29,7 @@ public class NoticeService {
     private final MemberService memberService;
     private final EmitterRepository emitterRepository;
     private final NoticeRepository noticeRepository;
+    private final NoticeMapper noticeMapper;
     private final RedisTemplate redisTemplate;
     public SseEmitter subscribe(Long memberId) {
         String emitterId = makeTimeIncludeId(memberId);
@@ -94,6 +101,13 @@ public class NoticeService {
             notice.inputContact(memberService.find(board.getSellerId()).getEmail());
         }
         return notice;
+    }
+
+    public List<NoticeResponseDto> getNotices(String token) {
+        Member member = memberService.findByAccessToken(token);
+        List<Notice> notices = member.getNotices();
+
+        return noticeMapper.noticesTonoticeDtos(notices);
     }
 
     public void deleteNotice(String token, long noticeId) {

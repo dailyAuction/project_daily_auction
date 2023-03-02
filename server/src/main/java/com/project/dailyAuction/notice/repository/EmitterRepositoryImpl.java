@@ -1,4 +1,4 @@
-package com.project.dailyAuction.notice;
+package com.project.dailyAuction.notice.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
