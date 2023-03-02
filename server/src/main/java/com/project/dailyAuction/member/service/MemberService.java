@@ -112,7 +112,6 @@ public class MemberService {
     }
 
     public Member findByEmailForOauth(String email) {
-
         return memberRepository.findByEmail(email).orElse(null);
     }
 
