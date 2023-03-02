@@ -32,16 +32,12 @@ public class Message {
         private int currentPrice;
         private int bidCount;
         private Integer[] history;
-    }
 
-    @Getter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Error{
-        private long boardId;
-        private long memberId;
         private String message;
+
+        public void changeMessage(String message) {
+            this.message = message;
+        }
     }
 
     //    @Getter
