@@ -64,7 +64,6 @@ public class SearchService {
         } else {
             valueOperations.increment(key);
         }
-        log.info("value:{}", valueOperations.get(key));
         return Integer.parseInt(valueOperations.get(key));
     }
 

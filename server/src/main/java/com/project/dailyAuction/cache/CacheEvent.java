@@ -18,8 +18,11 @@ public class CacheEvent {
     public void initCache(){
         cacheProcessor.updateViewCntToMySql();
         cacheProcessor.updateBiddingToMySql();
+        cacheProcessor.updateTopKeywordToMySql();
+        cacheProcessor.updateBoardPriceToMySql();
+        cacheProcessor.updateBoardStatusToMySql();
         cacheProcessor.deleteRedisPerHour();
-        log.info("조회수, 입찰 관련 반영-init");
+        log.info("**Log : Update To DB - Init");
     }
 
     // 순서별 정리
@@ -42,13 +45,13 @@ public class CacheEvent {
         cacheProcessor.updateTopKeywordToMySql();
         cacheProcessor.updateBoardPriceToMySql();
         cacheProcessor.deleteRedisPerHour();
-        log.info("조회수, 입찰 관련 반영-1시간");
+        log.info("**Log : Update To DB - Per Hour");
     }
 
     //    1분마다 실행
     @Scheduled(cron = "0 0/1 * * * ?")
     public void schedulePerMinuteCache() {
         cacheProcessor.updateBoardStatusToMySql();
-        log.info("게시글 상태 체크-1분");
+        log.info("**Log : Update To DB - Per Minute");
     }
 }

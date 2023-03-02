@@ -42,6 +42,7 @@ public class BoardDto {
         private LocalDateTime finishedAt;
         private Integer[] history;
         private int myPrice;
+        private String sellerEmail;
 
         public void updateMyPrice(int myPrice) {
             this.myPrice = myPrice;

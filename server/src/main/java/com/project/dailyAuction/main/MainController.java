@@ -38,8 +38,8 @@ public class MainController {
         log.info(keyword);
         Page<Board> boardPages = searchService.search(categoryId, keyword, page, size);
         List<Board> boards = boardPages.getContent();
-
-        return new PageDto(boardMapper.boardListToBoardDtoList(boards), boardPages);
+        List<Integer> prices = boardService.getPricesInRedis(boards);
+        return new PageDto(boardMapper.boardListToBoardDtoList(boards, prices), boardPages);
     }
 
     // 인기검색어
@@ -55,7 +55,8 @@ public class MainController {
     @ResponseStatus(HttpStatus.OK)
     public MultiResponseDto getImminentItem() {
         List<Board> boards = boardService.getImminentItem();
-        List<BoardDto.Response> boardDtos = boardMapper.boardListToBoardDtoList(boards);
+        List<Integer> prices = boardService.getPricesInRedis(boards);
+        List<BoardDto.Response> boardDtos = boardMapper.boardListToBoardDtoList(boards, prices);
         return new MultiResponseDto(boardDtos);
     }
 
@@ -64,7 +65,8 @@ public class MainController {
     @ResponseStatus(HttpStatus.OK)
     public MultiResponseDto getPopularItem(@PathVariable("category-id") long categoryId) {
         List<Board> boards = boardService.getPopularItem(categoryId);
-        List<BoardDto.Response> boardDtos = boardMapper.boardListToBoardDtoList(boards);
+        List<Integer> prices = boardService.getPricesInRedis(boards);
+        List<BoardDto.Response> boardDtos = boardMapper.boardListToBoardDtoList(boards, prices);
         return new MultiResponseDto(boardDtos);
     }
 
@@ -75,7 +77,8 @@ public class MainController {
                                      @RequestParam int size) {
         Page<Board> boardPages = searchService.getAllPopularItem(page, size);
         List<Board> boards = boardPages.getContent();
+        List<Integer> prices = boardService.getPricesInRedis(boards);
 
-        return new PageDto(boardMapper.boardListToBoardDtoList(boards), boardPages);
+        return new PageDto(boardMapper.boardListToBoardDtoList(boards, prices), boardPages);
     }
 }

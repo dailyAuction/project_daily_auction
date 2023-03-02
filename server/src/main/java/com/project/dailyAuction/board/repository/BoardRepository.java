@@ -28,7 +28,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     Page<Board> findByStatusIdOrderByViewCountDesc(long statusId, PageRequest of);
 
-    List<Board> findTop5ByStatusIdOrderByCreatedAtDesc(long statusId);
+    List<Board> findTop5ByStatusIdOrderByCreatedAtAsc(long statusId);
 
     @Modifying
     @Query(value = "update board set view_count =:viewCount where board_id =:boardId", nativeQuery = true)
@@ -52,7 +52,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     Page<Board> getBoardsByCreatedAtAfter(LocalDateTime time, Pageable pageable);
 
-    Page<Board> findBoardsByCategoryIdAndCreatedAt(long categoryId, LocalDateTime time, Pageable pageable);
+    Page<Board> findBoardsByCategoryIdAndCreatedAtAfter(long categoryId, LocalDateTime time, Pageable pageable);
 
     @Modifying
     @Query(value = "update board set current_price =:price where board_id =:boardId", nativeQuery = true)

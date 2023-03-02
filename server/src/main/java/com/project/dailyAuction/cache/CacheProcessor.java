@@ -1,5 +1,6 @@
 package com.project.dailyAuction.cache;
 
+import com.project.dailyAuction.code.BoardStatusCode;
 import com.project.dailyAuction.search.repository.KeywordRepository;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
@@ -44,23 +45,24 @@ public class CacheProcessor {
             String data = it.next();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime finishedAt = LocalDateTime.parse(redisTemplate.opsForValue().get(data), formatter);
-            if ((LocalDateTime.now().isAfter(finishedAt.minusMinutes(5)) ||
-                    LocalDateTime.now().isEqual(finishedAt.minusMinutes(5))) && LocalDateTime.now().isBefore(finishedAt.minusMinutes(4))) {
+            if ((LocalDateTime.now().plusHours(9).isAfter(finishedAt.minusMinutes(5)) ||
+                    LocalDateTime.now().plusHours(9).isEqual(finishedAt.minusMinutes(5))) && LocalDateTime.now().plusHours(9).isBefore(finishedAt.minusMinutes(4))) {
                 Long boardId = Long.parseLong(data.split("::")[1]);
 
                 Board board = boardRepository.findById(boardId)
                         .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
                                 ExceptionCode.BOARD_NOT_FOUND.getMessage(),
                                 new IllegalArgumentException()));
-
-                Member buyer = memberService.find(getBidderInRedis(board));
-                log.info(boardId + "번 게시글 마감 5분 전");
-
-                //마감 임박 알림 전송
-                noticeService.send(buyer, board, NoticeStatusCode.마감임박.getCode());
+                long bidderId = getBidderInRedis(board);
+                log.info("**Log : " + boardId + "번 게시글 마감 5분 전");
+                if (bidderId != 0) {
+                    Member buyer = memberService.find(bidderId);
+                    //마감 임박 알림 전송
+                    noticeService.send(buyer, board, NoticeStatusCode.마감임박.getCode());
+                }
             }
             // 경매 종료
-            else if (LocalDateTime.now().isAfter(finishedAt)) {
+            else if (LocalDateTime.now().plusHours(9).isAfter(finishedAt)) {
                 Long boardId = Long.parseLong(data.split("::")[1]);
 
                 Board board = boardRepository.findById(boardId)
@@ -70,12 +72,12 @@ public class CacheProcessor {
 
                 Member seller = memberService.find(board.getSellerId());
                 updateViewToMySql(boardId);
-                boardRepository.updateStatus(boardId, checkFinishCode(board));
                 deleteInRedis("finishedTime", boardId);
-                log.info(boardId + "번 게시글 마감");
-
-                if (board.getBidderId() != 0L) {
-                    Member buyer = memberService.find(getBidderInRedis(board));
+                log.info("**Log : " + boardId + "번 게시글 마감");
+                long bidderId = getBidderInRedis(board);
+                if (bidderId != 0L) {
+                    Member buyer = memberService.find(bidderId);
+                    boardRepository.updateStatus(boardId, BoardStatusCode.낙찰.code);
                     //구매자 경매 낙찰 알림 전송
                     noticeService.send(buyer, board, NoticeStatusCode.구매자낙찰.getCode());
 
@@ -85,6 +87,7 @@ public class CacheProcessor {
                 } else {
                     //판매자 경매 유찰 알림 전송
                     noticeService.send(seller, board, NoticeStatusCode.유찰.getCode());
+                    boardRepository.updateStatus(boardId, BoardStatusCode.유찰.code);
                 }
             }
         }
@@ -101,26 +104,6 @@ public class CacheProcessor {
         }
     }
 
-    // 입찰자 존재 여부 체크 메서드
-    @Transactional
-    public long checkFinishCode(Board board) {
-        long boardId = board.getBoardId();
-        Set<String> redisKeys = redisTemplate.keys("boardLeadingBidder*");
-        Iterator<String> it = redisKeys.iterator();
-        while (it.hasNext()) {
-            String data = it.next();
-            Long currentBoardId = Long.parseLong(data.split("::")[1]);
-            if (currentBoardId == boardId) {
-                return 2;
-            }
-        }
-        if (board.getBidderId() != 0) {
-            return 2;
-        } else {
-            return 1;
-        }
-    }
-
     //마감 시 mysql에 보드정보 넘겨주는 메서드
     @Transactional
     public void updateViewToMySql(long boardId) {
@@ -130,7 +113,7 @@ public class CacheProcessor {
             String data = it.next();
             int viewCnt = Integer.parseInt(redisTemplate.opsForValue().get(data));
             boardRepository.updateViews(boardId, viewCnt);
-            deleteInRedis("boardViewCount",boardId);
+            deleteInRedis("boardViewCount", boardId);
         }
         redisKeys = redisTemplate.keys("boardPrice::" + boardId);
         it = redisKeys.iterator();
@@ -138,7 +121,7 @@ public class CacheProcessor {
             String data = it.next();
             int price = Integer.parseInt(redisTemplate.opsForValue().get(data));
             boardRepository.updatePrice(boardId, price);
-            deleteInRedis("boardPrice",boardId);
+            deleteInRedis("boardPrice", boardId);
         }
         redisKeys = redisTemplate.keys("boardBidCount::" + boardId);
         it = redisKeys.iterator();
@@ -146,7 +129,7 @@ public class CacheProcessor {
             String data = it.next();
             int bidCount = Integer.parseInt(redisTemplate.opsForValue().get(data));
             boardRepository.updateBidCnt(boardId, bidCount);
-            deleteInRedis("boardBidCount",boardId);
+            deleteInRedis("boardBidCount", boardId);
         }
     }
 
@@ -261,7 +244,7 @@ public class CacheProcessor {
     }
 
     public void deleteAllInRedis(String key) {
-        Set<String> redisKeys = redisTemplate.keys(key+"*");
+        Set<String> redisKeys = redisTemplate.keys(key + "*");
         Iterator<String> it = redisKeys.iterator();
         while (it.hasNext()) {
             String data = it.next();

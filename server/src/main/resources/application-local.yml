@@ -13,6 +13,7 @@ spring:
         format_sql: true;
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
 
   redis:
     host: localhost
@@ -52,3 +53,8 @@ jwt:
     secret: ${JWT_SECRET_KEY}               # todo : ec2환경 변수에 저장
   access-token-expiration-minutes: 30
   refresh-token-expiration-minutes: 1440
+
+logging:
+  level:
+    com.zaxxer.hikari.HikariConfig: DEBUG
+    com.zaxxer.hikari: TRACE

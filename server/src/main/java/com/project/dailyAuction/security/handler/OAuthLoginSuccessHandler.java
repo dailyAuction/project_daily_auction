@@ -52,10 +52,10 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         if (member == null) {
             Member newMember = memberService.saveOauthMember(email);
             memberId = newMember.getMemberId();
-            log.info("# Create new member");
+            log.info("**Log : Create new member");
         } else {
             memberId = member.getMemberId();
-            log.info("# Already exits");
+            log.info("**Log : Member already exits");
         }
         String accessToken = delegateAccessToken(email, memberId);
         String refreshToken = delegateRefreshToken(email);
@@ -66,7 +66,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         response.addHeader("Coin", String.valueOf(memberId));
         redirect(request, response, accessToken, refreshToken);
 
-        log.info("# Authenticated successfully!");
+        log.info("**Log : Authenticated successfully!");
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
@@ -102,14 +102,15 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     private URI createURI(String accessToken, String refreshToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("AccessToken", "Bearer " + accessToken);
-        queryParams.add("RefreshToken", "Bearer " + accessToken);
+        queryParams.add("RefreshToken", "Bearer " + refreshToken);
 
 
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
-                .host("ec2-13-124-156-170.ap-northeast-2.compute.amazonaws.com")
-                .port(8080)
+//                .host("ec2-13-124-156-170.ap-northeast-2.compute.amazonaws.com")
+                .host("localhost")
+                .port(3000)
                 .path("callback/receive-token.html")
                 .queryParams(queryParams)
                 .build()

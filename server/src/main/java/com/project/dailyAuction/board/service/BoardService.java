@@ -8,6 +8,7 @@ import com.project.dailyAuction.boardImage.repository.BoardImageRepository;
 import com.project.dailyAuction.boardMember.entity.BoardMember;
 import com.project.dailyAuction.boardMember.repository.BoardMemberRepository;
 import com.project.dailyAuction.cache.CacheProcessor;
+import com.project.dailyAuction.code.BoardStatusCode;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.code.NoticeStatusCode;
 import com.project.dailyAuction.member.entity.Member;
@@ -136,7 +137,7 @@ public class BoardService {
                 oldCookie.setMaxAge(60 * 60 * 24);
                 httpResponse.addCookie(oldCookie);
             } else {  // 해당 보드 쿠키는 있는 경우
-                viewCount = getViewCntToRedis(board);
+                viewCount = getViewCntInRedis(board);
             }
         } else { // 쿠키 묶음이 없는 경우 -> 무조건 증가
             viewCount = addViewCntToRedis(board);
@@ -145,10 +146,11 @@ public class BoardService {
             newCookie.setMaxAge(60 * 60 * 24);
             httpResponse.addCookie(newCookie);
         }
+
         return viewCount;
     }
 
-    public int getViewCntToRedis(Board board) {
+    public int getViewCntInRedis(Board board) {
         long boardId = board.getBoardId();
         String key = "boardViewCount::" + boardId;
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
@@ -317,11 +319,23 @@ public class BoardService {
                     new IllegalArgumentException());
         }
 
+        // 마감된 글에 입찰 불가
+        if (board.getStatusId() != BoardStatusCode.경매중.code) {
+            throw new ResponseStatusException(ExceptionCode.CLOSED_AUCTION.getCode(),
+                    ExceptionCode.CLOSED_AUCTION.getMessage(),
+                    new IllegalArgumentException());
+        }
+
         int currentPrice = getPriceInRedis(board);
 
         if (board.getBidderId() != 0) {
-            Member lastMember = memberService.find(board.getBidderId());
-            //코인 증가
+            Member lastMember = memberService.find(getBidderInRedis(board));
+            if (lastMember.equals(member)) {
+                throw new ResponseStatusException(ExceptionCode.CANT_BID_IN_A_ROW.getCode(),
+                        ExceptionCode.CANT_BID_IN_A_ROW.getMessage(),
+                        new IllegalArgumentException());
+            }
+            //기존 입찰자에게 코인 반환
             lastMember.changeCoin(currentPrice);
 
             //알림 발송
@@ -406,12 +420,13 @@ public class BoardService {
         if (categoryId == 0) {
             return boardRepository.findTop5ByStatusIdOrderByViewCountDesc(1);
         } else {
-            return boardRepository.findTop5ByCategoryIdAndStatusIdOrderByViewCountDesc(categoryId, 1);
+            return boardRepository.findTop5ByCategoryIdAndStatusIdOrderByViewCountDesc(categoryId, BoardStatusCode.경매중.code);
         }
     }
 
     public List<Board> getImminentItem() {
-        return boardRepository.findTop5ByStatusIdOrderByCreatedAtDesc(1);
+        cacheProcessor.updateBiddingToMySql();
+        return boardRepository.findTop5ByStatusIdOrderByCreatedAtAsc(BoardStatusCode.경매중.code);
     }
 
     public int findMyPrice(String token, long boardId) {
@@ -445,10 +460,10 @@ public class BoardService {
         }
         // 전체 리스트 조회
         if (categoryId == 0) {//최근 하루의 모든 경매 조회
-            return boardRepository.getBoardsByCreatedAtAfter(LocalDateTime.now().minusDays(1), PageRequest.of(page, size, defaultSort));
+            return boardRepository.getBoardsByCreatedAtAfter(LocalDateTime.now().plusHours(9).minusDays(1), PageRequest.of(page, size, defaultSort));
         } else {//카테고리면 최근 하루의 경매 조회
-            return boardRepository.findBoardsByCategoryIdAndCreatedAt(categoryId,
-                    LocalDateTime.now().minusDays(1), PageRequest.of(page, size, defaultSort));
+            return boardRepository.findBoardsByCategoryIdAndCreatedAtAfter(categoryId,
+                    LocalDateTime.now().plusHours(9).minusDays(1), PageRequest.of(page, size, defaultSort));
         }
     }
 
@@ -460,5 +475,29 @@ public class BoardService {
         }
 
         return imageUrls;
+    }
+
+    public List<String> findSellerEmails(List<Board> boards) {
+        List<String> emails = new ArrayList<>();
+        for (Board board : boards) {
+            Member seller = memberService.find(board.getSellerId());
+            emails.add(seller.getEmail());
+        }
+        return emails;
+    }
+
+    public List<Integer> getPricesInRedis(List<Board> boards) {
+        List<Integer> prices = new ArrayList<>();
+        for (Board board : boards) {
+            long boardId = board.getBoardId();
+            String key = "boardPrice::" + boardId;
+            ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+            if (valueOperations.get(key) == null) {
+                prices.add(board.getCurrentPrice());
+            } else {
+                prices.add(Integer.parseInt(valueOperations.get(key)));
+            }
+        }
+        return prices;
     }
 }
