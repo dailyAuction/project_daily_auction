@@ -17,6 +17,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Controller
@@ -29,7 +30,7 @@ public class BidController {
     private final SimpMessageSendingOperations simpMessageSendingOperations;
 
     @MessageMapping("/bid")
-    public void bidMessage(Message.Bid message) throws Exception {
+    public void bidMessage(Principal principal, Message.Bid message) throws Exception {
         long boardId = message.getBoardId();
         String token = message.getBidderToken();
         int newPrice = message.getPrice();
@@ -40,7 +41,7 @@ public class BidController {
         if (optionalBoard.isEmpty()) {
             Message.Error response = Message.Error.builder().boardId(boardId).memberId(member.getMemberId()).message("미존재_게시글").build();
             log.info("**LOG: 입찰에러-미존재게시글");
-            simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
+            simpMessageSendingOperations.convertAndSendToUser(principal.getName(),"/sub/board-id/" + message.getBoardId(), response);
         }
         // 자기글에 입찰 불가
         else if (member.getMemberId() == optionalBoard.get().getSellerId()) {
@@ -58,7 +59,7 @@ public class BidController {
         else if (boardService.getBidderInRedis(optionalBoard.get()) == member.getMemberId()) {
             Message.Error response = Message.Error.builder().boardId(boardId).memberId(member.getMemberId()).message("연속_입찰").build();
             log.info("**LOG: 입찰에러-연속입찰");
-            simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
+            simpMessageSendingOperations.convertAndSendToUser(principal.getName(),"/sub/board-id/" + message.getBoardId(), response);
         }
         //코인이 부족하면 에러
         else if (member.getCoin() < newPrice) {
