@@ -43,6 +43,7 @@ public class NoticeService {
         // 503 에러를 방지하기 위한 더미 이벤트 전송
         String eventId = makeTimeIncludeId(memberId);
         sendNotification(emitter, eventId, emitterId, "EventStream Created. [userId=" + memberId + "]");
+        //todo: 핸드쉐이킹시 보유한 알림 한번에 보내는 방식 논의 후 구현 (List vs Pagination)
 
         return emitter;
     }
