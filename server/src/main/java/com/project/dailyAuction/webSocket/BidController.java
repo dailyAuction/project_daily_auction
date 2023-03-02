@@ -30,7 +30,7 @@ public class BidController {
     private final SimpMessageSendingOperations simpMessageSendingOperations;
 
     @MessageMapping("/bid")
-    public void bidMessage(Message.Bid message) throws Exception {
+    public void bidMessage(Principal principal, Message.Bid message) throws Exception {
         String name = message.getName();
         long boardId = message.getBoardId();
         String token = message.getBidderToken();
