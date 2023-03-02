@@ -11,7 +11,6 @@ public class Message {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Bid{
-        private String name;
         private long boardId;
         private int price;
         private String bidderToken;
