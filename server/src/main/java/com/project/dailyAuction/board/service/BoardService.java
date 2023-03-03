@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -184,7 +183,6 @@ public class BoardService {
         } else { // 쿠키 묶음이 없는 경우 -> 무조건 증가
             viewCount = addViewCntToRedis(board);
             Cookie newCookie = new Cookie("postView", "[" + boardId + "]");
-            newCookie.setDomain("daily-auction-bucket.s3-website.ap-northeast-2.amazonaws.com");
             newCookie.setPath("/");
             newCookie.setMaxAge(60 * 60 * 24);
             httpResponse.addCookie(newCookie);
@@ -351,7 +349,7 @@ public class BoardService {
     }
 
 
-    public Message.Response bidBoard(String token, long boardId, int newPrice) throws Exception {
+    public Message.Response bidBoard(String token, long boardId, int newPrice) {
         Member member = memberService.findByAccessToken(token);
         Board board = find(boardId);
 
@@ -374,7 +372,9 @@ public class BoardService {
         if (board.getBidderId() != 0) {
             Member lastMember = memberService.find(getBidderInRedis(board));
             if (lastMember.equals(member)) {
-                throw new Exception();
+                throw new ResponseStatusException(ExceptionCode.CANT_BID_IN_A_ROW.getCode(),
+                        ExceptionCode.CANT_BID_IN_A_ROW.getMessage(),
+                        new IllegalArgumentException());
             }
             //기존 입찰자에게 코인 반환
             lastMember.changeCoin(currentPrice);
