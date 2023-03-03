@@ -73,6 +73,11 @@ public class BoardService {
                 .build();
 
         return createdBoard;
+    }
+
+    public Board saveBoard(String token, BoardDto.Post postDto, List<MultipartFile> images) throws IOException {
+        Member member = memberService.findByAccessToken(token);
+        Board createdBoard = createBoard(member, postDto);
         // image 핸들러에서 boardId 를 사용하기위해 한 번 저장
         boardRepository.save(createdBoard);
 
@@ -85,12 +90,6 @@ public class BoardService {
         createdBoard.setImages(boardImages);
 
         return boardRepository.save(createdBoard);
-    }
-
-    public Board saveBoard(String token, BoardDto.Post postDto) {
-        Member member = memberService.findByAccessToken(token);
-
-        return boardRepository.save(createBoard(member, postDto));
     }
 
     public BoardDto.Response getDetailPage(String token, long boardId, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
