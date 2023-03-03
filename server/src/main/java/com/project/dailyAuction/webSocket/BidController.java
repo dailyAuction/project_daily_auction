@@ -10,6 +10,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
+import java.util.Arrays;
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -31,24 +33,8 @@ public class BidController {
     @MessageMapping("/init")
     public void initMessage(Message.Init message) {
         long boardId = message.getBoardId();
-        String token = null;
-        Board board = boardService.find(boardId);
-        int bidCount = boardService.getBidCountInRedis(board);
-        long bidderId = boardService.getBidderInRedis(board);
+        Message.Response response = boardService.createInitMessageResponse(boardId);
 
-        String history = boardService.getHistoryInRedis(board);
-        int currentPrice = boardService.getPriceInRedis(board);
-        int viewCount = boardService.getViewCntInRedis(board);
-
-        BoardDto.Response dto = boardService.getDetailPage(token, board, currentPrice, viewCount, bidCount, bidderId, history);
-
-        Message.Response response = Message.Response.builder()
-                .boardId(boardId)
-                .bidCount(bidCount)
-                .currentPrice(dto.getCurrentPrice())
-                .history(dto.getHistory())
-                .build();
-
-        simpMessageSendingOperations.convertAndSend("/sub/board-id/" + message.getBoardId(), response);
+        simpMessageSendingOperations.convertAndSend("/sub/board-id/" + boardId, response);
     }
 }

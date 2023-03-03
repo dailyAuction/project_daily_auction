@@ -44,16 +44,7 @@ public class BoardController {
                                       @PathVariable("board-id") long boardId,
                                       HttpServletRequest httpRequest,
                                       HttpServletResponse httpResponse) {
-        int viewCount = 0;
-        Board board = boardService.find(boardId);
-        int bidCount = boardService.getBidCountInRedis(board);
-        long bidderId = boardService.getBidderInRedis(board);
-        int currentPrice = boardService.getPriceInRedis(board);
-        String history = boardService.getHistoryInRedis(board);
-
-        viewCount = boardService.getViewCount(board, httpRequest, httpResponse);
-
-        BoardDto.Response response = boardService.getDetailPage(token, board, currentPrice, viewCount, bidCount, bidderId, history);
+        BoardDto.Response response = boardService.getDetailPage(token, boardId, httpRequest, httpResponse);
         return response;
     }
 

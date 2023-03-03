@@ -1,4 +1,4 @@
-package com.project.dailyAuction.notice;
+package com.project.dailyAuction.notice.repository;
 
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
