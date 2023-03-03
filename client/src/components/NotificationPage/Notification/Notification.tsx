@@ -26,9 +26,9 @@ export const Notification = ({ noticeId, boardId, boardTitle, thumbnail, statusI
       <Link to={`/detail/${boardId}`} className="flex flex-col space-y-2">
         <article>
           <h1 className="text-lg font-bold">
-            {!statusId ? contact + NOTIFICATION_STATUS_MSG[statusId] : NOTIFICATION_STATUS_MSG[statusId]}
+            {statusId === 1 ? contact + NOTIFICATION_STATUS_MSG[statusId] : NOTIFICATION_STATUS_MSG[statusId]}
           </h1>
-          {!statusId && <span className="text-sm">* 위 이메일로 연락해주세요.</span>}
+          {statusId === 1 && <span className="text-sm">* 위 이메일로 연락해주세요.</span>}
         </article>
 
         <article className="flex items-center space-x-2 relative">
