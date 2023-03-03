@@ -49,7 +49,7 @@ public class NoticeService {
         for (Notice notice: notices) {
             sendNotSave(receiverId, notice);
         }
-
+        log.info("알림 전체 조회@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         return emitter;
     }
 
