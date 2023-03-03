@@ -184,7 +184,7 @@ public class BoardService {
         } else { // 쿠키 묶음이 없는 경우 -> 무조건 증가
             viewCount = addViewCntToRedis(board);
             Cookie newCookie = new Cookie("postView", "[" + boardId + "]");
-            newCookie.setDomain("daily-auction-bucket.s3-website.ap-northeast-2.amazonaws");
+            newCookie.setDomain("daily-auction-bucket.s3-website.ap-northeast-2.amazonaws.com");
             newCookie.setPath("/");
             newCookie.setMaxAge(60 * 60 * 24);
             httpResponse.addCookie(newCookie);
