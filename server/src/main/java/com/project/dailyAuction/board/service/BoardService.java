@@ -175,7 +175,6 @@ public class BoardService {
             if (!oldCookie.getValue().contains("[" + boardId + "]")) {  // 그 중에서 해당 보드 쿠키가 없는 경우
                 viewCount = addViewCntToRedis(board);
                 oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
-                oldCookie.setDomain("daily-auction-bucket.s3-website.ap-northeast-2.amazonaws");
                 oldCookie.setPath("/");
                 oldCookie.setMaxAge(60 * 60 * 24);
                 httpResponse.addCookie(oldCookie);
@@ -185,7 +184,7 @@ public class BoardService {
         } else { // 쿠키 묶음이 없는 경우 -> 무조건 증가
             viewCount = addViewCntToRedis(board);
             Cookie newCookie = new Cookie("postView", "[" + boardId + "]");
-            oldCookie.setDomain("daily-auction-bucket.s3-website.ap-northeast-2.amazonaws");
+            newCookie.setDomain("daily-auction-bucket.s3-website.ap-northeast-2.amazonaws");
             newCookie.setPath("/");
             newCookie.setMaxAge(60 * 60 * 24);
             httpResponse.addCookie(newCookie);
