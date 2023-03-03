@@ -43,7 +43,11 @@ public class NoticeService {
         // 503 에러를 방지하기 위한 더미 이벤트 전송
         String eventId = makeTimeIncludeId(memberId);
         sendNotification(emitter, eventId, emitterId, "EventStream Created. [userId=" + memberId + "]");
-        //todo: 핸드쉐이킹시 보유한 알림 한번에 보내는 방식 논의 후 구현 (List vs Pagination)
+        List<Notice> notices = memberService.find(memberId).getNotices();
+        String receiverId = String.valueOf(memberId);
+        for (Notice notice: notices) {
+            sendNotSave(receiverId, notice);
+        }
 
         return emitter;
     }
@@ -66,6 +70,17 @@ public class NoticeService {
         Notice notice = noticeRepository.save(createNotice(receiver, board, status));
 
         String receiverId = String.valueOf(receiver.getMemberId());
+        String eventId = receiverId + "_" + System.currentTimeMillis();
+        Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverId);
+        emitters.forEach(
+                (key, emitter) -> {
+                    emitterRepository.saveEventCache(key, notice);
+                    sendNotification(emitter, eventId, key, NoticeResponseDto.create(notice));
+                }
+        );
+    }
+
+    public void sendNotSave(String receiverId, Notice notice) {
         String eventId = receiverId + "_" + System.currentTimeMillis();
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverId);
         emitters.forEach(
