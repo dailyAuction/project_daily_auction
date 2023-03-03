@@ -18,10 +18,10 @@ export const MyAuctionList = () => {
   const [statusId, setStatusId] = useState(0);
   const token = useRecoilValue(accessTokenAtom);
   const currPage = useLocation().pathname.split('/').at(-1);
-  const path = currPage === 'auctionList' ? 'my-auction-list' : 'joinList' ? 'participation-list' : '';
+  const path = currPage === 'auctionList' ? 'my-auction-list' : 'participation-list';
 
   const { ref, inView } = useInView({
-    threshold: 0.1,
+    threshold: 1,
   });
 
   const { data, status, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
@@ -56,7 +56,7 @@ export const MyAuctionList = () => {
         <TabBar />
       </div>
       <div>
-        <button type="button" ref={ref} disabled={!hasNextPage || isFetchingNextPage}>
+        <button type="button" className="text-white" ref={ref} disabled={!hasNextPage || isFetchingNextPage}>
           {isFetchingNextPage ? <Loading /> : hasNextPage ? '더보기' : ' '}
         </button>
       </div>
