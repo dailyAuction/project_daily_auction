@@ -43,8 +43,9 @@ public class NoticeService {
         // 503 에러를 방지하기 위한 더미 이벤트 전송
         String eventId = makeTimeIncludeId(memberId);
         sendNotification(emitter, eventId, emitterId, "EventStream Created. [userId=" + memberId + "]");
-        List<Notice> notices = memberService.find(memberId).getNotices();
         String receiverId = String.valueOf(memberId);
+        //로그인시 보유한 모든 알림 수신
+        List<Notice> notices = memberService.find(memberId).getNotices();
         for (Notice notice: notices) {
             sendNotSave(receiverId, notice);
         }
@@ -80,6 +81,7 @@ public class NoticeService {
         );
     }
 
+    //저장하지 않고 보유한 알림을 전송만 하는 기능
     public void sendNotSave(String receiverId, Notice notice) {
         String eventId = receiverId + "_" + System.currentTimeMillis();
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverId);
