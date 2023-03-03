@@ -30,6 +30,7 @@ export const useSSE = () => {
 
         const eventData = event.data[0] === '{' ? JSON.parse(event.data) : null;
         const newData = prevData ? [...prevData, eventData] : [eventData];
+
         return eventData ? newData : prevData;
       });
     };

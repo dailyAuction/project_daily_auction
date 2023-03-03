@@ -18,7 +18,7 @@ export const Notification = ({ noticeId, boardId, boardTitle, thumbnail, statusI
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-5 h-5">
+            className="w-5 h-5 cursor-pointer">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </i>
