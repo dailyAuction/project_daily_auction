@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-export const MyAuctionBtn = ({ status, setStatus }) => {
+export const MyAuctionBtn = ({ status, setStatus, fetchNextPage }) => {
   const location = useLocation().pathname;
   const page = location.includes('auctionList') ? 'auction' : 'join';
 
@@ -19,7 +19,10 @@ export const MyAuctionBtn = ({ status, setStatus }) => {
             key={el}
             type="button"
             className={`${i === status ? 'red-btn' : 'white-btn'} transition-none text-xs font-bold cursor-pointer`}
-            onClick={() => setStatus(i)}>
+            onClick={() => {
+              setStatus(i);
+              fetchNextPage();
+            }}>
             {el}
           </button>
         );

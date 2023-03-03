@@ -10,11 +10,11 @@ type MyAuctionListAPIFactor = {
 };
 
 type MyPageProduct = {
-  items: ProductDetailResp;
+  items: ProductDetailResp[];
 };
 
 export const myPageAPI = {
-  getMyAuctionList: async ({ path, page = 1, size = 10, token }: MyAuctionListAPIFactor) => {
+  getMyAuctionList: async ({ path, page, size = 5, token }: MyAuctionListAPIFactor) => {
     const res = await httpClient.get<MyPageProduct>(`/members/${path}/?page=${page}&size=${size}`, {
       headers: {
         Authorization: token,

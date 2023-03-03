@@ -16,7 +16,7 @@ export const mainPageAPI = {
     const res = await httpClient.get<MainPageProduct>('/imminent-item');
     return res.data;
   },
-  getBest: async ({ path, page, size = 2 }: GetBestProduct) => {
+  getBest: async ({ path, page, size = 10 }: GetBestProduct) => {
     const res = await httpClient.get<MainPageProduct>(`/${path}/?page=${page}&size=${size}`);
     return res.data;
   },

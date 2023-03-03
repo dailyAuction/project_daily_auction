@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { useEffect, useState } from 'react';
 import { useInfiniteQuery } from 'react-query';
@@ -19,7 +20,8 @@ export const Bestproduct = () => {
 
   const { data, status, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
     ['bestProduct', `${categoryId}`],
-    ({ pageParam }) => {
+    ({ pageParam = 0 }) => {
+      pageParam++;
       return mainPageAPI.getBest({ path, page: pageParam });
     },
     {
@@ -40,8 +42,6 @@ export const Bestproduct = () => {
     setCategoryId(idx);
     setIsClick(true);
   };
-
-  console.log(inView, hasNextPage);
 
   return (
     <div className="w-full">
