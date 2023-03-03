@@ -1,6 +1,7 @@
-package com.project.dailyAuction.notice;
+package com.project.dailyAuction.notice.dto;
 
 import com.project.dailyAuction.board.entity.Board;
+import com.project.dailyAuction.notice.entity.Notice;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

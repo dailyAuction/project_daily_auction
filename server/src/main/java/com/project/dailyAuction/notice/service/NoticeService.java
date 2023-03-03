@@ -1,10 +1,15 @@
-package com.project.dailyAuction.notice;
+package com.project.dailyAuction.notice.service;
 
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.code.NoticeStatusCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
+import com.project.dailyAuction.notice.dto.NoticeResponseDto;
+import com.project.dailyAuction.notice.entity.Notice;
+import com.project.dailyAuction.notice.mapper.NoticeMapper;
+import com.project.dailyAuction.notice.repository.EmitterRepository;
+import com.project.dailyAuction.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,6 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -25,6 +31,7 @@ public class NoticeService {
     private final MemberService memberService;
     private final EmitterRepository emitterRepository;
     private final NoticeRepository noticeRepository;
+    private final NoticeMapper noticeMapper;
     private final RedisTemplate redisTemplate;
     public SseEmitter subscribe(Long memberId) {
         String emitterId = makeTimeIncludeId(memberId);
@@ -36,6 +43,12 @@ public class NoticeService {
         // 503 에러를 방지하기 위한 더미 이벤트 전송
         String eventId = makeTimeIncludeId(memberId);
         sendNotification(emitter, eventId, emitterId, "EventStream Created. [userId=" + memberId + "]");
+        String receiverId = String.valueOf(memberId);
+        //로그인시 보유한 모든 알림 수신
+        List<Notice> notices = memberService.find(memberId).getNotices();
+        for (Notice notice: notices) {
+            sendNotSave(receiverId, notice);
+        }
 
         return emitter;
     }
@@ -58,6 +71,18 @@ public class NoticeService {
         Notice notice = noticeRepository.save(createNotice(receiver, board, status));
 
         String receiverId = String.valueOf(receiver.getMemberId());
+        String eventId = receiverId + "_" + System.currentTimeMillis();
+        Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverId);
+        emitters.forEach(
+                (key, emitter) -> {
+                    emitterRepository.saveEventCache(key, notice);
+                    sendNotification(emitter, eventId, key, NoticeResponseDto.create(notice));
+                }
+        );
+    }
+
+    //저장하지 않고 보유한 알림을 전송만 하는 기능
+    public void sendNotSave(String receiverId, Notice notice) {
         String eventId = receiverId + "_" + System.currentTimeMillis();
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverId);
         emitters.forEach(
@@ -97,6 +122,13 @@ public class NoticeService {
             notice.inputContact(memberService.find(board.getSellerId()).getEmail());
         }
         return notice;
+    }
+
+    public List<NoticeResponseDto> getNotices(String token) {
+        Member member = memberService.findByAccessToken(token);
+        List<Notice> notices = member.getNotices();
+
+        return noticeMapper.noticesTonoticeDtos(notices);
     }
 
     public void deleteNotice(String token, long noticeId) {

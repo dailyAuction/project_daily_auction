@@ -1,4 +1,4 @@
-package com.project.dailyAuction.notice;
+package com.project.dailyAuction.notice.repository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
