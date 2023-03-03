@@ -39,14 +39,14 @@ export const useBidInfoModal = ({ bidValue, setBidValue, setValidationMsg, handl
 
   // 구매자가 입찰시 사용되는 핸들러
   const handleClickBid = async (currentPrice: number, sendBid: (price: number) => void) => {
-    if (+bidValue > +myCoin) {
+    const bidValuePer1000 = useCoinCalc(bidValue);
+    setBidValue(String(bidValuePer1000));
+
+    if (+bidValuePer1000 > +myCoin) {
       setValidationMsg('보유한 코인이 부족합니다.');
-    } else if (+bidValue <= +currentPrice) {
+    } else if (+bidValuePer1000 <= +currentPrice) {
       setValidationMsg('현재 경매가보다 높은 가격을 입력해주세요.');
     } else {
-      const bidValuePer1000 = useCoinCalc(bidValue);
-      setBidValue(String(bidValuePer1000));
-
       // eslint-disable-next-line no-restricted-globals, no-alert, no-lonely-if
       if (confirm(`${bidValuePer1000}coin으로 입찰 하시겠습니까?`)) {
         setValidationMsg('입찰하였습니다!');
