@@ -1,4 +1,4 @@
-package com.project.dailyAuction.notice;
+package com.project.dailyAuction.notice.entity;
 
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.member.entity.Member;

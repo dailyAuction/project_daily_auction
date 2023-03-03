@@ -8,7 +8,7 @@ import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.code.NoticeStatusCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
-import com.project.dailyAuction.notice.NoticeService;
+import com.project.dailyAuction.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;

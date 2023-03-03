@@ -14,9 +14,9 @@ import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.code.NoticeStatusCode;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
-import com.project.dailyAuction.notice.Notice;
-import com.project.dailyAuction.notice.NoticeRepository;
-import com.project.dailyAuction.notice.NoticeService;
+import com.project.dailyAuction.notice.entity.Notice;
+import com.project.dailyAuction.notice.repository.NoticeRepository;
+import com.project.dailyAuction.notice.service.NoticeService;
 import com.project.dailyAuction.webSocket.Message;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,16 +57,15 @@ public class BoardService {
     private final BoardImageRepository boardImageRepository;
     private final ImageHandler imageHandler;
 
-    public Board saveBoard(String token, BoardDto.Post postDto, List<MultipartFile> images) throws IOException {
-        Member member = memberService.findByAccessToken(token);
+    public Board createBoard(Member member, BoardDto.Post postDto) {
         Board createdBoard = Board.builder()
                 .title(postDto.getTitle())
                 .description(postDto.getDescription())
                 .thumbnail("")
                 .statusId(1)
                 .categoryId(postDto.getCategoryId())
-                .createdAt(LocalDateTime.now().plusHours(9))
-                .finishedAt(LocalDateTime.now().plusHours(33))
+                .createdAt(LocalDateTime.now().plusHours(9).withSecond(0))
+                .finishedAt(LocalDateTime.now().plusHours(33).withSecond(0))
                 .sellerId(member.getMemberId())
                 .startingPrice(postDto.getStartingPrice())
                 .currentPrice(postDto.getStartingPrice())
@@ -74,6 +73,12 @@ public class BoardService {
                 .history(String.valueOf(postDto.getStartingPrice()))
                 .build();
 
+        return createdBoard;
+    }
+
+    public Board saveBoard(String token, BoardDto.Post postDto, List<MultipartFile> images) throws IOException {
+        Member member = memberService.findByAccessToken(token);
+        Board createdBoard = createBoard(member, postDto);
         // image 핸들러에서 boardId 를 사용하기위해 한 번 저장
         boardRepository.save(createdBoard);
 
@@ -88,8 +93,13 @@ public class BoardService {
         return boardRepository.save(createdBoard);
     }
 
-    public BoardDto.Response getDetailPage(String token, Board board, int currentPrice, int viewCount, int bidCount, long bidderId, String history) {
-
+    public BoardDto.Response getDetailPage(String token, long boardId, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        Board board = find(boardId);
+        int bidCount = getBidCountInRedis(board);
+        long bidderId = getBidderInRedis(board);
+        int currentPrice = getPriceInRedis(board);
+        String history = getHistoryInRedis(board);
+        int viewCount = getViewCount(board, httpRequest, httpResponse);
         Integer[] histories = Arrays.stream(history.split(","))
                 .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
 
@@ -131,6 +141,22 @@ public class BoardService {
         return response;
     }
 
+    public Message.Response createInitMessageResponse(long boardId) {
+        Board board = find(boardId);
+        int bidCount = getBidCountInRedis(board);
+        String history = getHistoryInRedis(board);
+        Integer[] histories = Arrays.stream(history.split(","))
+                .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
+        int currentPrice = getPriceInRedis(board);
+
+        return Message.Response.builder()
+                .boardId(boardId)
+                .bidCount(bidCount)
+                .currentPrice(currentPrice)
+                .history(histories)
+                .build();
+    }
+
     public int getViewCount(Board board, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         long boardId = board.getBoardId();
         int viewCount;
@@ -149,6 +175,7 @@ public class BoardService {
             if (!oldCookie.getValue().contains("[" + boardId + "]")) {  // 그 중에서 해당 보드 쿠키가 없는 경우
                 viewCount = addViewCntToRedis(board);
                 oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
+                oldCookie.setDomain("http://daily-auction-bucket.s3-website.ap-northeast-2.amazonaws.com");
                 oldCookie.setPath("/");
                 oldCookie.setMaxAge(60 * 60 * 24);
                 httpResponse.addCookie(oldCookie);
@@ -158,6 +185,7 @@ public class BoardService {
         } else { // 쿠키 묶음이 없는 경우 -> 무조건 증가
             viewCount = addViewCntToRedis(board);
             Cookie newCookie = new Cookie("postView", "[" + boardId + "]");
+            oldCookie.setDomain("http://daily-auction-bucket.s3-website.ap-northeast-2.amazonaws.com");
             newCookie.setPath("/");
             newCookie.setMaxAge(60 * 60 * 24);
             httpResponse.addCookie(newCookie);
@@ -220,7 +248,7 @@ public class BoardService {
         } else {
             String lastHistory = valueOperations.get(key);
             valueOperations.set(key,
-                    getUpdatedHistory(lastHistory ,newPrice));
+                    getUpdatedHistory(lastHistory, newPrice));
         }
         return valueOperations.get(key);
     }
