@@ -12,7 +12,7 @@ export const MyAuctionBtn = ({ status, setStatus, fetchNextPage }) => {
   );
 
   return (
-    <div className="flex gap-2 py-4 w-full px-2.5">
+    <div className="flex gap-2 py-4 w-full px-2.5 pt-16">
       {buttonList.map((el, i) => {
         return (
           <button

@@ -21,7 +21,7 @@ export const MyAuctionList = () => {
   const path = currPage === 'auctionList' ? 'my-auction-list' : 'joinList' ? 'participation-list' : '';
 
   const { ref, inView } = useInView({
-    threshold: 1,
+    threshold: 0.1,
   });
 
   const { data, status, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
@@ -45,7 +45,9 @@ export const MyAuctionList = () => {
 
   return (
     <div className="base-layout bg-white">
-      <SubHeader>내가 등록한 경매</SubHeader>
+      <div className="fixed top-0 w-full sm:w-[500px] z-[10000]">
+        <SubHeader>내가 등록한 경매</SubHeader>
+      </div>
       <MyAuctionBtn status={statusId} setStatus={setStatusId} fetchNextPage={fetchNextPage} />
       {status === 'loading' && <Loading />}
       {status === 'error' && <div>{`${AUCTION_STATUS[statusId]} 상품이 없습니다.`}</div>}
