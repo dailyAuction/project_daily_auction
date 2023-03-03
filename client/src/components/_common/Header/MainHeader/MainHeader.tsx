@@ -1,33 +1,23 @@
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { loginStateAtom } from '../../../../atoms/user';
-import { useSSE } from '../../../../hooks/useSSE';
+import { userInfoAtom } from '../../../../atoms/user';
+import { useNotification } from '../../../../hooks/useNotification';
 
 export const MainHeader = ({ children }) => {
-  const loginState = useRecoilValue(loginStateAtom);
-  const { fetchSSE, eventSource } = useSSE();
+  const { notifications } = useNotification();
+  const { coin } = useRecoilValue(userInfoAtom);
 
-  // 로그인이 되어있는 경우에만 알림을 수신하도록 SSE를 연결합니다.
-  // TODO: 어떤 컴포넌트에서든 연결을 유지하도록 변경할 것
-  useEffect(() => {
-    if (loginState) {
-      fetchSSE();
-    }
-
-    return () => eventSource.current?.close();
-  }, [eventSource]);
-
+  // TODO: 로그인 상태에 따라 렌더링 내용 다르게 하기
   return (
     <header className="h-14 w-full sticky bg-main-brown py-3">
       <div className="h-full mx-3 text-white flex justify-between items-center">
         <h1 className="font-bold text-lg">{children}</h1>
         <div className="flex gap-3">
-          <span className="">10,000 coin</span>
+          <span className="">{coin.toLocaleString()} coin</span>
           <Link to="/notification">
             <>
               <div className="top-3 right-3 absolute w-3.5 h-3.5 rounded-full text-xs flex justify-center items-center bg-red-600">
-                3
+                {notifications?.length || 0}
               </div>
               <i>
                 <svg
