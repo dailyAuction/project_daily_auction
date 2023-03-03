@@ -1,8 +1,9 @@
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
 import { useCallback, useRef } from 'react';
 import { useQueryClient } from 'react-query';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { accessTokenAtom } from '../atoms/token';
+import { userInfoAtom } from '../atoms/user';
 import { NOTIFICATION_KEY } from '../constants/constants';
 import { NotificationResp } from '../types/notice.type';
 
@@ -10,6 +11,7 @@ export const useSSE = () => {
   const accessToken = useRecoilValue(accessTokenAtom);
   const eventSource = useRef<EventSourcePolyfill | EventSource>();
   const queryClient = useQueryClient();
+  const setUserInfo = useSetRecoilState(userInfoAtom);
 
   // sse 연결 함수
   const fetchSSE = useCallback(() => {
@@ -25,11 +27,12 @@ export const useSSE = () => {
 
     // 메시지 수신시 캐시에 저장
     eventSource.current.onmessage = (event) => {
+      if (event.data[0] === 'E') console.log(event.data);
+
+      const eventData = event.data[0] === '{' ? JSON.parse(event.data) : null;
+
+      // 알림 데이터 업데이트
       queryClient.setQueryData(NOTIFICATION_KEY, (prevData: NotificationResp[] | null) => {
-        if (event.data[0] === 'E') console.log(event.data);
-
-        const eventData = event.data[0] === '{' ? JSON.parse(event.data) : null;
-
         const newData =
           prevData && eventData
             ? [...prevData.filter((data) => data.noticeId !== eventData?.noticeId), eventData]
@@ -37,6 +40,13 @@ export const useSSE = () => {
 
         return eventData ? newData : prevData;
       });
+
+      // 알림 데이터에 coin이 있으면, coin 상태를 업데이트
+      if (eventData && eventData.coin) {
+        setUserInfo((prev) => {
+          return { ...prev, ...{ coin: eventData.coin } };
+        });
+      }
     };
 
     eventSource.current.onerror = (event) => {};

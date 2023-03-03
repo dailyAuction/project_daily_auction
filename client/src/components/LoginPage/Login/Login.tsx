@@ -40,7 +40,7 @@ export const Login = () => {
           setRefreshToken(res.refreshtoken);
           setUserInfo({
             memberId: Number(res.memberid),
-            coin: res.coin,
+            coin: Number(res.coin),
             email: res.email,
           });
           setLoginState(true);
