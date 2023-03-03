@@ -3,14 +3,16 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { myInfoAPI } from '../../../api/myPageAPI';
 import { accessTokenAtom } from '../../../atoms/token';
 import { userInfoAtom } from '../../../atoms/user';
+import { useCoinCalc } from '../../../hooks/useCoinCalc';
 
 type UseBidInfoModalFactor = {
-  bidValue?: string;
-  setBidValue?: React.Dispatch<SetStateAction<string>>;
-  setValidationMsg?: React.Dispatch<SetStateAction<string>>;
+  bidValue: string;
+  setBidValue: React.Dispatch<SetStateAction<string>>;
+  setValidationMsg: React.Dispatch<SetStateAction<string>>;
+  handleClose: () => void;
 };
 
-export const useBidInfoModal = ({ bidValue, setBidValue, setValidationMsg }: UseBidInfoModalFactor) => {
+export const useBidInfoModal = ({ bidValue, setBidValue, setValidationMsg, handleClose }: UseBidInfoModalFactor) => {
   const [{ coin: myCoin }, setCoin] = useRecoilState(userInfoAtom);
   const accessToken = useRecoilValue(accessTokenAtom);
 
@@ -36,22 +38,27 @@ export const useBidInfoModal = ({ bidValue, setBidValue, setValidationMsg }: Use
   };
 
   // 구매자가 입찰시 사용되는 핸들러
-  const handleClickBid = (currentPrice: number, sendBid: (price: number) => void) => {
-    // 현재 가진 코인보다 입력한 코인이 더 많을 경우
+  const handleClickBid = async (currentPrice: number, sendBid: (price: number) => void) => {
     if (+bidValue > +myCoin) {
       setValidationMsg('보유한 코인이 부족합니다.');
-    }
-    // 현재 경매가보다 입력한 코인이 더 적은 경우
-    else if (+bidValue <= +currentPrice) {
+    } else if (+bidValue <= +currentPrice) {
       setValidationMsg('현재 경매가보다 높은 가격을 입력해주세요.');
-    }
-    // 모든 조건을 통과한 경우
-    else {
+    } else {
+      const bidValuePer1000 = useCoinCalc(bidValue);
+      setBidValue(String(bidValuePer1000));
+
       // eslint-disable-next-line no-restricted-globals, no-alert, no-lonely-if
-      if (confirm('입찰 하시겠습니까?')) {
+      if (confirm(`${bidValuePer1000}coin으로 입찰 하시겠습니까?`)) {
         setValidationMsg('입찰하였습니다!');
-        // useWebsocket으로 부터 온 sendBid 함수로 웹소켓을 통한 send
-        sendBid(+bidValue);
+
+        // 웹소켓을 통한 send
+        sendBid(bidValuePer1000);
+        setBidValue('');
+        // await로 코인이 업데이트 될 때까지 대기
+        // 입찰을 완료한 후 곧바로 코인을 업데이트!
+        await handleUpdateCoin();
+        // 입찰 완료 후 모달 닫기
+        handleClose();
       }
     }
   };

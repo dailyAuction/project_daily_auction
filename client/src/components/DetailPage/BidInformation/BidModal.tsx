@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { myInfoAPI } from '../../../api/myPageAPI';
 import { userInfoAtom } from '../../../atoms/user';
 import { blockInvalidChar } from '../../../utils/blockInvalidChar';
 import { useBidInfoModal } from './useBidInfoModal';
-import { accessTokenAtom } from '../../../atoms/token';
 
 type BidModalProps = {
   currentPrice: number;
@@ -12,29 +10,13 @@ type BidModalProps = {
   handleClose: () => void;
 };
 
-// 입찰 모달
 export const BidModal = ({ handleClose, currentPrice, sendBid }: BidModalProps) => {
   const [bidValue, setBidValue] = useState('');
-  const [validationMsg, setValidationMsg] = useState('');
+  const [validationMsg, setValidationMsg] = useState('1000coin 단위로 입력해주세요!');
 
-  const { handleClickBid, handleChange } = useBidInfoModal({ bidValue, setBidValue, setValidationMsg });
+  const { handleClickBid, handleChange } = useBidInfoModal({ bidValue, setBidValue, setValidationMsg, handleClose });
 
   const { coin: myCoin } = useRecoilValue(userInfoAtom);
-
-  // TODO: 입찰 성공 후 코인 업데이트 요청하기
-  const accessToken = useRecoilValue(accessTokenAtom);
-
-  useEffect(() => {
-    const get = async () => {
-      const res = await myInfoAPI.get(accessToken);
-      return res;
-    };
-    try {
-      const res = get();
-    } catch (err) {
-      console.error(err);
-    }
-  }, []);
 
   return (
     <section className="bg-modal z-10">
