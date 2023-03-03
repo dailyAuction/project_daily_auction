@@ -14,12 +14,14 @@ export const Bestproduct = () => {
   const path = categoryId ? `${categoryId}/popular-item` : 'all-popular-item';
 
   const { ref, inView } = useInView({
-    threshold: 0.5,
+    threshold: 1,
   });
 
   const { data, status, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
     ['bestProduct', `${categoryId}`],
-    ({ pageParam = 1 }) => mainPageAPI.getBest({ path, page: pageParam }),
+    ({ pageParam }) => {
+      return mainPageAPI.getBest({ path, page: pageParam });
+    },
     {
       getNextPageParam: (lastPage, allPages) => {
         const totalPage = lastPage['pageInfo']?.totalPages;
@@ -27,8 +29,6 @@ export const Bestproduct = () => {
         return nextPage <= totalPage && nextPage; // 끝까지 다 봤을때는 return되는 값이 없어야한다
       },
       enabled: isClick,
-      refetchOnMount: true,
-      refetchOnWindowFocus: true,
     }
   );
 
@@ -40,6 +40,8 @@ export const Bestproduct = () => {
     setCategoryId(idx);
     setIsClick(true);
   };
+
+  console.log(inView, hasNextPage);
 
   return (
     <div className="w-full">
@@ -80,27 +82,29 @@ export const Bestproduct = () => {
         {status === 'error' && <div>카테고리별 인기상품이 없습니다.</div>}
       </div>
       <div className="flex flex-col gap-2 items-center">
-        {data?.pages?.map((page) => (
-          <div key={crypto.randomUUID()} className="w-[96%] flex flex-col gap-2">
-            {page?.items?.map((el) => (
-              <div key={el.boardId} className="">
-                <ProductItem productDetail={el} />
-              </div>
-            ))}
-          </div>
-        ))}
+        {data?.pages?.map((page) => {
+          return (
+            <div key={crypto.randomUUID()} className="w-[96%] flex flex-col gap-2">
+              {page?.items?.map((el) => (
+                <div key={el.boardId}>
+                  <ProductItem productDetail={el} />
+                </div>
+              ))}
+            </div>
+          );
+        })}
         <div>
           <button
             type="button"
+            className=""
             disabled={!hasNextPage || isFetchingNextPage}
-            className="text-opacity-20"
-            ref={ref}
             onClick={() => fetchNextPage()}>
-            {isFetchingNextPage ? <Loading /> : hasNextPage ? 'more' : ''}
+            {isFetchingNextPage ? <Loading /> : hasNextPage ? '더보기' : ''}
           </button>
         </div>
       </div>
       <ToList categoryId={categoryId} />
+      <div ref={ref}>{''}</div>
     </div>
   );
 };
