@@ -29,15 +29,17 @@ export const useSSE = () => {
         if (event.data[0] === 'E') console.log(event.data);
 
         const eventData = event.data[0] === '{' ? JSON.parse(event.data) : null;
-        const newData = prevData ? [...prevData, eventData] : [eventData];
+
+        const newData =
+          prevData && eventData
+            ? [...prevData.filter((data) => data.noticeId !== eventData?.noticeId), eventData]
+            : [eventData];
 
         return eventData ? newData : prevData;
       });
     };
 
-    eventSource.current.onerror = (event) => {
-      // console.error(event);
-    };
+    eventSource.current.onerror = (event) => {};
   }, []);
 
   // 조건에 따라 sse 연결 함수를 실행하도록 fetchSSE 그리고 eventSource 객체를 리턴합니다.
