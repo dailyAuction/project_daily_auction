@@ -20,5 +20,10 @@ export const productDetailAPI = {
 
   postBid: (path: string, newPrice: number) => httpClient.post(`${productDetailAPI.url}/${path}/bidding`, { newPrice }),
 
-  delete: (path: string) => httpClient.delete(`${productDetailAPI.url}/${path}`),
+  delete: (path: string, token: string) =>
+    httpClient.delete(`${productDetailAPI.url}/${path},`, {
+      headers: {
+        Authorization: token,
+      },
+    }),
 };
