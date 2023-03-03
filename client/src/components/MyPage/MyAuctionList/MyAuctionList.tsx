@@ -13,6 +13,7 @@ import { MyAuctionContent } from '../MyAuctionContent/MyAuctionContent';
 import { myPageAPI } from '../../../api/myPageAPI';
 import { Loading } from '../../_common/Loading/Loading';
 import { AUCTION_STATUS } from '../../../constants/constants';
+import { ScrollToTopBtn } from '../../_common/ScrollToTopBtn/ScrollToTopBtn';
 
 export const MyAuctionList = () => {
   const [statusId, setStatusId] = useState(0);
@@ -60,6 +61,7 @@ export const MyAuctionList = () => {
           {isFetchingNextPage ? <Loading /> : hasNextPage ? '더보기' : ' '}
         </button>
       </div>
+      <ScrollToTopBtn />
     </div>
   );
 };
