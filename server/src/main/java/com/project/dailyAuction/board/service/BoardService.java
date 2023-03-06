@@ -28,6 +28,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -247,7 +248,6 @@ public class BoardService {
             if (!oldCookie.getValue().contains("[" + boardId + "]")) {  // 그 중에서 해당 보드 쿠키가 없는 경우
                 viewCount = setViewCntToRedis(board);
                 oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
-                oldCookie.setDomain("dailyauction.site");
                 oldCookie.setPath("/");
                 oldCookie.setMaxAge(60 * 60 * 24);
                 httpResponse.addCookie(oldCookie);
@@ -256,11 +256,13 @@ public class BoardService {
             }
         } else { // 쿠키 묶음이 없는 경우 -> 무조건 증가
             viewCount = setViewCntToRedis(board);
-            Cookie newCookie = new Cookie("postView", "[" + boardId + "]");
-            newCookie.setPath("/");
-            newCookie.setDomain("dailyauction.site");
-            newCookie.setMaxAge(60 * 60 * 24);
-            httpResponse.addCookie(newCookie);
+            ResponseCookie newCookie = ResponseCookie.from("postView", "[" + boardId + "]")
+                    .path("/")
+                    .httpOnly(true)
+                    .maxAge(60 * 60 * 24)
+                    .domain(".dailyauction.site")
+                    .build();
+            httpResponse.addHeader("Set-Cookie", newCookie.toString());
         }
 
         return viewCount;
