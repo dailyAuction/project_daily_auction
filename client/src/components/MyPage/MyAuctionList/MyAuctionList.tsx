@@ -48,8 +48,6 @@ export const MyAuctionList = () => {
     if (inView && hasNextPage) fetchNextPage();
   }, [inView]);
 
-  console.log(path);
-
   return (
     <div className="base-layout bg-white">
       <div className="fixed top-0 w-full sm:w-[500px] z-[10000]">
