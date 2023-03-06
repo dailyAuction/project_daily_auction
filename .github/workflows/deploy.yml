@@ -10,12 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name : Checkout code
-      - uses: actions/checkout@master
+        uses: actions/checkout@master
       
       - name: Install dependencies and build client
-      - run : cd client
-      - run: npm i
-      - run: npm run build
+        run : |
+              cd client
+              npm i
+              npm run build
       
       - name: deploy to s3
         uses: jakejarvis/s3-sync-action@master
