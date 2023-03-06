@@ -37,7 +37,7 @@ public class JwtTokenizer {
     private int refreshTokenExpirationMinutes;
 
 
-    public String encodeBase64SecretKey(String secretKey){
+    public String encodeBase64SecretKey(String secretKey) {
         return Encoders.BASE64.encode(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -110,7 +110,7 @@ public class JwtTokenizer {
                     .build()
                     .parseClaimsJws(jws)
                     .getBody();
-        } catch (ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             log.info("**Log : Expired JWT token");
             throw new ResponseStatusException(ExceptionCode.EXPIRED_TOKEN.getCode(), ExceptionCode.EXPIRED_TOKEN.getMessage(), new IllegalArgumentException());
         }

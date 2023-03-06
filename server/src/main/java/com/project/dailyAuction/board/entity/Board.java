@@ -54,13 +54,6 @@ public class Board implements Serializable {
         this.bidderId = memberId;
     }
 
-    public Long[] getHistoryArray(){
-        String[] histories = this.history.split(",");
-        return Arrays.stream(histories)
-                .mapToLong(a -> Long.parseLong(a)).boxed()
-                .toArray(Long[]::new);
-    }
-
     public void updatePrice(int price) {
         this.currentPrice = price;
     }

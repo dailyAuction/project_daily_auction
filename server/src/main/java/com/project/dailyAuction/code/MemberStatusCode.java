@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum MemberStatusCode {
-    활동회원(1,"활동회원"),
-    휴면회원(2,"휴면회원"),
-    탈퇴회원(3,"탈퇴회원");
+    ACTIVE(1, "활동회원"),
+    DORMANT(2, "휴면회원"),
+    WITHDRAWN(3, "탈퇴회원");
     private final long code;
     private final String message;
 
