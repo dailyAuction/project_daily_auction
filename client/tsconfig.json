@@ -10,5 +10,5 @@
     "moduleResolution": "node"
   },
   "include": ["./tailwind.config.json", "src/**/*"], // ts 적용할 경로
-  "exclude": ["node_modules"] // ts 적용하지 않을 폴더
+  "exclude": ["node_modules", "src/router"] // ts 적용하지 않을 폴더
 }
