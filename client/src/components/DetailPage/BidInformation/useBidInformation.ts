@@ -9,6 +9,7 @@ export const useBidInformation = () => {
     // boardId로 재등록 요청된 게시글 데이터를 조회할 수 있음.
     navigate(`/postProduct?${boardId}`);
   };
+
   const handleDeleteProduct = async (boardId: string) => {
     try {
       if (

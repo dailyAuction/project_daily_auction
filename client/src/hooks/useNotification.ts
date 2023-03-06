@@ -1,14 +1,44 @@
-import { useQueryClient } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
+import { useRecoilValue } from 'recoil';
+import { noticesAPI } from '../api/noticesAPI';
+import { accessTokenAtom } from '../atoms/token';
+import { loginStateAtom } from '../atoms/user';
 import { NOTIFICATION_KEY } from '../constants/constants';
-import { NotificationResp } from '../types/notice.type';
 
 export const useNotification = () => {
-  const queryClient = useQueryClient();
-  const notifications = queryClient.getQueryData(NOTIFICATION_KEY) as NotificationResp[];
+  const accessToken = useRecoilValue(accessTokenAtom);
+  const loginState = useRecoilValue(loginStateAtom);
 
-  const handleDelete = (noticeId: number) => {
-    // TODO: 알림 삭제기능 구현하기
-  };
+  if (loginState) {
+    // 알림 데이터 가져오기
+    const {
+      data: notifications,
+      isLoading,
+      error,
+      refetch,
+    } = useQuery(NOTIFICATION_KEY, () => noticesAPI.get(accessToken), {
+      refetchOnMount: true,
+      onError: (e) => console.error(e),
+    });
 
-  return { notifications, handleDelete };
+    // 삭제 후 데이터 업데이트
+    const { mutate: handleDelete } = useMutation(
+      (noticeId: number) => {
+        return noticesAPI.delete(noticeId, accessToken);
+      },
+      {
+        onSuccess: () => {
+          refetch();
+        },
+        onError: () => {
+          throw new Error('삭제 실패!');
+        },
+      }
+    );
+
+    return { notifications, isLoading, error, handleDelete };
+  }
+
+  const notifications = [];
+  return { notifications };
 };
