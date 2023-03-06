@@ -2,8 +2,7 @@ name: Deploy to S3 - develop mode
 
 on:
   push:
-    branches:
-      - 'FE-dev'
+    branches: ['FE-dev']
 
 jobs:
   deploy:
