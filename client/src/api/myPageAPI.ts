@@ -14,7 +14,7 @@ type MyPageProduct = {
 };
 
 export const myPageAPI = {
-  getMyAuctionList: async ({ path, page, size = 5, token }: MyAuctionListAPIFactor) => {
+  getMyAuctionList: async ({ path, page, size, token }: MyAuctionListAPIFactor) => {
     const res = await httpClient.get<MyPageProduct>(`/members/${path}/?page=${page}&size=${size}`, {
       headers: {
         Authorization: token,

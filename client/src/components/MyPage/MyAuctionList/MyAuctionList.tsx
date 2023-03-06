@@ -48,10 +48,12 @@ export const MyAuctionList = () => {
     if (inView && hasNextPage) fetchNextPage();
   }, [inView]);
 
+  console.log(path);
+
   return (
     <div className="base-layout bg-white">
       <div className="fixed top-0 w-full sm:w-[500px] z-[10000]">
-        <SubHeader>내가 등록한 경매</SubHeader>
+        <SubHeader>{path === 'my-auction-list' ? '내가 등록한 경매' : '내가 참여한 경매'}</SubHeader>
       </div>
       <MyAuctionBtn setIsClick={setIsClick} status={statusId} setStatus={setStatusId} />
       {status === 'loading' && <Loading />}
