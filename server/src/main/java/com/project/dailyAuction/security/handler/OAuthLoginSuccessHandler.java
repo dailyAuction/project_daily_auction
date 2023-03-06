@@ -108,8 +108,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
-                .host("server.dailyauction.site")
-                .port(8080)
+                .host("dailyauction.site")
                 .path("callback/receive-token.html")
                 .queryParams(queryParams)
                 .build()
