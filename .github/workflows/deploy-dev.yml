@@ -13,7 +13,8 @@ jobs:
         uses: actions/checkout@master
 
       - name: Install dependencies and build client
-        run : cd client
+        run : |
+              cd client
               npm i
               npm run build
 
