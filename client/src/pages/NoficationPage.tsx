@@ -5,7 +5,6 @@ import { useNotification } from '../hooks/useNotification';
 
 export const NotificationPage = () => {
   const { notifications } = useNotification();
-  console.log(notifications);
   return (
     <main className="base-layout">
       <SubHeader>알림</SubHeader>

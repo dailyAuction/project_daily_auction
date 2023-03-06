@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useRecoilValue, useResetRecoilState } from 'recoil';
-import { accessTokenAtom, refreshTokenAtom } from '../../../atoms/token';
-import { loginStateAtom, socialLoginStateAtom, userInfoAtom } from '../../../atoms/user';
+import { useRecoilValue } from 'recoil';
+import { socialLoginStateAtom, userInfoAtom } from '../../../atoms/user';
+import { resetUserInfoHook } from '../../../hooks/useResetUserInfo';
 import { SignOutModal } from './SignOutModal';
 
 export const MyPageInfo = () => {
@@ -10,19 +10,10 @@ export const MyPageInfo = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const { email, coin } = useRecoilValue(userInfoAtom);
   const socialLoginState = useRecoilValue(socialLoginStateAtom);
-
-  const resetAccessToken = useResetRecoilState(accessTokenAtom);
-  const resetRefreshToken = useResetRecoilState(refreshTokenAtom);
-  const resetUserInfo = useResetRecoilState(userInfoAtom);
-  const resetLoginState = useResetRecoilState(loginStateAtom);
-  const resetSocialLoginState = useResetRecoilState(socialLoginStateAtom);
+  const { resetUser } = resetUserInfoHook();
 
   const handleLogout = () => {
-    resetAccessToken();
-    resetRefreshToken();
-    resetUserInfo();
-    resetLoginState();
-    resetSocialLoginState();
+    resetUser();
     navigate('/');
   };
 
