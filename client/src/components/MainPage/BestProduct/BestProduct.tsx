@@ -28,6 +28,7 @@ export const Bestproduct = () => {
       getNextPageParam: (lastPage, allPages) => {
         const totalPage = lastPage['pageInfo']?.totalPages;
         const nextPage = allPages.length;
+        console.log(allPages);
         return nextPage <= totalPage && nextPage; // 끝까지 다 봤을때는 return되는 값이 없어야한다
       },
       enabled: isClick,
@@ -38,7 +39,7 @@ export const Bestproduct = () => {
     if (inView && hasNextPage) fetchNextPage();
   }, [inView]);
 
-  const handleClickCategory = (idx) => {
+  const handleClickCategory = (idx: number) => {
     setCategoryId(idx);
     setIsClick(true);
   };

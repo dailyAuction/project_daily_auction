@@ -37,6 +37,7 @@ export const MyAuctionList = () => {
         const nextPage = allPages.length;
         return nextPage <= totalPage && nextPage;
       },
+      cacheTime: 0,
     }
   );
 
