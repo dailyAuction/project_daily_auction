@@ -1,9 +1,9 @@
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { signoutAPI } from '../../../api/signoutAPI';
-import { accessTokenAtom, refreshTokenAtom } from '../../../atoms/token';
-import { loginStateAtom, userInfoAtom } from '../../../atoms/user';
+import { accessTokenAtom } from '../../../atoms/token';
+import { resetUserInfoHook } from '../../../hooks/useResetUserInfo';
 
 type SignOutModalProps = {
   handleClose: () => void;
@@ -12,10 +12,7 @@ type SignOutModalProps = {
 export const SignOutModal = ({ handleClose }: SignOutModalProps) => {
   const navigate = useNavigate();
   const accessToken = useRecoilValue(accessTokenAtom);
-  const resetAccessToken = useResetRecoilState(accessTokenAtom);
-  const resetRefreshToken = useResetRecoilState(refreshTokenAtom);
-  const resetUserInfo = useResetRecoilState(userInfoAtom);
-  const resetLoginState = useResetRecoilState(loginStateAtom);
+  const { resetUser } = resetUserInfoHook();
 
   const { mutate: signOutOk } = useMutation(
     () => {
@@ -23,11 +20,7 @@ export const SignOutModal = ({ handleClose }: SignOutModalProps) => {
     },
     {
       onSuccess: () => {
-        console.log('회원탈퇴 성공');
-        resetAccessToken();
-        resetRefreshToken();
-        resetUserInfo();
-        resetLoginState();
+        resetUser();
         navigate('/');
       },
       onError: (error) => {
