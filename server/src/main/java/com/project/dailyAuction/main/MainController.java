@@ -47,10 +47,9 @@ public class MainController {
     @GetMapping("/imminent-item")
     @ResponseStatus(HttpStatus.OK)
     public MultiResponseDto getImminentItem() {
-        List<Board> boards = boardService.getImminentItem();
-        List<Integer> prices = boardService.getPricesInRedis(boards);
-        List<BoardDto.Response> boardDtos = boardMapper.boardListToBoardDtoList(boards, prices);
-        return new MultiResponseDto(boardDtos);
+        MultiResponseDto imminentItemDto = boardService.getImminentPage();
+
+        return imminentItemDto;
     }
 
     // 카테고리별 인기 상품

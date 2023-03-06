@@ -58,6 +58,37 @@ public class MemberService {
         return member;
     }
 
+    public void delete(String token) {
+        Member member = findByAccessToken(token);
+        member.changeStatus(MemberStatusCode.WITHDRAWN);
+        boardRepository.deleteBySellerId(member.getMemberId());
+    }
+
+    public MemberDto.Coin addCoin(String token, MemberDto.Coin coin) {
+        Member member = findByAccessToken(token);
+        member.changeCoin(coin.getCoin());
+
+        return MemberDto.Coin.builder()
+                .coin(member.getCoin())
+                .build();
+    }
+
+    public MemberDto.MyPage getMyPage(String token) {
+        Member member = findByAccessToken(token);
+
+        return MemberDto.MyPage.builder()
+                .email(member.getEmail())
+                .coin(member.getCoin())
+                .memberId(member.getMemberId())
+                .build();
+    }
+
+    public Page<Board> getMyAuction(String token, int page, int size) {
+        Member member = findByAccessToken(token);
+
+        return boardRepository.findBySellerId(member.getMemberId(), PageRequest.of(page - 1, size));
+    }
+
     // 비밀번호 체크
     public void verifyPassword(Member member, String password) {
         if (!passwordEncoder().matches(password, member.getPassword())) {

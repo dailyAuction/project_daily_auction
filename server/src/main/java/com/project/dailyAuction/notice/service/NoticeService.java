@@ -113,7 +113,7 @@ public class NoticeService {
                 .build();
         if (status == NoticeStatusCode.SUCCESS_FOR_SELLER.getCode()) {
             notice.inputContact(memberService.find(getBidderInRedis(board)).getEmail());
-        } else if(status == NoticeStatusCode.구매자낙찰.getCode()) {
+        } else if (status == NoticeStatusCode.SUCCESS_FOR_BUYER.getCode()) {
             notice.inputContact(memberService.find(board.getSellerId()).getEmail());
         }
         return notice;

@@ -202,6 +202,13 @@ public class BoardService {
                 .build();
     }
 
+    public MultiResponseDto getImminentPage() {
+        List<Board> boards = getImminentItem();
+        List<Integer> prices = getPricesInRedis(boards);
+        List<BoardDto.Response> boardDtos = boardMapper.boardListToBoardDtoList(boards, prices);
+        return new MultiResponseDto(boardDtos);
+    }
+
     public Board find(long boardId) {
         return boardRepository.findById(boardId)
                 .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
@@ -209,19 +216,39 @@ public class BoardService {
                         new IllegalArgumentException()));
     }
 
-    public int getViewCntInRedis(Board board) {
+    public int getViewCount(Board board, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         long boardId = board.getBoardId();
-        String key = "boardViewCount::" + boardId;
-        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        if (valueOperations.get(key) == null) {
-            valueOperations.set(
-                    key,
-                    String.valueOf(board.getViewCount()));
-            return Integer.parseInt(valueOperations.get(key));
-        } else {
-            valueOperations.get(key);
-            return Integer.parseInt(valueOperations.get(key));
+        int viewCount;
+        // 조회수 로직
+        Cookie oldCookie = null;
+        Cookie[] cookies = httpRequest.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("postView")) {
+                    oldCookie = cookie;
+                }
+            }
         }
+
+        if (oldCookie != null) { // 쿠키 묶음이 있는 경우 -> 체크 후 증가
+            if (!oldCookie.getValue().contains("[" + boardId + "]")) {  // 그 중에서 해당 보드 쿠키가 없는 경우
+                viewCount = setViewCntToRedis(board);
+                oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60 * 24);
+                httpResponse.addCookie(oldCookie);
+            } else {  // 해당 보드 쿠키는 있는 경우
+                viewCount = getViewCntInRedis(board);
+            }
+        } else { // 쿠키 묶음이 없는 경우 -> 무조건 증가
+            viewCount = setViewCntToRedis(board);
+            Cookie newCookie = new Cookie("postView", "[" + boardId + "]");
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60 * 60 * 24);
+            httpResponse.addCookie(newCookie);
+        }
+
+        return viewCount;
     }
 
     public int getViewCntInRedis(Board board) {

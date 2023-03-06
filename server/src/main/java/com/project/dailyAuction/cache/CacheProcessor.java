@@ -55,7 +55,7 @@ public class CacheProcessor {
                 if (bidderId != 0) {
                     Member buyer = memberService.find(bidderId);
                     //마감 임박 알림 전송
-                    noticeService.send(buyer, board, NoticeStatusCode.마감임박.getCode());
+                    noticeService.sendWithSave(buyer, board, NoticeStatusCode.IMMINENT_FOR_BIDDER.getCode());
                 }
             }
             // 경매 종료
@@ -76,7 +76,7 @@ public class CacheProcessor {
                     Member buyer = memberService.find(bidderId);
                     boardRepository.updateStatus(boardId, BoardStatusCode.SUCCESSFUL_BID.code);
                     //구매자 경매 낙찰 알림 전송
-                    noticeService.send(buyer, board, NoticeStatusCode.구매자낙찰.getCode());
+                    noticeService.sendWithSave(buyer, board, NoticeStatusCode.SUCCESS_FOR_BUYER.getCode());
 
                     //판매자 경매 낙찰 알림 전송
                     noticeService.sendWithSave(seller, board, NoticeStatusCode.SUCCESS_FOR_SELLER.getCode());
