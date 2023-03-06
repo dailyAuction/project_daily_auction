@@ -5,6 +5,7 @@ export const AUCTION_STATUS = ['진행중', '낙찰', '마감'];
 export const NOTIFICATION_STATUS = ['', '낙찰', '낙찰', '유찰', '상회 입찰', '마감 임박'];
 
 export const NOTIFICATION_STATUS_MSG = [
+  '',
   '님이 낙찰되셨습니다.',
   '입찰에 성공하였습니다.',
   '해당 물품이 유찰되었습니다.',
