@@ -1,22 +1,16 @@
 package com.project.dailyAuction.main;
 
 import com.project.dailyAuction.search.dto.TopKeywordsDto;
-import com.project.dailyAuction.search.entity.Keyword;
 import com.project.dailyAuction.search.mapper.KeywordMapper;
 import com.project.dailyAuction.search.service.SearchService;
-import com.project.dailyAuction.board.dto.BoardDto;
 import com.project.dailyAuction.board.mapper.BoardMapper;
-import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.service.BoardService;
 import com.project.dailyAuction.dto.MultiResponseDto;
 import com.project.dailyAuction.dto.PageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/")
@@ -35,39 +29,36 @@ public class MainController {
                           @RequestParam int page,
                           @RequestParam int size,
                           @RequestParam String keyword) {
-        log.info(keyword);
-        Page<Board> boardPages = searchService.search(categoryId, keyword, page, size);
-        List<Board> boards = boardPages.getContent();
-        List<Integer> prices = boardService.getPricesInRedis(boards);
-        return new PageDto(boardMapper.boardListToBoardDtoList(boards, prices), boardPages);
+        PageDto pageDto = searchService.getSearchPage(categoryId, keyword, page, size);
+
+        return pageDto;
     }
 
     // 인기검색어
     @GetMapping("/top-searched-keyword")
     @ResponseStatus(HttpStatus.OK)
     public TopKeywordsDto getTopSearchedKeyword() {
-        List<Keyword> list = searchService.getTopKeyword();
-        return keywordMapper.listToDto(list);
+        TopKeywordsDto topKeywords = searchService.getTopKeyword();
+
+        return topKeywords;
     }
 
     // 마감임박 상품
     @GetMapping("/imminent-item")
     @ResponseStatus(HttpStatus.OK)
     public MultiResponseDto getImminentItem() {
-        List<Board> boards = boardService.getImminentItem();
-        List<Integer> prices = boardService.getPricesInRedis(boards);
-        List<BoardDto.Response> boardDtos = boardMapper.boardListToBoardDtoList(boards, prices);
-        return new MultiResponseDto(boardDtos);
+        MultiResponseDto imminentItemDto = boardService.getImminentPage();
+
+        return imminentItemDto;
     }
 
     // 카테고리별 인기 상품
     @GetMapping("/{category-id}/popular-item")
     @ResponseStatus(HttpStatus.OK)
     public MultiResponseDto getPopularItem(@PathVariable("category-id") long categoryId) {
-        List<Board> boards = boardService.getPopularItem(categoryId);
-        List<Integer> prices = boardService.getPricesInRedis(boards);
-        List<BoardDto.Response> boardDtos = boardMapper.boardListToBoardDtoList(boards, prices);
-        return new MultiResponseDto(boardDtos);
+        MultiResponseDto popularItemDto = boardService.getPopularItemPage(categoryId);
+
+        return popularItemDto;
     }
 
     // 전체 인기상품
@@ -75,10 +66,8 @@ public class MainController {
     @ResponseStatus(HttpStatus.OK)
     public PageDto getAllPopularItem(@RequestParam int page,
                                      @RequestParam int size) {
-        Page<Board> boardPages = searchService.getAllPopularItem(page, size);
-        List<Board> boards = boardPages.getContent();
-        List<Integer> prices = boardService.getPricesInRedis(boards);
+        PageDto getAllPopularDto = searchService.getAllPopularPage(page, size);
 
-        return new PageDto(boardMapper.boardListToBoardDtoList(boards, prices), boardPages);
+        return getAllPopularDto;
     }
 }

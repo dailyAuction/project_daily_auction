@@ -25,8 +25,9 @@ public class NoticeController {
     @GetMapping("/notices")
     @ResponseStatus(HttpStatus.OK)
     public MultiResponseDto getNotices(@RequestHeader(name = "Authorization") String token) {
+        MultiResponseDto noticeResponseDtos = noticeService.getNotices(token);
 
-        return new MultiResponseDto(noticeService.getNotices(token));
+        return noticeResponseDtos;
     }
 
     @DeleteMapping("/notices/{notice-id}")

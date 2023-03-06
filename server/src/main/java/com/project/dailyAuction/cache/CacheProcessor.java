@@ -11,9 +11,6 @@ import com.project.dailyAuction.member.service.MemberService;
 import com.project.dailyAuction.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
@@ -58,7 +55,7 @@ public class CacheProcessor {
                 if (bidderId != 0) {
                     Member buyer = memberService.find(bidderId);
                     //마감 임박 알림 전송
-                    noticeService.send(buyer, board, NoticeStatusCode.마감임박.getCode());
+                    noticeService.sendWithSave(buyer, board, NoticeStatusCode.IMMINENT_FOR_BIDDER.getCode());
                 }
             }
             // 경매 종료
@@ -77,17 +74,17 @@ public class CacheProcessor {
                 long bidderId = getBidderInRedis(board);
                 if (bidderId != 0L) {
                     Member buyer = memberService.find(bidderId);
-                    boardRepository.updateStatus(boardId, BoardStatusCode.낙찰.code);
+                    boardRepository.updateStatus(boardId, BoardStatusCode.SUCCESSFUL_BID.code);
                     //구매자 경매 낙찰 알림 전송
-                    noticeService.send(buyer, board, NoticeStatusCode.구매자낙찰.getCode());
+                    noticeService.sendWithSave(buyer, board, NoticeStatusCode.SUCCESS_FOR_BUYER.getCode());
 
                     //판매자 경매 낙찰 알림 전송
-                    noticeService.send(seller, board, NoticeStatusCode.판매자낙찰.getCode());
+                    noticeService.sendWithSave(seller, board, NoticeStatusCode.SUCCESS_FOR_SELLER.getCode());
 
                 } else {
                     //판매자 경매 유찰 알림 전송
-                    noticeService.send(seller, board, NoticeStatusCode.유찰.getCode());
-                    boardRepository.updateStatus(boardId, BoardStatusCode.유찰.code);
+                    noticeService.sendWithSave(seller, board, NoticeStatusCode.FAILED_FOR_SELLER.getCode());
+                    boardRepository.updateStatus(boardId, BoardStatusCode.FAILED_BID.code);
                 }
             }
         }
@@ -215,18 +212,6 @@ public class CacheProcessor {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
         valueOperations.set(key, refreshToken, 24, TimeUnit.HOURS);
-    }
-
-
-    //업데이트 후 레디스 전체 초기화
-    public void flushRedis() {
-        redisTemplate.execute(new RedisCallback<Object>() {
-            @Override
-            public Object doInRedis(RedisConnection connection) throws DataAccessException {
-                connection.flushAll();
-                return null;
-            }
-        });
     }
 
     // 한시간마다 db업데이트 후 삭제

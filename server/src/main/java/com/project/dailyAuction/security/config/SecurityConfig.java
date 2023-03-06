@@ -126,7 +126,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         public void configure(HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer, cacheProcessor);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, memberService, jwtTokenizer, cacheProcessor);
             jwtAuthenticationFilter.setFilterProcessesUrl("/login");
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new LoginFailureHandler());
@@ -144,7 +144,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         public void configure(HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer, cacheProcessor);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, memberService, jwtTokenizer, cacheProcessor);
             jwtAuthenticationFilter.setFilterProcessesUrl("/login");
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new OAuthLoginSuccessHandler(jwtTokenizer, memberService, cacheProcessor));
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new LoginFailureHandler());

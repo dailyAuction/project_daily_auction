@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface BoardMapper {
-    default List<BoardDto.Response> boardListToBoardDtoList(List<Board> boards, List<Integer> prices){
+    default List<BoardDto.Response> boardListToBoardDtoList(List<Board> boards, List<Integer> prices) {
         List<BoardDto.Response> responses = new ArrayList<>();
         for (int i = 0; i < boards.size(); i++) {
             Board board = boards.get(i);
@@ -32,7 +32,8 @@ public interface BoardMapper {
         }
         return responses;
     }
-    default List<BoardDto.Response> boardListToBoardDtoListWithMyPriceAndEmail(List<Board> boards,List<Integer> prices ,List<Integer> myPrices,List<String> sellerEmails){
+
+    default List<BoardDto.Response> boardListToBoardDtoListWithMyPriceAndEmail(List<Board> boards, List<Integer> prices, List<Integer> myPrices, List<String> sellerEmails) {
         List<BoardDto.Response> responses = new ArrayList<>();
         for (int i = 0; i < boards.size(); i++) {
             Board board = boards.get(i);
@@ -42,7 +43,6 @@ public interface BoardMapper {
                     .bidderId(board.getBidderId())
                     .description(board.getDescription())
                     .categoryId(board.getCategoryId())
-                    //todo: 썸네일
                     .thumbnail(board.getThumbnail())
                     .createdAt(board.getCreatedAt())
                     .finishedAt(board.getFinishedAt())

@@ -25,17 +25,6 @@ public class CacheEvent {
         log.info("**Log : Update To DB - Init");
     }
 
-    // 순서별 정리
-    //1. 초(0-59)
-    //2. 분(0-59)
-    //3. 시간(0-23)
-    //4. 일(1-31)
-    //5. 월(1-12)
-    //6. 요일(0-7)
-
-    //10분마다 실행
-    //    @Scheduled(cron = "*/10 * * * * ?")
-
     // 한시간 마다 실행
     @Scheduled(cron = "0 0 0/1 * * ?")
     public void schedulePerHourCache() {

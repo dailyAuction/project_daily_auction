@@ -27,10 +27,10 @@ public class BoardController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BoardDto.IdDto postBoard(@RequestHeader(name = "Authorization") String token,
-                          @RequestBody BoardDto.Post postDto) {
-        Board board = boardService.saveBoard(token, postDto);
-        boardService.setFinishedTimeToRedis(board, board.getFinishedAt());
-        BoardDto.IdDto response = BoardDto.IdDto.builder().boardId(board.getBoardId()).build();
+                                    @RequestBody BoardDto.Post postDto) {
+
+        BoardDto.IdDto response = boardService.saveBoard(token, postDto);
+
         return response;
     }
 
@@ -40,24 +40,24 @@ public class BoardController {
                                       @PathVariable("board-id") long boardId,
                                       HttpServletRequest httpRequest,
                                       HttpServletResponse httpResponse) {
+
         BoardDto.Response response = boardService.getDetailPage(token, boardId, httpRequest, httpResponse);
+
         return response;
     }
 
     @GetMapping("/{sort}/{category-id}")
     @ResponseStatus(HttpStatus.OK)
-    public PageDto getBoardByCategory(@RequestHeader(name = "Authorization", required = false) String token,
-                                      @PathVariable("category-id") long categoryId,
-                                      @PathVariable("sort") int sort,
-                                      @RequestParam int page,
-                                      @RequestParam int size) {
-        Page<Board> boardPage = boardService.findBoardPage(categoryId, page - 1, size, sort);
-        List<Board> boards = boardPage.getContent();
-        List<Integer> prices = boardService.getPricesInRedis(boards);
-        List<BoardDto.Response> responses = boardMapper.boardListToBoardDtoList(boards,prices);
+    public PageDto getBoardsByCategory(@RequestHeader(name = "Authorization", required = false) String token,
+                                       @PathVariable("category-id") long categoryId,
+                                       @PathVariable("sort") int sort,
+                                       @RequestParam int page,
+                                       @RequestParam int size) {
 
 
-        return new PageDto(responses, boardPage);
+        PageDto pageDto = boardService.getBoards(categoryId, page - 1, size, sort);
+
+        return pageDto;
     }
 
     @PatchMapping("/{board-id}/bidding")

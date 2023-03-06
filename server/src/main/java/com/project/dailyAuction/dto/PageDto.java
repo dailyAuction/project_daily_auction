@@ -9,7 +9,6 @@ import java.util.List;
 public class PageDto<T> {
     private List<T> items;
     private PageInfo pageInfo;
-
     public PageDto(List<T> items, Page page) {
         this.items = items;
         this.pageInfo = new PageInfo(page.getNumber() + 1,

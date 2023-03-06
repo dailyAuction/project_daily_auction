@@ -2,6 +2,7 @@ package com.project.dailyAuction.board.service;
 
 import com.project.dailyAuction.board.dto.BoardDto;
 import com.project.dailyAuction.board.entity.Board;
+import com.project.dailyAuction.board.mapper.BoardMapper;
 import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.boardImage.entity.BoardImage;
 import com.project.dailyAuction.boardImage.repository.BoardImageRepository;
@@ -11,6 +12,8 @@ import com.project.dailyAuction.cache.CacheProcessor;
 import com.project.dailyAuction.code.BoardStatusCode;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.code.NoticeStatusCode;
+import com.project.dailyAuction.dto.MultiResponseDto;
+import com.project.dailyAuction.dto.PageDto;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import com.project.dailyAuction.notice.entity.Notice;
@@ -44,6 +47,7 @@ import java.util.Optional;
 @Slf4j
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final BoardMapper boardMapper;
     private final NoticeService noticeService;
     private final MemberService memberService;
     private final BoardMemberRepository boardMemberRepository;
@@ -71,10 +75,14 @@ public class BoardService {
         return createdBoard;
     }
 
-    public Board saveBoard(String token, BoardDto.Post postDto) {
+    public BoardDto.IdDto saveBoard(String token, BoardDto.Post postDto) {
         Member member = memberService.findByAccessToken(token);
+        Board board = createBoard(member, postDto);
+        setFinishedTimeToRedis(board, board.getFinishedAt());
 
-        return boardRepository.save(createBoard(member, postDto));
+        boardRepository.save(board);
+
+        return BoardDto.IdDto.builder().boardId(board.getBoardId()).build();
     }
 
     public BoardDto.Response getDetailPage(String token, long boardId, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
@@ -125,20 +133,87 @@ public class BoardService {
         return response;
     }
 
-    public Message.Response createInitMessageResponse(long boardId) {
+    public Message.Response bidBoard(String token, long boardId, int newPrice) {
+        Member member = memberService.findByAccessToken(token);
         Board board = find(boardId);
-        int bidCount = getBidCountInRedis(board);
-        String history = getHistoryInRedis(board);
+        int currentPrice = getPriceInRedis(board);
+
+        checkBiddable(member, board, newPrice, currentPrice);
+
+
+        if (board.getBidderId() != 0) {
+            Member lastMember = memberService.find(getBidderInRedis(board));
+            if (lastMember.equals(member)) {
+                throw new ResponseStatusException(ExceptionCode.CANT_BID_IN_A_ROW.getCode(),
+                        ExceptionCode.CANT_BID_IN_A_ROW.getMessage(),
+                        new IllegalArgumentException());
+            }
+            // 기존 입찰자에게 코인 반환
+            lastMember.changeCoin(currentPrice);
+
+            //알림 발송
+            noticeService.sendWithSave(lastMember, board, NoticeStatusCode.HIGHER_FOR_BUYER.getCode(), lastMember.getCoin());
+        }
+
+        // 리딩비더 변경
+        if (board.getBidderId() == 0) {
+            board.changeLeadingBidder(member.getMemberId());
+        } else {
+            changeLeadingBidderToRedis(board.getBoardId(), member.getMemberId());
+        }
+
+        // 현재입찰가 변경
+        if (board.getCurrentPrice() == 0) {
+            board.updatePrice(newPrice);
+        } else {
+            changePriceToRedis(board.getBoardId(), newPrice);
+        }
+
+        // bid count 레디스에 증가
+        int bidCount = setBidCountToRedis(board);
+
+        // 히스토리 레디스에 추가
+        String history = setHistoryToRedis(board, newPrice);
+
+        // 내 참여 경매 리스트를 위해 boardmember 저장
+        Optional<BoardMember> optionalBoardMember = boardMemberRepository.findByBoardAndMember(board, member);
+        if (optionalBoardMember.isEmpty()) {
+            boardMemberRepository.save(BoardMember.builder()
+                    .board(board)
+                    .member(member)
+                    .myPrice(newPrice)
+                    .build());
+        } else {
+            optionalBoardMember.get().changeMyPrice(newPrice);
+        }
+
+        //코인 감소
+        member.changeCoin(-newPrice);
+
+        // 기록 배열로 변환
         Integer[] histories = Arrays.stream(history.split(","))
                 .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
-        int currentPrice = getPriceInRedis(board);
 
         return Message.Response.builder()
                 .boardId(boardId)
                 .bidCount(bidCount)
-                .currentPrice(currentPrice)
                 .history(histories)
+                .currentPrice(newPrice)
                 .build();
+    }
+
+    public MultiResponseDto getImminentPage() {
+        List<Board> boards = getImminentItem();
+        List<Integer> prices = getPricesInRedis(boards);
+        List<BoardDto.Response> boardDtos = boardMapper.boardListToBoardDtoList(boards, prices);
+        return new MultiResponseDto(boardDtos);
+    }
+
+    public Board find(long boardId) {
+        return boardRepository.findById(boardId)
+                .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
+                        ExceptionCode.BOARD_NOT_FOUND.getMessage(),
+                        new IllegalArgumentException()));
     }
 
     public int getViewCount(Board board, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
@@ -157,7 +232,7 @@ public class BoardService {
 
         if (oldCookie != null) { // 쿠키 묶음이 있는 경우 -> 체크 후 증가
             if (!oldCookie.getValue().contains("[" + boardId + "]")) {  // 그 중에서 해당 보드 쿠키가 없는 경우
-                viewCount = addViewCntToRedis(board);
+                viewCount = setViewCntToRedis(board);
                 oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
                 oldCookie.setPath("/");
                 oldCookie.setMaxAge(60 * 60 * 24);
@@ -166,7 +241,7 @@ public class BoardService {
                 viewCount = getViewCntInRedis(board);
             }
         } else { // 쿠키 묶음이 없는 경우 -> 무조건 증가
-            viewCount = addViewCntToRedis(board);
+            viewCount = setViewCntToRedis(board);
             Cookie newCookie = new Cookie("postView", "[" + boardId + "]");
             newCookie.setPath("/");
             newCookie.setMaxAge(60 * 60 * 24);
@@ -184,14 +259,13 @@ public class BoardService {
             valueOperations.set(
                     key,
                     String.valueOf(board.getViewCount()));
-            return Integer.parseInt(valueOperations.get(key));
         } else {
             valueOperations.get(key);
-            return Integer.parseInt(valueOperations.get(key));
         }
+        return Integer.parseInt(valueOperations.get(key));
     }
 
-    public int addViewCntToRedis(Board board) {
+    public int setViewCntToRedis(Board board) {
         long boardId = board.getBoardId();
         String key = "boardViewCount::" + boardId;
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
@@ -205,7 +279,7 @@ public class BoardService {
         return Integer.parseInt(valueOperations.get(key));
     }
 
-    public int addBidCountToRedis(Board board) {
+    public int setBidCountToRedis(Board board) {
         long boardId = board.getBoardId();
         String key = "boardBidCount::" + boardId;
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
@@ -219,7 +293,7 @@ public class BoardService {
         return Integer.parseInt(valueOperations.get(key));
     }
 
-    public String addHistoryToRedis(Board board, int newPrice) {
+    public String setHistoryToRedis(Board board, int newPrice) {
         long boardId = board.getBoardId();
         String key = "boardHistory::" + boardId;
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
@@ -233,23 +307,6 @@ public class BoardService {
                     getUpdatedHistory(lastHistory, newPrice));
         }
         return valueOperations.get(key);
-    }
-
-    public String getUpdatedHistory(String history, int newPrice) {
-        String[] histories = history.split(",");
-        StringBuilder sb = new StringBuilder();
-        int start = histories.length - 19;
-        if (start < 0) {
-            start = 0;
-        }
-        for (int i = start; i < start + 19; i++) {
-            if (i >= histories.length) {
-                break;
-            }
-            sb.append(histories[i] + ",");
-        }
-        sb.append(newPrice);
-        return sb.toString();
     }
 
     private void changeLeadingBidderToRedis(long boardId, long bidderId) {
@@ -317,116 +374,6 @@ public class BoardService {
         }
     }
 
-    public void deleteBoard(String token, long boardId) {
-        Board target = find(boardId);
-        if (target.getSellerId() != memberService.findByAccessToken(token).getMemberId()) {
-            throw new ResponseStatusException(ExceptionCode.NOT_WRITER.getCode(),
-                    ExceptionCode.NOT_WRITER.getMessage(),
-                    new IllegalArgumentException());
-        }
-        // 경매 진행 중일 때 삭제하면 환불
-        if (target.getStatusId() == 1) {
-            Member lastBidder = memberService.find(target.getBidderId());
-            lastBidder.changeCoin(target.getCurrentPrice());
-        }
-
-        boardRepository.delete(target);
-    }
-
-
-    public Message.Response bidBoard(String token, long boardId, int newPrice) {
-        Member member = memberService.findByAccessToken(token);
-        Board board = find(boardId);
-
-        // 자기글에 입찰 불가
-        if (member.getMemberId() == board.getSellerId()) {
-            throw new ResponseStatusException(ExceptionCode.CANT_BID_SELF.getCode(),
-                    ExceptionCode.CANT_BID_SELF.getMessage(),
-                    new IllegalArgumentException());
-        }
-
-        // 마감된 글에 입찰 불가
-        if (board.getStatusId() != BoardStatusCode.경매중.code) {
-            throw new ResponseStatusException(ExceptionCode.CLOSED_AUCTION.getCode(),
-                    ExceptionCode.CLOSED_AUCTION.getMessage(),
-                    new IllegalArgumentException());
-        }
-
-        int currentPrice = getPriceInRedis(board);
-
-        if (board.getBidderId() != 0) {
-            Member lastMember = memberService.find(getBidderInRedis(board));
-            if (lastMember.equals(member)) {
-                throw new ResponseStatusException(ExceptionCode.CANT_BID_IN_A_ROW.getCode(),
-                        ExceptionCode.CANT_BID_IN_A_ROW.getMessage(),
-                        new IllegalArgumentException());
-            }
-            //기존 입찰자에게 코인 반환
-            lastMember.changeCoin(currentPrice);
-
-            //알림 발송
-            noticeService.send(lastMember, board, NoticeStatusCode.상회입찰.getCode(), lastMember.getCoin());
-        }
-
-        //코인이 부족하면 에러
-        if (member.getCoin() < newPrice) {
-            throw new ResponseStatusException(ExceptionCode.NOT_ENOUGH_COIN.getCode(),
-                    ExceptionCode.NOT_ENOUGH_COIN.getMessage(),
-                    new IllegalArgumentException());
-        }
-
-        //입찰가보다 낮거나 같으면 에러
-        if (currentPrice >= newPrice) {
-            throw new ResponseStatusException(ExceptionCode.LESS_THAN_CURRENT.getCode(),
-                    ExceptionCode.LESS_THAN_CURRENT.getMessage(),
-                    new IllegalArgumentException());
-        }
-        //리딩비더 변경
-        if (board.getBidderId() == 0) {
-            board.changeLeadingBidder(member.getMemberId());
-        } else {
-            changeLeadingBidderToRedis(board.getBoardId(), member.getMemberId());
-        }
-
-        //현재입찰가 변경
-        if (board.getCurrentPrice() == 0) {
-            board.updatePrice(newPrice);
-        } else {
-            changePriceToRedis(board.getBoardId(), newPrice);
-        }
-
-        //bid count 증가
-        int bidCount = addBidCountToRedis(board);
-        //히스토리 추가
-        String history = addHistoryToRedis(board, newPrice);
-
-        //기록용 남기기
-        Optional<BoardMember> optionalBoardMember = boardMemberRepository.findByBoardAndMember(board, member);
-        if (optionalBoardMember.isEmpty()) {
-            boardMemberRepository.save(BoardMember.builder()
-                    .board(board)
-                    .member(member)
-                    .myPrice(newPrice)
-                    .build());
-        } else {
-            optionalBoardMember.get().changeMyPrice(newPrice);
-        }
-
-        //코인 감소
-        member.changeCoin(-newPrice);
-
-        // 기록 배열로 변환
-        Integer[] histories = Arrays.stream(history.split(","))
-                .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
-
-        return Message.Response.builder()
-                .boardId(boardId)
-                .bidCount(bidCount)
-                .history(histories)
-                .currentPrice(newPrice)
-                .build();
-    }
-
     private void changePriceToRedis(long boardId, int newPrice) {
         String key = "boardPrice::" + boardId;
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
@@ -434,11 +381,44 @@ public class BoardService {
         valueOperations.set(key, String.valueOf(newPrice));
     }
 
-    public Board find(long boardId) {
-        return boardRepository.findById(boardId)
-                .orElseThrow(() -> new ResponseStatusException(ExceptionCode.BOARD_NOT_FOUND.getCode(),
-                        ExceptionCode.BOARD_NOT_FOUND.getMessage(),
-                        new IllegalArgumentException()));
+    public String getUpdatedHistory(String history, int newPrice) {
+        String[] histories = history.split(",");
+        StringBuilder sb = new StringBuilder();
+        int start = histories.length - 19;
+        if (start < 0) {
+            start = 0;
+        }
+        for (int i = start; i < start + 19; i++) {
+            if (i >= histories.length) {
+                break;
+            }
+            sb.append(histories[i] + ",");
+        }
+        sb.append(newPrice);
+        return sb.toString();
+    }
+
+    public void deleteBoard(String token, long boardId) {
+        Board target = find(boardId);
+
+        // 작성자 체크
+        writerErrorCheck(target, token);
+
+        // 경매 진행 중일 때 삭제하면 환불
+        if (target.getStatusId() == 1) {
+            Member lastBidder = memberService.find(getBidderInRedis(target));
+            lastBidder.changeCoin(target.getCurrentPrice());
+        }
+
+        boardRepository.delete(target);
+    }
+
+    private void writerErrorCheck(Board target, String token) {
+        if (target.getSellerId() != memberService.findByAccessToken(token).getMemberId()) {
+            throw new ResponseStatusException(ExceptionCode.NOT_WRITER.getCode(),
+                    ExceptionCode.NOT_WRITER.getMessage(),
+                    new IllegalArgumentException());
+        }
     }
 
     public List<Board> getPopularItem(long categoryId) {
@@ -446,13 +426,13 @@ public class BoardService {
         if (categoryId == 0) {
             return boardRepository.findTop5ByStatusIdOrderByViewCountDesc(1);
         } else {
-            return boardRepository.findTop5ByCategoryIdAndStatusIdOrderByViewCountDesc(categoryId, BoardStatusCode.경매중.code);
+            return boardRepository.findTop5ByCategoryIdAndStatusIdOrderByViewCountDesc(categoryId, BoardStatusCode.PROCEEDING.code);
         }
     }
 
     public List<Board> getImminentItem() {
         cacheProcessor.updateBiddingToMySql();
-        return boardRepository.findTop5ByStatusIdOrderByCreatedAtAsc(BoardStatusCode.경매중.code);
+        return boardRepository.findTop5ByStatusIdOrderByCreatedAtAsc(BoardStatusCode.PROCEEDING.code);
     }
 
     public int findMyPrice(String token, long boardId) {
@@ -525,5 +505,83 @@ public class BoardService {
             }
         }
         return prices;
+    }
+
+    public PageDto getBoards(long categoryId, int page, int size, int sort) {
+        Page<Board> boardPage = findBoardPage(categoryId, page - 1, size, sort);
+        List<Board> boards = boardPage.getContent();
+        List<Integer> prices = getPricesInRedis(boards);
+        List<BoardDto.Response> responses = boardMapper.boardListToBoardDtoList(boards, prices);
+
+        return new PageDto(responses, boardPage);
+    }
+
+    public Message.Response createInitMessageResponse(long boardId) {
+        Board board = find(boardId);
+        int bidCount = getBidCountInRedis(board);
+        String history = getHistoryInRedis(board);
+        Integer[] histories = Arrays.stream(history.split(","))
+                .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
+        int currentPrice = getPriceInRedis(board);
+
+        return Message.Response.builder()
+                .boardId(boardId)
+                .bidCount(bidCount)
+                .currentPrice(currentPrice)
+                .history(histories)
+                .build();
+    }
+
+    private void checkBiddable(Member member, Board board, int newPrice, int currentPrice) {
+        // 자기글에 입찰 불가
+        if (member.getMemberId() == board.getSellerId()) {
+            throw new ResponseStatusException(ExceptionCode.CANT_BID_SELF.getCode(),
+                    ExceptionCode.CANT_BID_SELF.getMessage(),
+                    new IllegalArgumentException());
+        }
+        // 마감된 글에 입찰 불가
+        if (board.getStatusId() != BoardStatusCode.PROCEEDING.code) {
+            throw new ResponseStatusException(ExceptionCode.CLOSED_AUCTION.getCode(),
+                    ExceptionCode.CLOSED_AUCTION.getMessage(),
+                    new IllegalArgumentException());
+        }
+        // 코인이 부족하면 에러
+        if (member.getCoin() < newPrice) {
+            throw new ResponseStatusException(ExceptionCode.NOT_ENOUGH_COIN.getCode(),
+                    ExceptionCode.NOT_ENOUGH_COIN.getMessage(),
+                    new IllegalArgumentException());
+        }
+        // 입찰가보다 낮거나 같으면 에러
+        if (currentPrice >= newPrice) {
+            throw new ResponseStatusException(ExceptionCode.LESS_THAN_CURRENT.getCode(),
+                    ExceptionCode.LESS_THAN_CURRENT.getMessage(),
+                    new IllegalArgumentException());
+        }
+    }
+
+    public MultiResponseDto getPopularItemPage(long categoryId) {
+        List<Board> boards = getPopularItem(categoryId);
+        List<Integer> prices = getPricesInRedis(boards);
+        List<BoardDto.Response> boardDtos = boardMapper.boardListToBoardDtoList(boards, prices);
+        return new MultiResponseDto(boardDtos);
+    }
+
+    public PageDto getParticipationPage(String token, int page, int size) {
+        Page<Board> boardPages = memberService.getParticipation(token, page, size);
+        List<Board> boards = boardPages.getContent();
+        List<Integer> myPrices = memberService.findMyPrices(token, boards);
+
+        List<Integer> prices = getPricesInRedis(boards);
+        List<String> sellerEmails = findSellerEmails(boards);
+
+        return new PageDto(boardMapper.boardListToBoardDtoListWithMyPriceAndEmail(boards, prices, myPrices, sellerEmails), boardPages);
+    }
+
+    public PageDto getMyAuctionPage(String token, int page, int size) {
+        Page<Board> boardPages = memberService.getMyAuction(token, page, size);
+        List<Board> boards = boardPages.getContent();
+        List<Integer> prices = getPricesInRedis(boards);
+
+        return new PageDto(boardMapper.boardListToBoardDtoList(boards, prices), boardPages);
     }
 }

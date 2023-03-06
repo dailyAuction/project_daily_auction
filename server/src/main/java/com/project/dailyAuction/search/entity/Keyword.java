@@ -21,7 +21,7 @@ public class Keyword {
     @Column
     private int searchedCnt;
 
-    public void cntUp(){
+    public void cntUp() {
         this.searchedCnt++;
     }
 }
