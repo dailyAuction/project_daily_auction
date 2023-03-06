@@ -247,10 +247,13 @@ public class BoardService {
         if (oldCookie != null) { // 쿠키 묶음이 있는 경우 -> 체크 후 증가
             if (!oldCookie.getValue().contains("[" + boardId + "]")) {  // 그 중에서 해당 보드 쿠키가 없는 경우
                 viewCount = setViewCntToRedis(board);
-                oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
-                oldCookie.setPath("/");
-                oldCookie.setMaxAge(60 * 60 * 24);
-                httpResponse.addCookie(oldCookie);
+                ResponseCookie newCookie = ResponseCookie.from("postView", oldCookie.getValue() + "_[" + boardId + "]")
+                        .path("/")
+                        .httpOnly(true)
+                        .maxAge(60 * 60 * 24)
+                        .domain(".dailyauction.site")
+                        .build();
+                httpResponse.setHeader("Set-Cookie", newCookie.toString());
             } else {  // 해당 보드 쿠키는 있는 경우
                 viewCount = getViewCntInRedis(board);
             }
