@@ -63,7 +63,7 @@ export const ImageList = ({ url }: ImageListProps) => {
 
   return (
     <>
-      <section className="flex h-[150px] justify-cente w-full items-center overflow-x-scroll space-x-3">
+      <section className="flex h-[150px] justify-cente w-full items-center overflow-x-scroll space-x-3 z-30">
         {url.map((src: string, idx: number) => (
           <img
             key={src}
