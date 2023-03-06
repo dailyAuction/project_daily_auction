@@ -251,7 +251,7 @@ public class BoardService {
                         .path("/")
                         .httpOnly(true)
                         .maxAge(60 * 60 * 24)
-                        .domain(".dailyauction.site")
+                        .domain("dailyauction.site")
                         .build();
                 httpResponse.setHeader("Set-Cookie", newCookie.toString());
             } else {  // 해당 보드 쿠키는 있는 경우
@@ -263,7 +263,7 @@ public class BoardService {
                     .path("/")
                     .httpOnly(true)
                     .maxAge(60 * 60 * 24)
-                    .domain(".dailyauction.site")
+                    .domain("dailyauction.site")
                     .build();
             httpResponse.addHeader("Set-Cookie", newCookie.toString());
         }
