@@ -1,8 +1,5 @@
-import React, { SetStateAction } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
 import { productDetailAPI } from '../../../api/boardsAPI';
-import { userInfoAtom } from '../../../atoms/user';
 
 export const useBidInformation = () => {
   const navigate = useNavigate();
