@@ -70,3 +70,9 @@ logging:
   level:
     com.zaxxer.hikari.HikariConfig: DEBUG
     com.zaxxer.hikari: TRACE
+
+server:
+  servlet:
+    session:
+      cookie:
+        same-site: none

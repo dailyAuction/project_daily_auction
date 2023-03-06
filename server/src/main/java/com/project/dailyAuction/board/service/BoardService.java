@@ -257,7 +257,7 @@ public class BoardService {
             viewCount = setViewCntToRedis(board);
             Cookie newCookie = new Cookie("postView", "[" + boardId + "]");
             newCookie.setPath("/");
-            newCookie.setDomain(".dailyauction.site");
+            newCookie.setDomain("dailyauction.site");
             newCookie.setMaxAge(60 * 60 * 24);
             httpResponse.addCookie(newCookie);
         }
