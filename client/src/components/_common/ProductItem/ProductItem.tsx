@@ -30,7 +30,11 @@ export const ProductItem = ({ productDetail }: ProductItemProps) => {
           )}
           <p className="text-sm sm:text-base font-bold line-clamp-2">{getShortString(title, 40)}</p>
           <div className="pb-2 pt-3 text-xs">
-            {statusId !== 1 ? '' : page === 'register' ? `시작가 ${startingPrice} coin` : `입찰가 ${currentPrice} coin`}
+            {statusId !== 1
+              ? ''
+              : page === 'participation'
+              ? `입찰가 ${currentPrice} coin`
+              : `시작가 ${startingPrice} coin`}
             <div className="flex items-center gap-0.5">
               {statusId === 1 ? '현재가' : ''}
               <p className="text-base text-main-orange">{currentPrice} coin</p>

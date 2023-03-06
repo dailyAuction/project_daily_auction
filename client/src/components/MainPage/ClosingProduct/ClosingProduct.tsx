@@ -2,6 +2,7 @@ import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import { ProductItemImg } from '../../_common/ProductItemImg/ProductItemImg';
 import { mainPageAPI } from '../../../api/mainPageAPI';
+import { Loading } from '../../_common/Loading/Loading';
 
 export const ClosingProduct = () => {
   const { isLoading, error, data } = useQuery('closingProduct', () => mainPageAPI.getClosing(), {
@@ -24,9 +25,9 @@ export const ClosingProduct = () => {
         </svg>
       </div>
       <div className="flex gap-2 overflow-x-auto scrollbar-hide w-full">
-        {isLoading && <div>Loading...</div>}
+        {isLoading && <Loading />}
         {error && <div>마감 임박 상품이 없습니다.</div>}
-        {data?.items.map((el) => {
+        {data?.items?.map((el) => {
           return (
             <Link key={el.boardId} to={`/detail/${el.boardId}`}>
               <div className="flex flex-col ml-2 min-w-[120px] w-[120px]">
