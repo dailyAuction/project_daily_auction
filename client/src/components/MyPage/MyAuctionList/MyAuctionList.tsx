@@ -17,6 +17,7 @@ import { ScrollToTopBtn } from '../../_common/ScrollToTopBtn/ScrollToTopBtn';
 
 export const MyAuctionList = () => {
   const [statusId, setStatusId] = useState(0);
+  const [isClick, setIsClick] = useState(true);
   const token = useRecoilValue(accessTokenAtom);
   const currPage = useLocation().pathname.split('/').at(-1);
   const path = currPage === 'auctionList' ? 'my-auction-list' : 'participation-list';
@@ -29,7 +30,8 @@ export const MyAuctionList = () => {
     ['myAuction', `${statusId}`],
     ({ pageParam = 0 }) => {
       pageParam++;
-      return myPageAPI.getMyAuctionList({ path, page: pageParam, token });
+      const size = statusId === 2 ? 5 : 10000;
+      return myPageAPI.getMyAuctionList({ path, size, page: pageParam, token });
     },
     {
       getNextPageParam: (lastPage, allPages) => {
@@ -37,6 +39,7 @@ export const MyAuctionList = () => {
         const nextPage = allPages.length;
         return nextPage <= totalPage && nextPage;
       },
+      enabled: isClick,
       cacheTime: 0,
     }
   );
@@ -50,7 +53,7 @@ export const MyAuctionList = () => {
       <div className="fixed top-0 w-full sm:w-[500px] z-[10000]">
         <SubHeader>내가 등록한 경매</SubHeader>
       </div>
-      <MyAuctionBtn status={statusId} setStatus={setStatusId} fetchNextPage={fetchNextPage} />
+      <MyAuctionBtn setIsClick={setIsClick} status={statusId} setStatus={setStatusId} />
       {status === 'loading' && <Loading />}
       {status === 'error' && <div>{`${AUCTION_STATUS[statusId]} 상품이 없습니다.`}</div>}
       <MyAuctionContent data={data} statusId={statusId} />
