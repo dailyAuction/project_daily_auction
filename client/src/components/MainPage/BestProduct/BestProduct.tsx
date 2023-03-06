@@ -1,22 +1,44 @@
-import { useState } from 'react';
-import { useQuery } from 'react-query';
+/* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/dot-notation */
+import { useEffect, useState } from 'react';
+import { useInfiniteQuery } from 'react-query';
+import { useInView } from 'react-intersection-observer';
 import { ProductItem } from '../../_common/ProductItem/ProductItem';
 import { CATEGORIES } from '../../../constants/constants';
 import { mainPageAPI } from '../../../api/mainPageAPI';
+import { Loading } from '../../_common/Loading/Loading';
+import { ToList } from '../ToList/ToList';
 
 export const Bestproduct = () => {
   const [categoryId, setCategoryId] = useState(0);
   const [isClick, setIsClick] = useState(true);
-
   const path = categoryId ? `${categoryId}/popular-item` : 'all-popular-item';
 
-  const { isLoading, error, data } = useQuery(['bestProduct', `${categoryId}`], () => mainPageAPI.getBest({ path }), {
-    enabled: isClick,
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
+  const { ref, inView } = useInView({
+    threshold: 1,
   });
 
-  const handleClickCategory = (idx) => {
+  const { data, status, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
+    ['bestProduct', `${categoryId}`],
+    ({ pageParam = 0 }) => {
+      pageParam++;
+      return mainPageAPI.getBest({ path, page: pageParam });
+    },
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        const totalPage = lastPage['pageInfo']?.totalPages;
+        const nextPage = allPages.length;
+        return nextPage <= totalPage && nextPage; // 끝까지 다 봤을때는 return되는 값이 없어야한다
+      },
+      enabled: isClick,
+    }
+  );
+
+  useEffect(() => {
+    if (inView && hasNextPage) fetchNextPage();
+  }, [inView]);
+
+  const handleClickCategory = (idx: number) => {
     setCategoryId(idx);
     setIsClick(true);
   };
@@ -45,7 +67,7 @@ export const Bestproduct = () => {
         </svg>
       </div>
       <div className="p-2 pb-4 overflow-x-scroll scrollbar-hide">
-        <section className="w-max space-x-3">
+        <section className="w-max space-x-3 pb-2 ">
           {CATEGORIES.map((el, i) => {
             return (
               <span key={el} onClick={() => handleClickCategory(i)}>
@@ -55,19 +77,34 @@ export const Bestproduct = () => {
               </span>
             );
           })}
-          {isLoading && <div>Loading...</div>}
-          {error && <div>카테고리별 인기상품이 없습니다.</div>}
         </section>
+        {status === 'loading' && <Loading />}
+        {status === 'error' && <div>카테고리별 인기상품이 없습니다.</div>}
       </div>
       <div className="flex flex-col gap-2 items-center">
-        {data?.items.map((el) => {
+        {data?.pages?.map((page) => {
           return (
-            <div key={el.boardId} className="w-[96%]">
-              <ProductItem productDetail={el} />
+            <div key={crypto.randomUUID()} className="w-[96%] flex flex-col gap-2">
+              {page?.items?.map((el) => (
+                <div key={el.boardId}>
+                  <ProductItem productDetail={el} />
+                </div>
+              ))}
             </div>
           );
         })}
+        <div>
+          <button
+            type="button"
+            className=""
+            disabled={!hasNextPage || isFetchingNextPage}
+            onClick={() => fetchNextPage()}>
+            {isFetchingNextPage ? <Loading /> : hasNextPage ? '더보기' : ''}
+          </button>
+        </div>
       </div>
+      <ToList categoryId={categoryId} />
+      <div ref={ref}>{''}</div>
     </div>
   );
 };

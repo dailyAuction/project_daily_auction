@@ -13,7 +13,6 @@ import { SearchResultPage } from '../pages/SearchResultPage';
 import { ChargePage } from '../pages/ChargePage';
 import { MainPage } from '../pages/MainPage';
 import { MyAuctionList } from '../components/MyPage/MyAuctionList/MyAuctionList';
-import { MyJoinList } from '../components/MyPage/MyJoinList/MyJoinList';
 import { SocialLogin } from '../components/LoginPage/SocialLogin/SocialLogin';
 
 export const Router = () => {
@@ -28,7 +27,7 @@ export const Router = () => {
         <Route path="/postProduct" element={<PostProductPage />} />
         <Route path="/my" element={<MyPage />} />
         <Route path="/my/auctionList" element={<MyAuctionList />} />
-        <Route path="/my/joinList" element={<MyJoinList />} />
+        <Route path="/my/joinList" element={<MyAuctionList />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/editPassword" element={<EditPasswordPage />} />
         <Route path="/charge" element={<ChargePage />} />
