@@ -1,7 +1,7 @@
 package com.project.dailyAuction.member.service;
 
 
-import com.project.dailyAuction.board.mapper.BoardMapping;
+import com.project.dailyAuction.boardMember.repository.BoardMapping;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
 import com.project.dailyAuction.boardMember.entity.BoardMember;
@@ -58,6 +58,37 @@ public class MemberService {
         return member;
     }
 
+    public void delete(String token) {
+        Member member = findByAccessToken(token);
+        member.changeStatus(MemberStatusCode.WITHDRAWN);
+        boardRepository.deleteBySellerId(member.getMemberId());
+    }
+
+    public MemberDto.Coin addCoin(String token, MemberDto.Coin coin) {
+        Member member = findByAccessToken(token);
+        member.changeCoin(coin.getCoin());
+
+        return MemberDto.Coin.builder()
+                .coin(member.getCoin())
+                .build();
+    }
+
+    public MemberDto.MyPage getMyPage(String token) {
+        Member member = findByAccessToken(token);
+
+        return MemberDto.MyPage.builder()
+                .email(member.getEmail())
+                .coin(member.getCoin())
+                .memberId(member.getMemberId())
+                .build();
+    }
+
+    public Page<Board> getMyAuction(String token, int page, int size) {
+        Member member = findByAccessToken(token);
+
+        return boardRepository.findBySellerId(member.getMemberId(), PageRequest.of(page - 1, size));
+    }
+
     // 비밀번호 체크
     public void verifyPassword(Member member, String password) {
         if (!passwordEncoder().matches(password, member.getPassword())) {
@@ -101,19 +132,13 @@ public class MemberService {
                 .email(email)
                 .password(passwordEncoder().encode("epdlffldhrtusthtufqlalfqjsgh"))
                 .coin(0)
-                .statusId(1)
+                .statusId(MemberStatusCode.ACTIVE.getCode())
                 .build()
         );
     }
 
     public Member findByEmailForOauth(String email) {
         return memberRepository.findByEmail(email).orElse(null);
-    }
-
-    public void delete(String token) {
-        Member member = findByAccessToken(token);
-        member.changeStatus(MemberStatusCode.탈퇴회원);
-        boardRepository.deleteBySellerId(member.getMemberId());
     }
 
     // 이메일이 있으면 에러 , 없으면 인증코드를 보내줌
@@ -139,29 +164,6 @@ public class MemberService {
         emailService.findPassword(email, newPassword);
 
         member.changePassword(passwordEncoder().encode(newPassword));
-    }
-
-    public int addCoin(String token, MemberDto.Coin coin) {
-        Member member = findByAccessToken(token);
-        member.changeCoin(coin.getCoin());
-
-        return member.getCoin();
-    }
-
-    public MemberDto.MyPage getMyPage(String token) {
-        Member member = findByAccessToken(token);
-
-        return MemberDto.MyPage.builder()
-                .email(member.getEmail())
-                .coin(member.getCoin())
-                .memberId(member.getMemberId())
-                .build();
-    }
-
-    public Page<Board> getMyAuction(String token, int page, int size) {
-        Member member = findByAccessToken(token);
-
-        return boardRepository.findBySellerId(member.getMemberId(), PageRequest.of(page - 1, size));
     }
 
     public Page<Board> getParticipation(String token, int page, int size) {

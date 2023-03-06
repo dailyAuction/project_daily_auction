@@ -1,7 +1,5 @@
 package com.project.dailyAuction.member.entity;
 
-
-//import com.project.dailyAuction.boardNotice.entity.Notice;
 import com.project.dailyAuction.code.MemberStatusCode;
 import com.project.dailyAuction.notice.entity.Notice;
 import lombok.AllArgsConstructor;
@@ -38,13 +36,14 @@ public class Member {
     @OneToMany(mappedBy = "receiver")
     private List<Notice> notices = new ArrayList<>();
 
-    public void setUserDetails(long memberId, String email, String password,int coin){
+    public void setUserDetails(long memberId, String email, String password, int coin) {
         this.memberId = memberId;
         this.email = email;
         this.password = password;
         this.coin = coin;
     }
-    public void changePassword(String password){
+
+    public void changePassword(String password) {
         this.password = password;
     }
 
@@ -52,7 +51,7 @@ public class Member {
         this.statusId = status.getCode();
     }
 
-    public void changeCoin(int newCoin){
+    public void changeCoin(int newCoin) {
         this.coin += newCoin;
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface NoticeMapper {
-    default List<NoticeResponseDto> noticesTonoticeDtos(List<Notice> notices){
+    default List<NoticeResponseDto> noticesToNoticeDtos(List<Notice> notices) {
         List<NoticeResponseDto> responses = new ArrayList<>();
         for (Notice notice : notices) {
             NoticeResponseDto response = NoticeResponseDto.create(notice);

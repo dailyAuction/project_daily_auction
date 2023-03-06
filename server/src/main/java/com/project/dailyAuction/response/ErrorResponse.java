@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
-public class ErrorResponse { //v1
+public class ErrorResponse {
     private final Integer status;
     private final String message;
     private final List<FieldError> fieldErrors;

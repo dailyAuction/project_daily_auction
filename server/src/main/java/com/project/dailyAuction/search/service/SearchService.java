@@ -1,6 +1,11 @@
 package com.project.dailyAuction.search.service;
 
+import com.project.dailyAuction.board.mapper.BoardMapper;
+import com.project.dailyAuction.board.service.BoardService;
+import com.project.dailyAuction.dto.PageDto;
+import com.project.dailyAuction.search.dto.TopKeywordsDto;
 import com.project.dailyAuction.search.entity.Keyword;
+import com.project.dailyAuction.search.mapper.KeywordMapper;
 import com.project.dailyAuction.search.repository.KeywordRepository;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.board.repository.BoardRepository;
@@ -23,12 +28,15 @@ import java.util.Optional;
 @Slf4j
 public class SearchService {
     private final KeywordRepository keywordRepository;
+    private final BoardService boardService;
     private final BoardRepository boardRepository;
+    private final BoardMapper boardMapper;
+    private final KeywordMapper keywordMapper;
     private final RedisTemplate<String, String> redisTemplate;
     private final CacheProcessor cacheProcessor;
 
     public Page<Board> search(long categoryId, String keyword, int page, int size) {
-        addSearchCountInRedis(keyword);
+        setSearchCountInRedis(keyword);
 
         if (categoryId == 0) {
             return boardRepository.findByTitleContaining(keyword, PageRequest.of(page - 1, size));
@@ -53,7 +61,7 @@ public class SearchService {
         return optionalKeyword.get();
     }
 
-    public int addSearchCountInRedis(String keyword) {
+    public int setSearchCountInRedis(String keyword) {
         String key = "SearchedCount::" + keyword;
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         if (valueOperations.get(key) == null) {
@@ -67,13 +75,30 @@ public class SearchService {
         return Integer.parseInt(valueOperations.get(key));
     }
 
-    public List<Keyword> getTopKeyword() {
+    public TopKeywordsDto getTopKeyword() {
         cacheProcessor.updateTopKeywordToMySql();
-        return keywordRepository.findTop10ByOrderBySearchedCntDesc();
+        List<Keyword> list =  keywordRepository.findTop10ByOrderBySearchedCntDesc();
+        return keywordMapper.listToDto(list);
     }
 
     public Page<Board> getAllPopularItem(int page, int size) {
         cacheProcessor.updateViewCntToMySql();
         return boardRepository.findByStatusIdOrderByViewCountDesc(1, PageRequest.of(page - 1, size));
+    }
+
+    public PageDto getSearchPage(long categoryId, String keyword, int page, int size) {
+        Page<Board> boardPages = search(categoryId, keyword, page, size);
+        List<Board> boards = boardPages.getContent();
+        List<Integer> prices = boardService.getPricesInRedis(boards);
+
+        return new PageDto(boardMapper.boardListToBoardDtoList(boards, prices), boardPages);
+    }
+
+    public PageDto getAllPopularPage(int page, int size) {
+        Page<Board> boardPages = getAllPopularItem(page, size);
+        List<Board> boards = boardPages.getContent();
+        List<Integer> prices = boardService.getPricesInRedis(boards);
+
+        return new PageDto(boardMapper.boardListToBoardDtoList(boards, prices), boardPages);
     }
 }

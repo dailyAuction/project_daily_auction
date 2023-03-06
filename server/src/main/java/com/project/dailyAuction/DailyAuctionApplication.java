@@ -16,13 +16,13 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 @EnableWebSocket
 public class DailyAuctionApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DailyAuctionApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DailyAuctionApplication.class, args);
+    }
 
-	// 웹소켓을 사용하기 위해 엔드포인트 설정
-	@Bean
-	public ServerEndpointExporter serverEndpointExporter() {
-		return new ServerEndpointExporter();
-	}
+    // 웹소켓을 사용하기 위해 엔드포인트 설정
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        return new ServerEndpointExporter();
+    }
 }

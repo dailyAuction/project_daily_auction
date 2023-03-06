@@ -3,6 +3,7 @@ package com.project.dailyAuction.notice.service;
 import com.project.dailyAuction.board.entity.Board;
 import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.code.NoticeStatusCode;
+import com.project.dailyAuction.dto.MultiResponseDto;
 import com.project.dailyAuction.member.entity.Member;
 import com.project.dailyAuction.member.service.MemberService;
 import com.project.dailyAuction.notice.dto.NoticeResponseDto;
@@ -33,6 +34,7 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final NoticeMapper noticeMapper;
     private final RedisTemplate redisTemplate;
+
     public SseEmitter subscribe(Long memberId) {
         String emitterId = makeTimeIncludeId(memberId);
         SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(300000l));
@@ -42,14 +44,13 @@ public class NoticeService {
 
         // 503 에러를 방지하기 위한 더미 이벤트 전송
         String eventId = makeTimeIncludeId(memberId);
-        sendNotification(emitter, eventId, emitterId, "EventStream Created. [userId=" + memberId + "]");
+        sendToEmitter(emitter, eventId, emitterId, "EventStream Created. [userId=" + memberId + "]");
         String receiverId = String.valueOf(memberId);
         //로그인시 보유한 모든 알림 수신
         List<Notice> notices = memberService.find(memberId).getNotices();
-        for (Notice notice: notices) {
-            sendNotSave(receiverId, notice);
+        for (Notice notice : notices) {
+            send(receiverId, notice);
         }
-
         return emitter;
     }
 
@@ -57,7 +58,7 @@ public class NoticeService {
         return memberId + "_" + System.currentTimeMillis();
     }
 
-    private void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data) {
+    private void sendToEmitter(SseEmitter emitter, String eventId, String emitterId, Object data) {
         try {
             emitter.send(SseEmitter.event()
                     .id(eventId)
@@ -67,34 +68,28 @@ public class NoticeService {
         }
     }
 
-    public void send(Member receiver, Board board, long status) {
+    public void sendWithSave(Member receiver, Board board, long status) {
         Notice notice = noticeRepository.save(createNotice(receiver, board, status));
 
         String receiverId = String.valueOf(receiver.getMemberId());
-        String eventId = receiverId + "_" + System.currentTimeMillis();
-        Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverId);
-        emitters.forEach(
-                (key, emitter) -> {
-                    emitterRepository.saveEventCache(key, notice);
-                    sendNotification(emitter, eventId, key, NoticeResponseDto.create(notice));
-                }
-        );
+
+        send(receiverId, notice);
     }
 
     //저장하지 않고 보유한 알림을 전송만 하는 기능
-    public void sendNotSave(String receiverId, Notice notice) {
+    public void send(String receiverId, Notice notice) {
         String eventId = receiverId + "_" + System.currentTimeMillis();
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverId);
         emitters.forEach(
                 (key, emitter) -> {
                     emitterRepository.saveEventCache(key, notice);
-                    sendNotification(emitter, eventId, key, NoticeResponseDto.create(notice));
+                    sendToEmitter(emitter, eventId, key, NoticeResponseDto.create(notice));
                 }
         );
     }
 
     //오버로드
-    public void send(Member receiver, Board board, long status, int coin) {
+    public void sendWithSave(Member receiver, Board board, long status, int coin) {
         Notice notice = noticeRepository.save(createNotice(receiver, board, status));
 
         String receiverId = String.valueOf(receiver.getMemberId());
@@ -103,7 +98,7 @@ public class NoticeService {
         emitters.forEach(
                 (key, emitter) -> {
                     emitterRepository.saveEventCache(key, notice);
-                    sendNotification(emitter, eventId, key, NoticeResponseDto.create(notice, coin));
+                    sendToEmitter(emitter, eventId, key, NoticeResponseDto.create(notice, coin));
                 }
         );
     }
@@ -116,19 +111,19 @@ public class NoticeService {
                 .status(status)
                 .isRead(false)
                 .build();
-        if (status == NoticeStatusCode.판매자낙찰.getCode()) {
+        if (status == NoticeStatusCode.SUCCESS_FOR_SELLER.getCode()) {
             notice.inputContact(memberService.find(getBidderInRedis(board)).getEmail());
-        } else if(status == NoticeStatusCode.구매자낙찰.getCode()) {
+        } else if (status == NoticeStatusCode.SUCCESS_FOR_BUYER.getCode()) {
             notice.inputContact(memberService.find(board.getSellerId()).getEmail());
         }
         return notice;
     }
 
-    public List<NoticeResponseDto> getNotices(String token) {
+    public MultiResponseDto getNotices(String token) {
         Member member = memberService.findByAccessToken(token);
         List<Notice> notices = member.getNotices();
 
-        return noticeMapper.noticesTonoticeDtos(notices);
+        return new MultiResponseDto(noticeMapper.noticesToNoticeDtos(notices));
     }
 
     public void deleteNotice(String token, long noticeId) {
