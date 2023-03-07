@@ -6,7 +6,7 @@ import { useGetQueryString } from '../hooks/useGetQueryString';
 import { getShortString } from '../utils/getShortString';
 
 export const SearchResultPage = () => {
-  const [categoryId, keyword] = useGetQueryString().split('_');
+  const keyword = useGetQueryString().split('_')[1];
   return (
     <main className="base-layout">
       <MainHeader>{`"${getShortString(keyword, 10)}" 검색 결과`}</MainHeader>

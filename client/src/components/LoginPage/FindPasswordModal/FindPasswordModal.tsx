@@ -24,11 +24,7 @@ export const FindPasswordModal = ({ handleClose }: LeaveModalProps) => {
     formState: { errors },
   } = useForm<EmailData>();
 
-  const {
-    mutate: postForgotPassword,
-    isError: emailAuthFail,
-    isSuccess: emailAuthSuccess,
-  } = useMutation((email: string) => {
+  const { mutate: postForgotPassword } = useMutation((email: string) => {
     return loginAPI.postForgotPassword(email);
   });
 
