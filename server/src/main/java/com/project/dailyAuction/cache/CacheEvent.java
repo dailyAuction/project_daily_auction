@@ -17,15 +17,10 @@ public class CacheEvent {
     @PostConstruct
     public void initCache(){
         cacheProcessor.updateViewCntToMySql();
-        log.info("**Log : updateViewCntToMySql");
         cacheProcessor.updateBiddingToMySql();
-        log.info("**Log : updateBiddingToMySql");
         cacheProcessor.updateTopKeywordToMySql();
-        log.info("**Log : updateTopKeywordToMySql");
         cacheProcessor.updateBoardPriceToMySql();
-        log.info("**Log : updateBoardPriceToMySql");
         cacheProcessor.updateBoardStatusToMySql();
-        log.info("**Log : updateBoardStatusToMySql");
         cacheProcessor.deleteRedisPerHour();
         log.info("**Log : Update To DB - Init");
     }
