@@ -11,6 +11,11 @@ declare module 'react-query/types/react/QueryClientProvider' {
 }
 
 export const App = () => {
+  if (process.env.NODE_ENV === 'production') {
+    console.log = function noConsole() {};
+    console.warn = function noConsole() {};
+  }
+
   const [queryClient] = useState(
     () =>
       new QueryClient({
