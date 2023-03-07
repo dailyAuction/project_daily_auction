@@ -1,3 +1,4 @@
+import shortid from 'shortid';
 import { ProductItem } from '../../_common/ProductItem/ProductItem';
 
 export const MyAuctionContent = ({ data, statusId }) => {
@@ -7,7 +8,7 @@ export const MyAuctionContent = ({ data, statusId }) => {
         const filterData = page.items.filter((item) => item.statusId === statusId + 1);
         return (
           filterData[0] && (
-            <div key={crypto.randomUUID()} className="flex flex-col gap-2">
+            <div key={shortid.generate()} className="flex flex-col gap-2">
               {filterData.map((el) => {
                 return <ProductItem key={el.boardId} productDetail={el} />;
               })}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useInfiniteQuery } from 'react-query';
 import { useInView } from 'react-intersection-observer';
+import shortid from 'shortid';
 import { ProductItem } from '../../_common/ProductItem/ProductItem';
 import { CATEGORIES } from '../../../constants/constants';
 import { mainPageAPI } from '../../../api/mainPageAPI';
@@ -28,7 +29,7 @@ export const Bestproduct = () => {
       getNextPageParam: (lastPage, allPages) => {
         const totalPage = lastPage['pageInfo']?.totalPages;
         const nextPage = allPages.length;
-        return nextPage <= totalPage && nextPage; // 끝까지 다 봤을때는 return되는 값이 없어야한다
+        return nextPage <= totalPage && nextPage;
       },
       enabled: isClick,
     }
@@ -84,7 +85,7 @@ export const Bestproduct = () => {
       <div className="flex flex-col gap-2 items-center">
         {data?.pages?.map((page) => {
           return (
-            <div key={crypto.randomUUID()} className="w-[96%] flex flex-col gap-2">
+            <div key={shortid.generate()} className="w-[96%] flex flex-col gap-2">
               {page?.items?.map((el) => (
                 <div key={el.boardId}>
                   <ProductItem productDetail={el} />
