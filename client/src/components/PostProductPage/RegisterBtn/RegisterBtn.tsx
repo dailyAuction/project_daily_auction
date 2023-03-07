@@ -1,7 +1,7 @@
 export const RegisterBtn = ({ valid, setValid, handleClickBtn }) => {
   return (
     <>
-      <button type="button" className="red-btn m-2 ml-auto mb-3" onClick={handleClickBtn}>
+      <button type="button" className="red-btn m-2 ml-auto mb-20" onClick={handleClickBtn}>
         등록
       </button>
       {valid && (
