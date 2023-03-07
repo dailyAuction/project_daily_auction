@@ -58,7 +58,7 @@ public class BoardController {
                                        @RequestParam int size) {
 
 
-        PageDto pageDto = boardService.getBoards(categoryId, page - 1, size, sort);
+        PageDto pageDto = boardService.getBoards(categoryId, page, size, sort);
 
         return pageDto;
     }
