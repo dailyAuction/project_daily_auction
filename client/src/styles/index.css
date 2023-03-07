@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@layer base {
+  * {
+    font-family: 'Pretendard-Regular';
+  }
+}
+
+@layer components {
+  .base-layout {
+    @apply flex flex-col items-center h-full w-full sm:w-[500px]
+    bg-background-mobile;
+  }
+
+  .content-layout {
+    @apply w-full h-full px-[10px] space-y-3 overflow-y-auto pb-[75px];
+  }
+
+  .red-btn {
+    @apply bg-main-red py-1 px-5 rounded-xl text-white hover:bg-main-orange transition-all;
+  }
+
+  .white-btn {
+    @apply bg-white border-border-color border py-1 px-5 rounded-xl text-main-brown font-bold hover:bg-border-color transition-all;
+  }
+
+  .bg-modal {
+    @apply w-full h-full bg-main-brown/[.30] absolute right-0 -top-3 space-y-0 flex justify-center items-center flex-col z-10;
+  }
+
+  .modal-container {
+    @apply w-96 h-96 bg-background-mobile shadow-sm rounded-md flex flex-col px-10 justify-center space-y-5 z-20;
+  }
+
+  .input {
+    @apply w-full outline-none px-2.5 py-1 rounded-[10px] text-base placeholder:text-border-color;
+  }
+
+  .category-btn {
+    @apply bg-white rounded-[10px] mx-1 px-2.5 shadow-lg h-[23px] hover:bg-main-red hover:text-white text-xs active:bg-red-600;
+  }
+
+  img {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  /* input type="number"일 경우 화살표 제거 */
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number'] {
+    -webkit-appearance: none;
+    margin: 0;
+    -moz-appearance: textfield !important;
+  }
+}
