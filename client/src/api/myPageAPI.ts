@@ -6,7 +6,6 @@ type MyAuctionListAPIFactor = {
   path: string;
   page?: number;
   size?: number;
-  token?: string;
 };
 
 type MyPageProduct = {
@@ -14,23 +13,15 @@ type MyPageProduct = {
 };
 
 export const myPageAPI = {
-  getMyAuctionList: async ({ path, page = 1, size = 10, token }: MyAuctionListAPIFactor) => {
-    const res = await httpClient.get<MyPageProduct>(`/members/${path}/?page=${page}&size=${size}`, {
-      headers: {
-        Authorization: token,
-      },
-    });
+  getMyAuctionList: async ({ path, page = 1, size = 10 }: MyAuctionListAPIFactor) => {
+    const res = await httpClient.get<MyPageProduct>(`/members/${path}/?page=${page}&size=${size}`);
     return res.data;
   },
 };
 
 export const myInfoAPI = {
-  get: async (token: string) => {
-    const res = await httpClient.get<MemberInfo>('/members/my-page', {
-      headers: {
-        Authorization: token,
-      },
-    });
+  get: async () => {
+    const res = await httpClient.get<MemberInfo>('/members/my-page');
     return res.data;
   },
 };

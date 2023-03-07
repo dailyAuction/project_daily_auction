@@ -3,9 +3,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
-import { useRecoilValue } from 'recoil';
 import { editPasswordAPI } from '../../../api/editPasswordAPI';
-import { accessTokenAtom } from '../../../atoms/token';
 import { REG_KOREA, REG_PASSWORD } from '../../../constants/constants';
 import { SuccessModal } from '../../_common/Modal/SuccessModal';
 import { OpenPassword } from '../../_common/OpenPassword/OpenPassword';
@@ -27,7 +25,6 @@ export const EditPassword = () => {
     newPassword: false,
     confirmPassword: false,
   });
-  const accessToken = useRecoilValue(accessTokenAtom);
 
   // TODO : 비밀번호 변경 로직 분리하기
   const {
@@ -43,7 +40,7 @@ export const EditPassword = () => {
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
       };
-      return editPasswordAPI.patch({ data: patchData, token: accessToken });
+      return editPasswordAPI.patch({ data: patchData });
     },
     {
       onSuccess: () => {

@@ -8,7 +8,6 @@ import { FindPasswordModal } from '../FindPasswordModal/FindPasswordModal';
 import { REG_EMAIL, REG_PASSWORD } from '../../../constants/constants';
 import { MemberAuthData } from '../../../types/member.type';
 import { loginAPI } from '../../../api/loginAPI';
-import { accessTokenAtom, refreshTokenAtom } from '../../../atoms/token';
 import { loginStateAtom, userInfoAtom } from '../../../atoms/user';
 
 type LoginData = MemberAuthData;
@@ -16,8 +15,6 @@ type LoginData = MemberAuthData;
 export const Login = () => {
   const [isCorrect, setIsCorrect] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [, setAccessToken] = useRecoilState(accessTokenAtom);
-  const [, setRefreshToken] = useRecoilState(refreshTokenAtom);
   const [, setUserInfo] = useRecoilState(userInfoAtom);
   const [, setLoginState] = useRecoilState(loginStateAtom);
 
@@ -36,8 +33,9 @@ export const Login = () => {
     {
       onSuccess: (res) => {
         if (res.accesstoken !== res.refreshtoken) {
-          setAccessToken(res.accesstoken);
-          setRefreshToken(res.refreshtoken);
+          localStorage.setItem('access', res.accesstoken);
+          localStorage.setItem('refresh', res.refreshtoken);
+
           setUserInfo({
             memberId: Number(res.memberid),
             coin: Number(res.coin),

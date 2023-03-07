@@ -13,7 +13,7 @@ export const MyPageInfo = () => {
   const { resetUser } = resetUserInfoHook();
 
   const handleLogout = () => {
-    resetUser();
+    // resetUser();
     navigate('/');
   };
 

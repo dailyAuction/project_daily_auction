@@ -1,4 +1,3 @@
-import { useRecoilValue } from 'recoil';
 import { useCallback, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +8,6 @@ import { RegisterProductInfo } from '../components/PostProductPage/RegisterProdu
 import { TabBar } from '../components/_common/TabBar/TabBar';
 import { RegisterBtn } from '../components/PostProductPage/RegisterBtn/RegisterBtn';
 import { postProductAPI } from '../api/postProductAPI';
-import { accessTokenAtom } from '../atoms/token';
 
 export const PostProductPage = () => {
   const [myImage, setMyImage] = useState([]);
@@ -19,7 +17,6 @@ export const PostProductPage = () => {
     description: '',
     categoryId: '',
   });
-  const token = useRecoilValue(accessTokenAtom);
   const [valid, setValid] = useState(false);
   const [errMessage, setErrMessage] = useState('');
   const navigate = useNavigate();
@@ -28,7 +25,7 @@ export const PostProductPage = () => {
   Array.from(myImage).forEach((img) => formData.append('files', img));
   formData.append('data', new Blob([JSON.stringify(productInfo)], { type: 'application/json' }));
 
-  const { mutate } = useMutation(() => postProductAPI.post(formData, token));
+  const { mutate } = useMutation(() => postProductAPI.post(formData));
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>, data) => {
     e.preventDefault();

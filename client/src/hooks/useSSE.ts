@@ -1,14 +1,14 @@
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
 import { useCallback, useRef } from 'react';
 import { useQueryClient } from 'react-query';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { accessTokenAtom } from '../atoms/token';
+import { useSetRecoilState } from 'recoil';
 import { userInfoAtom } from '../atoms/user';
 import { NOTIFICATION_KEY } from '../constants/constants';
 import { NotificationResp } from '../types/notice.type';
 
 export const useSSE = () => {
-  const accessToken = useRecoilValue(accessTokenAtom);
+  const accessToken = localStorage.getItem('access');
+  console.log(accessToken);
   const eventSource = useRef<EventSourcePolyfill | EventSource>();
   const queryClient = useQueryClient();
   const setUserInfo = useSetRecoilState(userInfoAtom);

@@ -1,8 +1,6 @@
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
 import { signoutAPI } from '../../../api/signoutAPI';
-import { accessTokenAtom } from '../../../atoms/token';
 import { resetUserInfoHook } from '../../../hooks/useResetUserInfo';
 
 type SignOutModalProps = {
@@ -11,12 +9,11 @@ type SignOutModalProps = {
 
 export const SignOutModal = ({ handleClose }: SignOutModalProps) => {
   const navigate = useNavigate();
-  const accessToken = useRecoilValue(accessTokenAtom);
   const { resetUser } = resetUserInfoHook();
 
   const { mutate: signOutOk } = useMutation(
     () => {
-      return signoutAPI.patch({ token: accessToken });
+      return signoutAPI.patch();
     },
     {
       onSuccess: () => {

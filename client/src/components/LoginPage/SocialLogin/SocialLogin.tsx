@@ -1,9 +1,7 @@
 import { useEffect } from 'react';
-import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { myInfoAPI } from '../../../api/myPageAPI';
-import { accessTokenAtom, refreshTokenAtom } from '../../../atoms/token';
 import { loginStateAtom, socialLoginStateAtom, userInfoAtom } from '../../../atoms/user';
 import { MainHeader } from '../../_common/Header/MainHeader/MainHeader';
 import { TabBar } from '../../_common/TabBar/TabBar';
@@ -11,8 +9,6 @@ import { useSocialToken } from './useSocialLogin';
 
 export const SocialLogin = () => {
   const navigate = useNavigate();
-  const [, setAccessToken] = useRecoilState(accessTokenAtom);
-  const [, setRefreshToken] = useRecoilState(refreshTokenAtom);
   const [, setUserInfo] = useRecoilState(userInfoAtom);
   const [, setLoginState] = useRecoilState(loginStateAtom);
   const [, setSocialLoginState] = useRecoilState(socialLoginStateAtom);
@@ -21,9 +17,11 @@ export const SocialLogin = () => {
   const { access, refresh } = useSocialToken();
   const socialLogin = async () => {
     try {
-      const res = await myInfoAPI.get(access);
-      setAccessToken(access);
-      setRefreshToken(refresh);
+      const res = await myInfoAPI.get();
+      localStorage.setItem('access', access);
+      localStorage.setItem('refresh', refresh);
+      // setAccessToken(access);
+      // setRefreshToken(refresh);
       setUserInfo({
         memberId: res.memberId,
         coin: res.coin,

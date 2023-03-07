@@ -1,4 +1,3 @@
-import { useRecoilValue } from 'recoil';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { SubHeader } from '../../_common/Header/SubHeader/SubHeader';
@@ -7,15 +6,13 @@ import { MyAuctionBtn } from '../MyAuctionBtn/MyAuctionBtn';
 import { MyAuctionContent } from '../MyAuctionContent/MyAuctionContent';
 import { AUCTION_STATUS } from '../../../constants/constants';
 import { myPageAPI } from '../../../api/myPageAPI';
-import { accessTokenAtom } from '../../../atoms/token';
 
 export const MyAuctionList = () => {
   const [status, setStatus] = useState(0);
-  const token = useRecoilValue(accessTokenAtom);
 
   const { isLoading, error, data } = useQuery(
     'myAuction',
-    () => myPageAPI.getMyAuctionList({ path: 'my-auction-list', token }),
+    () => myPageAPI.getMyAuctionList({ path: 'my-auction-list' }),
     { staleTime: 1000 * 20 }
   );
 

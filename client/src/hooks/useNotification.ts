@@ -1,12 +1,10 @@
 import { useMutation, useQuery } from 'react-query';
 import { useRecoilValue } from 'recoil';
 import { noticesAPI } from '../api/noticesAPI';
-import { accessTokenAtom } from '../atoms/token';
 import { loginStateAtom } from '../atoms/user';
 import { NOTIFICATION_KEY } from '../constants/constants';
 
 export const useNotification = () => {
-  const accessToken = useRecoilValue(accessTokenAtom);
   const loginState = useRecoilValue(loginStateAtom);
 
   if (loginState) {
@@ -16,7 +14,7 @@ export const useNotification = () => {
       isLoading,
       error,
       refetch,
-    } = useQuery(NOTIFICATION_KEY, () => noticesAPI.get(accessToken), {
+    } = useQuery(NOTIFICATION_KEY, () => noticesAPI.get(), {
       refetchOnMount: true,
       onError: (e) => console.error(e),
     });
@@ -24,7 +22,7 @@ export const useNotification = () => {
     // 삭제 후 데이터 업데이트
     const { mutate: handleDelete } = useMutation(
       (noticeId: number) => {
-        return noticesAPI.delete(noticeId, accessToken);
+        return noticesAPI.delete(noticeId);
       },
       {
         onSuccess: () => {

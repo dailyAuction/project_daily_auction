@@ -1,14 +1,12 @@
 import { Client } from '@stomp/stompjs';
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { accessTokenAtom } from '../atoms/token';
 import { ProductDetailRealtimeResp } from '../types/product.type';
 
 export const useWebsocket = (subEndpoint: string) => {
   const [response, setResponse] = useState<Partial<ProductDetailRealtimeResp>>({});
   const boardId = +subEndpoint.split('/').at(-1);
   const client = useRef<Client | null>(null);
-  const accessToken = useRecoilValue(accessTokenAtom);
+  const accessToken = localStorage.getItem('access');
 
   // 웹소켓 연결을 위한 stomp 클라이언트 생성
   useEffect(() => {

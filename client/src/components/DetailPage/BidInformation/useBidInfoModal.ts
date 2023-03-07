@@ -1,7 +1,6 @@
 import { SetStateAction } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { myInfoAPI } from '../../../api/myPageAPI';
-import { accessTokenAtom } from '../../../atoms/token';
 import { userInfoAtom } from '../../../atoms/user';
 import { useCoinCalc } from '../../../hooks/useCoinCalc';
 
@@ -14,12 +13,11 @@ type UseBidInfoModalFactor = {
 
 export const useBidInfoModal = ({ bidValue, setBidValue, setValidationMsg, handleClose }: UseBidInfoModalFactor) => {
   const [{ coin: myCoin }, setCoin] = useRecoilState(userInfoAtom);
-  const accessToken = useRecoilValue(accessTokenAtom);
 
   // 코인 잔액 업데이트 핸들러
   const handleUpdateCoin = async () => {
     try {
-      const { coin } = await myInfoAPI.get(accessToken);
+      const { coin } = await myInfoAPI.get();
       setCoin((prev) => ({ ...prev, coin }));
     } catch (err) {
       console.error(err);

@@ -1,7 +1,6 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { useMutation } from 'react-query';
 import React, { SetStateAction } from 'react';
-import { accessTokenAtom } from '../../../atoms/token';
 import { userInfoAtom } from '../../../atoms/user';
 import { useCoinCalc, useBtnCoinCalc } from '../../../hooks/useCoinCalc';
 import { coinAPI } from '../../../api/coinAPI';
@@ -15,11 +14,11 @@ type UseChargeFactor = {
 
 export const useCharge = ({ coinValue, setCoinValue, setModalOpen, setAdviceText }: UseChargeFactor) => {
   const [, setUserInfo] = useRecoilState(userInfoAtom);
-  const accessToken = useRecoilValue(accessTokenAtom);
 
   const { mutate: patchCoin } = useMutation(
     (calcCoin: number) => {
-      return coinAPI.patchCoinCharge({ coin: calcCoin, token: accessToken });
+      // return coinAPI.patchCoinCharge({ coin: calcCoin, token: accessToken });
+      return coinAPI.patchCoinCharge({ coin: calcCoin });
     },
     {
       onSuccess: (res) => {

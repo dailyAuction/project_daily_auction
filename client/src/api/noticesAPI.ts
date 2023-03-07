@@ -8,23 +8,13 @@ type NoticesResp = {
 export const noticesAPI = {
   url: `/notices`,
 
-  async get(token: string) {
-    const option = {
-      headers: {
-        Authorization: token,
-      },
-    };
-
-    const res = await httpClient.get<NoticesResp>(this.url, option);
+  async get() {
+    const res = await httpClient.get<NoticesResp>(this.url);
     return res.data.items;
   },
 
-  async delete(id: number, token: string) {
-    const res = await httpClient.delete(`${this.url}/${id}`, {
-      headers: {
-        Authorization: token,
-      },
-    });
+  async delete(id: number) {
+    const res = await httpClient.delete(`${this.url}/${id}`);
 
     return res.data;
   },
