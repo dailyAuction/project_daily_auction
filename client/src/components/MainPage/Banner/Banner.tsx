@@ -20,8 +20,12 @@ export const Banner = () => {
   return (
     <div className="base-layout my-2">
       <div className="relative">
-        <div className="w-full h-56 " ref={slideRef}>
-          <img className="w-screen h-56 object-cover" src={`/testImg/test${currSlide + 1}.jpeg`} alt="" />
+        <div className="w-full h-56 flex justify-center items-center bg-[#F2ECC8]" ref={slideRef}>
+          <img
+            className="w-screen object-fill max-h-56"
+            src={`https://daily-auction-bucket.s3.ap-northeast-2.amazonaws.com/banner/banner${currSlide + 1}.jpg`}
+            alt=""
+          />
         </div>
         <div>
           <button type="button" className="absolute top-20 left-3" onClick={handlerClickPrevBtn}>
