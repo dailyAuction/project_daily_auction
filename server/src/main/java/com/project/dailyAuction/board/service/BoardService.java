@@ -252,6 +252,9 @@ public class BoardService {
 //                        .httpOnly(true)
                         .maxAge(60 * 60 * 24)
                         .domain("dailyauction.site")
+                        .sameSite("None")
+                        .secure(true)
+                        .httpOnly(true)
                         .build();
                 httpResponse.setHeader("Set-Cookie", newCookie.toString());
             } else {  // 해당 보드 쿠키는 있는 경우
@@ -261,9 +264,11 @@ public class BoardService {
             viewCount = setViewCntToRedis(board);
             ResponseCookie newCookie = ResponseCookie.from("postView", "[" + boardId + "]")
                     .path("/")
-//                    .httpOnly(true)
                     .maxAge(60 * 60 * 24)
                     .domain("dailyauction.site")
+                    .sameSite("None")
+                    .secure(true)
+                    .httpOnly(true)
                     .build();
             httpResponse.addHeader("Set-Cookie", newCookie.toString());
         }
