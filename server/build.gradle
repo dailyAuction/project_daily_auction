@@ -1,0 +1,70 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.8'
+	id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.project'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
+	//gson
+	implementation 'com.google.code.gson:gson'
+
+	//test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+	//메일 전송 관련
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	//썸네일 관련
+	implementation 'net.coobird:thumbnailator:0.4.18'
+
+	//스프링시큐리티
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	//JWT 인증 관련
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly	'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	//oauth 관련
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	//redis 관련
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	//websocket 관련
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	//aws 관련
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+	implementation group: 'commons-io', name: 'commons-io', version: '2.4'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
