@@ -13,7 +13,7 @@ export const CategoryProductListPage = () => {
   const [isClick, setIsClick] = useState(true);
   const [sortState, setSortState] = useState(0);
 
-  const { isLoading, data } = useQuery(
+  const { data } = useQuery(
     ['categoryProduct', `${id}`, `${sortState}`],
     () => categoryProductAPI.get({ sort: sortState + 1, categoryId: id }),
     {

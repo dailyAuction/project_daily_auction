@@ -38,7 +38,8 @@
       }
     ],
     "@typescript-eslint/no-explicit-any": "off",
-    "no-console": "warn", // console.log 경고
+    "no-console": "off", // console.log 경고
+    "no-alert": "off", // console.log 경고
     "no-nested-ternary": "off", // 중첩 삼항연산자 사용 가능
     "no-param-reassign": ["error", { "props": false }], // 함수 매개변수 재할당 불가
     "no-plusplus": "off", // 증감 연산자 사용 가능

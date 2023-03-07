@@ -16,7 +16,7 @@ export const SearchResultList = () => {
     }
   );
 
-  const { items: results, pageInfo } = data || {};
+  const { items: results } = data || {};
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>검색 결과를 찾지 못하였습니다.</div>;
