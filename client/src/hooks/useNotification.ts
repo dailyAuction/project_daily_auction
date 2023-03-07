@@ -11,18 +11,13 @@ export const useNotification = () => {
 
   if (loginState) {
     // 알림 데이터 가져오기
-    const {
-      data: notifications,
-      isLoading,
-      error,
-      refetch,
-    } = useQuery(NOTIFICATION_KEY, () => noticesAPI.get(accessToken), {
+    const { data: notifications, refetch } = useQuery(NOTIFICATION_KEY, () => noticesAPI.get(accessToken), {
       refetchOnMount: true,
       onError: (e) => console.error(e),
     });
 
     // 삭제 후 데이터 업데이트
-    const { mutate: handleDelete } = useMutation(
+    const { mutate: handleDelete, isLoading: isDeleteLoading } = useMutation(
       (noticeId: number) => {
         return noticesAPI.delete(noticeId, accessToken);
       },
@@ -36,7 +31,7 @@ export const useNotification = () => {
       }
     );
 
-    return { notifications, isLoading, error, handleDelete };
+    return { notifications, handleDelete, isDeleteLoading };
   }
 
   const notifications = [];

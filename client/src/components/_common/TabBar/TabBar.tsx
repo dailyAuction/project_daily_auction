@@ -121,12 +121,14 @@ const TabIcon = ({ children, idx }) => {
 
 export const TabBar = () => {
   return (
-    <nav className="flex shrink-0 w-full h-[75px] sticky top-[100vh] bg-white justify-between items-center px-7 border-t">
-      {TAB_TITLE.map((title, idx) => (
-        <TabIcon key={title} idx={idx}>
-          {title}
-        </TabIcon>
-      ))}
-    </nav>
+    <div className="fixed bottom-0 sm:w-[500px] w-screen">
+      <nav className="flex shrink-0 w-full h-[75px] sticky top-[100vh] bg-white justify-between items-center px-7 border-t">
+        {TAB_TITLE.map((title, idx) => (
+          <TabIcon key={title} idx={idx}>
+            {title}
+          </TabIcon>
+        ))}
+      </nav>
+    </div>
   );
 };

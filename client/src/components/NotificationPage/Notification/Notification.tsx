@@ -3,10 +3,17 @@ import { NOTIFICATION_STATUS, NOTIFICATION_STATUS_MSG } from '../../../constants
 import { getShortString } from '../../../utils/getShortString';
 import { useNotification } from '../../../hooks/useNotification';
 import { NotificationResp } from '../../../types/notice.type';
+import { Loading } from '../../_common/Loading/Loading';
 
 export const Notification = ({ noticeId, boardId, boardTitle, thumbnail, statusId, contact }: NotificationResp) => {
-  const { handleDelete } = useNotification();
+  const { handleDelete, isDeleteLoading } = useNotification();
 
+  if (isDeleteLoading)
+    return (
+      <section className="mt-2 py-2 px-3 flex justify-center items-center">
+        <Loading />
+      </section>
+    );
   return (
     <section className="bg-white mt-2 py-2 px-3 rounded-lg space-y-3">
       <article className="flex justify-between items-center border-b pt-2 pb-1">

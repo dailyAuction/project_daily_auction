@@ -14,9 +14,9 @@ export const MainPage = () => {
       <ClosingProduct />
       <Bestproduct />
       <Footer />
-      <div className="fixed bottom-0 sm:w-[500px] w-screen">
-        <TabBar />
-      </div>
+
+      <TabBar />
+
       <ScrollToTopBtn />
     </main>
   );
