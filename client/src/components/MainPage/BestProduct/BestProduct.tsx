@@ -82,9 +82,9 @@ export const Bestproduct = () => {
         {status === 'error' && <div>카테고리별 인기상품이 없습니다.</div>}
       </div>
       <div className="flex flex-col gap-2 items-center">
-        {data?.pages?.map((page) => {
+        {data?.pages?.map((page, idx) => {
           return (
-            <div key={crypto.randomUUID()} className="w-[96%] flex flex-col gap-2">
+            <div key={page.items[idx].boardId} className="w-[96%] flex flex-col gap-2">
               {page?.items?.map((el) => (
                 <div key={el.boardId}>
                   <ProductItem productDetail={el} />
