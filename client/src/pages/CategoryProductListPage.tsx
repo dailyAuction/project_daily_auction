@@ -33,8 +33,7 @@ export const CategoryProductListPage = () => {
         <MainHeader>{CATEGORIES[Number(id)]}</MainHeader>
         <CategoryList sortState={sortState} setSortState={setSortState} setIsClick={setIsClick} />
       </section>
-      <section className="w-full h-full overflow-y-scroll scrollbar-hide ">
-        {/* TODO : 상품 리스트 조회 추가 */}
+      <section className="content-layout overflow-y-scroll scrollbar-hide ">
         <article className="px-[10px] mb-[10px] flex flex-col space-y-3">
           {data?.items.map((product) => (
             <ProductItem productDetail={product} key={product.boardId} />

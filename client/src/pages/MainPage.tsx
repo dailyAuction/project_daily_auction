@@ -8,7 +8,7 @@ import { TabBar } from '../components/_common/TabBar/TabBar';
 
 export const MainPage = () => {
   return (
-    <main className="base-layout bg-white relative overflow-scroll">
+    <main className="base-layout bg-white relative overflow-scroll scrollbar-hide">
       <MainHeader>Daily Auction</MainHeader>
       <Banner />
       <ClosingProduct />
