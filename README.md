@@ -37,6 +37,7 @@
   - **1주차** : 와이어프레임과 서비스 설계 위주로 진행했습니다.
   - **2주차 ~ 4주차** : 코어타임을 준수하며 요구사항에 맞게 서비스를 개발했습니다. 
   - **5주차** : AWS S3 와 EC2를 통한 서비스 배포를 진행했습니다. 
+
 |<a href="https://www.figma.com/file/EruPDY4ljbba0H442rES6k/%EB%8D%B0%EC%9D%BC%EB%A6%AC-%EC%98%A5%EC%85%98?node-id=0%3A1&t=8JtZ8r5VgRGiS1cr-1">프로토 타입</a>|<a href="https://docs.google.com/spreadsheets/d/1eA0DrcsMQVfrVcueWP3xH4EueExcl0PKA2HXubzB63w/edit#gid=0">요구사항 정의서</a>|
 |:-:|:-:|
 |<img src="https://daily-auction-bucket.s3.ap-northeast-2.amazonaws.com/banner/readme/readme1.png">|<img src="https://daily-auction-bucket.s3.ap-northeast-2.amazonaws.com/banner/readme/readme2.png">|
@@ -60,7 +61,7 @@
 |박혜정 (FE / 팀장)|김재훈 (FE / 서기)|정희찬 (FE)|강병재 (BE)|조성웅 (BE)|
 |:-:|:-:|:-:|:-:|:-:|
 |<img src="https://avatars.githubusercontent.com/u/89173923?v=4" width=150>|<img src="https://avatars.githubusercontent.com/u/107684690?v=4" width=150 >|<img src="https://pre-032-bucket.s3.ap-northeast-2.amazonaws.com/profile_green.png" width=150>|<img src="https://avatars.githubusercontent.com/u/107945688?v=4" width=150>|<img src="https://avatars.githubusercontent.com/u/104243252?v=4" width=150>|
-|[@Eugenius1st](https://github.com/Eugenius1st)|[@halmokme](https://github.com/halmokme)|[@raon9401](https://github.com/raon9401)| [@casava840](https://github.com/casava840)   |[@woong-sung](https://github.com/woong-sung)|
+|[@hyejj19](https://github.com/hyejj19)|[@halmokme](https://github.com/halmokme)|[@raon9401](https://github.com/raon9401)| [@casava840](https://github.com/casava840)   |[@woong-sung](https://github.com/woong-sung)|
 
 ### 맡은 역할
 
