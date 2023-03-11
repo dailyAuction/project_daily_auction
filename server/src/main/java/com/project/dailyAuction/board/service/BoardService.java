@@ -83,9 +83,9 @@ public class BoardService {
     public BoardDto.IdDto saveBoard(String token, BoardDto.Post postDto, List<MultipartFile> images) throws IOException {
         Member member = memberService.findByAccessToken(token);
         Board createdBoard = createBoard(member, postDto);
-        setFinishedTimeToRedis(createdBoard, createdBoard.getFinishedAt());
         // image 핸들러에서 boardId 를 사용하기위해 한 번 저장
         boardRepository.save(createdBoard);
+        setFinishedTimeToRedis(createdBoard, createdBoard.getFinishedAt());
 
         List<BoardImage> list = imageHandler.saveImageOnS3(createdBoard, images);
 
