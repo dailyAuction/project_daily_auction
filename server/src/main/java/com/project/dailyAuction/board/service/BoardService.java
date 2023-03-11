@@ -29,6 +29,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseCookie;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -73,7 +74,6 @@ public class BoardService {
                 .sellerId(member.getMemberId())
                 .startingPrice(postDto.getStartingPrice())
                 .currentPrice(postDto.getStartingPrice())
-                .sellerId(member.getMemberId())
                 .history(String.valueOf(postDto.getStartingPrice()))
                 .build();
 
@@ -608,5 +608,78 @@ public class BoardService {
         List<Integer> prices = getPricesInRedis(boards);
 
         return new PageDto(boardMapper.boardListToBoardDtoList(boards, prices), boardPages);
+    }
+
+    @Scheduled(cron = "0 0 15 * * *")
+    public void createTestBoard(){
+        List<BoardImage> boardImages = new ArrayList<>();
+        boardImages.add(boardImageRepository.findById(1L).get());
+        Board createdBoard = Board.builder()
+                .title("마우스 팝니다")
+                .description("마우스 싸게 팝니다")
+                .thumbnail("http://daily-auction-bucket.s3-website.ap-northeast-2.amazonaws.com/board_thumbnail/1565647234960824thumbnail_of_1")
+                .images(boardImages)
+                .statusId(1)
+                .categoryId(1)
+                .createdAt(LocalDateTime.now().plusHours(9).withSecond(0))
+                .finishedAt(LocalDateTime.now().plusHours(33).withSecond(0))
+                .sellerId(1)
+                .startingPrice(30000)
+                .currentPrice(30000)
+                .history("30000")
+                .build();
+
+        boardRepository.save(createdBoard);
+
+        setFinishedTimeToRedis(createdBoard, createdBoard.getFinishedAt().withSecond(0));
+    }
+    @Scheduled(cron = "0 0 18 * * *")
+    public void createTestBoard2(){
+        List<BoardImage> boardImages = new ArrayList<>();
+        boardImages.add(boardImageRepository.findById(3L).get());
+        Board createdBoard = Board.builder()
+                .title("노트북과 모니터 세트 판매합니다")
+                .description("긴급한 사정으로 인하여... 싸게 처분합니다 ㅜㅜ.\n" +
+                        " 소중하게 사용해주실 새 주인님 모십니다..\n" +
+                        " 경매는 백만원부터 시작하겠습니다..\n" +
+                        " 많은 관심 부탁드리며, 인기 상품으로 등급되길 희망합니다.")
+                .thumbnail("http://daily-auction-bucket.s3-website.ap-northeast-2.amazonaws.com/board_thumbnail/1566439308222329thumbnail_of_3")
+                .images(boardImages)
+                .statusId(1)
+                .categoryId(1)
+                .createdAt(LocalDateTime.now().plusHours(9).withSecond(0))
+                .finishedAt(LocalDateTime.now().plusHours(33).withSecond(0))
+                .sellerId(6)
+                .startingPrice(100000)
+                .currentPrice(100000)
+                .history("100000")
+                .build();
+
+        boardRepository.save(createdBoard);
+
+        setFinishedTimeToRedis(createdBoard, createdBoard.getFinishedAt().withSecond(0));
+    }
+    @Scheduled(cron = "0 0 21 * * *")
+    public void createTestBoard3(){
+        List<BoardImage> boardImages = new ArrayList<>();
+        boardImages.add(boardImageRepository.findById(8L).get());
+        Board createdBoard = Board.builder()
+                .title("브리타 정수기 필터 2개 팝니다.")
+                .description("2개 남았는데 안쓸거 같아서 팝니다.")
+                .thumbnail("http://daily-auction-bucket.s3-website.ap-northeast-2.amazonaws.com/board_thumbnail/1566748772618759thumbnail_of_8")
+                .images(boardImages)
+                .statusId(1)
+                .categoryId(2)
+                .createdAt(LocalDateTime.now().plusHours(9).withSecond(0))
+                .finishedAt(LocalDateTime.now().plusHours(33).withSecond(0))
+                .sellerId(7)
+                .startingPrice(10000)
+                .currentPrice(10000)
+                .history("10000")
+                .build();
+
+        boardRepository.save(createdBoard);
+
+        setFinishedTimeToRedis(createdBoard, createdBoard.getFinishedAt().withSecond(0));
     }
 }
