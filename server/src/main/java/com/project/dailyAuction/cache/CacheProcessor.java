@@ -34,7 +34,6 @@ public class CacheProcessor {
     private final MemberService memberService;
 
     // 보드 상태 업데이트
-    @Transactional
     public void updateBoardStatusToMySql() {
         Set<String> redisKeys = redisTemplate.keys("finishedTime*");
         Iterator<String> it = redisKeys.iterator();
@@ -102,7 +101,6 @@ public class CacheProcessor {
     }
 
     //마감 시 mysql에 보드정보 넘겨주는 메서드
-    @Transactional
     public void updateViewToMySql(long boardId) {
         Set<String> redisKeys = redisTemplate.keys("boardViewCount::" + boardId);
         Iterator<String> it = redisKeys.iterator();
@@ -131,7 +129,6 @@ public class CacheProcessor {
     }
 
     //mysql에 조회수를 넘겨주는 메서드
-    @Transactional
     public void updateViewCntToMySql() {
         Set<String> redisKeys = redisTemplate.keys("boardViewCount*");
         Iterator<String> it = redisKeys.iterator();
@@ -144,7 +141,6 @@ public class CacheProcessor {
         deleteAllInRedis("boardViewCount");
     }
 
-    @Transactional
     public void updateTopKeywordToMySql() {
         Set<String> redisKeys = redisTemplate.keys("SearchedCount*");
         Iterator<String> it = redisKeys.iterator();
@@ -157,7 +153,6 @@ public class CacheProcessor {
         deleteAllInRedis("SearchedCount");
     }
 
-    @Transactional
     public void updateBoardPriceToMySql() {
         Set<String> redisKeys = redisTemplate.keys("boardPrice*");
         Iterator<String> it = redisKeys.iterator();
@@ -171,7 +166,6 @@ public class CacheProcessor {
     }
 
     //bidding 관련
-    @Transactional
     public void updateBiddingToMySql() {
         Set<String> redisKeys = redisTemplate.keys("boardBidCount*");
         Iterator<String> it = redisKeys.iterator();
@@ -206,7 +200,6 @@ public class CacheProcessor {
     }
 
     // refreshToken 레디스에 저장
-    @Transactional
     public void saveRefreshTokenToRedis(long memberId, String refreshToken) {
         String key = "refreshToken::" + memberId;
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
