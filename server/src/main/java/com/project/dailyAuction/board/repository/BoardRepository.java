@@ -12,7 +12,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Transactional
 public interface BoardRepository extends JpaRepository<Board, Long> {
     void deleteBySellerId(long sellerId);
 
@@ -33,22 +32,27 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findTop5ByStatusIdOrderByCreatedAtAsc(long statusId);
 
     @Modifying
+    @Transactional
     @Query(value = "update board set view_count =:viewCount where board_id =:boardId", nativeQuery = true)
     void updateViews(long boardId, int viewCount);
 
     @Modifying
+    @Transactional
     @Query(value = "update board set bid_count =:bidCnt where board_id =:boardId", nativeQuery = true)
     void updateBidCnt(Long boardId, int bidCnt);
 
     @Modifying
+    @Transactional
     @Query(value = "update board set bidder_id =:bidderId where board_id =:boardId", nativeQuery = true)
     void updateBidCnt(Long boardId, long bidderId);
 
     @Modifying
+    @Transactional
     @Query(value = "update board set history =:history where board_id =:boardId", nativeQuery = true)
     void updateHistory(Long boardId, String history);
 
     @Modifying
+    @Transactional
     @Query(value = "update board set status_id =:statusId where board_id =:boardId", nativeQuery = true)
     void updateStatus(Long boardId, long statusId);
 
@@ -57,6 +61,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Page<Board> findBoardsByCategoryIdAndCreatedAtAfter(long categoryId, LocalDateTime time, Pageable pageable);
 
     @Modifying
+    @Transactional
     @Query(value = "update board set current_price =:price where board_id =:boardId", nativeQuery = true)
     void updatePrice(Long boardId, int price);
 }
