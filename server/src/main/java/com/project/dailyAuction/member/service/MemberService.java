@@ -66,6 +66,12 @@ public class MemberService {
 
     public MemberDto.Coin addCoin(String token, MemberDto.Coin coin) {
         Member member = findByAccessToken(token);
+        int curCoin = member.getCoin();
+        if (curCoin+coin.getCoin()>1000000000){
+            throw new ResponseStatusException(ExceptionCode.OVER_COIN.getCode(),
+                    ExceptionCode.OVER_COIN.getMessage(),
+                    new IllegalArgumentException());
+        }
         member.changeCoin(coin.getCoin());
 
         return MemberDto.Coin.builder()
