@@ -2,6 +2,7 @@ package com.project.dailyAuction.search.service;
 
 import com.project.dailyAuction.board.mapper.BoardMapper;
 import com.project.dailyAuction.board.service.BoardService;
+import com.project.dailyAuction.code.ExceptionCode;
 import com.project.dailyAuction.dto.PageDto;
 import com.project.dailyAuction.search.dto.TopKeywordsDto;
 import com.project.dailyAuction.search.entity.Keyword;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -87,6 +89,11 @@ public class SearchService {
     }
 
     public PageDto getSearchPage(long categoryId, String keyword, int page, int size) {
+        if (keyword.equals("") || keyword.equals(null)) {
+            throw new ResponseStatusException(ExceptionCode.CANT_BLANK_SEARCH.getCode(),
+                    ExceptionCode.CANT_BLANK_SEARCH.getMessage(),
+                    new IllegalArgumentException());
+        }
         Page<Board> boardPages = search(categoryId, keyword, page, size);
         List<Board> boards = boardPages.getContent();
         List<Integer> prices = boardService.getPricesInRedis(boards);

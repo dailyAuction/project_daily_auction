@@ -18,6 +18,7 @@ public enum ExceptionCode {
     CANT_BID_IN_A_ROW(409, "Can't Bid In A Row"),
     NOTICE_NOT_FOUND(404, "Notice Not Found"),
     CLOSED_AUCTION(409, "Can't Bid Closed Auction"),
+    CANT_BLANK_SEARCH(409, "Can't Search Blank"),
     KEYWORD_NOT_FOUND(404, "Keyword Not Found");
 
     private final int code;
