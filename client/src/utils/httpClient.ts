@@ -30,23 +30,25 @@ httpClient.interceptors.request.use(
 
 // 기능 : 리프레시 토큰으로 엑세스 토큰 재발급
 const getAccessToken = async () => {
-  try {
-    const refresh = JSON.parse(localStorage.getItem('refresh'));
-    return await httpClient
-      .get('/members/refresh-token', {
-        headers: {
-          RefreshToken: refresh.replace('Bearer ', ''),
-        },
-      })
-      .then((res) => {
-        return res?.headers.authorization;
-      });
-  } catch (error) {
-    // 리프레시 토큰 만료 에러 핸들링
-    console.log('리프레시 토큰 만료', error);
-    localStorage.clear();
-    window.location.href = '/login';
-  }
+  const refresh = JSON.parse(localStorage.getItem('refresh'));
+  // 리프레시 토큰 있는 상태에서 엑세스 토큰 발급시 로직
+  if (refresh)
+    try {
+      return await httpClient
+        .get('/members/refresh-token', {
+          headers: {
+            RefreshToken: refresh.replace('Bearer ', ''),
+          },
+        })
+        .then((res) => {
+          return res?.headers.authorization;
+        });
+    } catch (error) {
+      // 리프레시 토큰 만료 에러 핸들링
+      console.log('리프레시 토큰 만료', error?.response?.status);
+      localStorage.clear();
+      window.location.href = '/login';
+    }
 };
 
 httpClient.interceptors.response.use(
@@ -62,8 +64,8 @@ httpClient.interceptors.response.use(
     }
 
     // 리프레시 토큰으로 엑세스 토큰 재발급
-    const accessToken = await getAccessToken();
     if (response.status === 401) {
+      const accessToken = await getAccessToken();
       localStorage.setItem('access', JSON.stringify(`Bearer ${accessToken}`));
       config.headers.Authorization = `Bearer ${accessToken}`;
       return axios(config);
