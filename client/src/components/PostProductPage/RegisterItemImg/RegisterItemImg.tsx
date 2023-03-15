@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import imageCompression from 'browser-image-compression';
 import heic2any from 'heic2any';
+import { useTouchScroll } from '../../../hooks/useTouchScroll';
 
 export const RegisterItemImg = ({ myImage, setMyImage }) => {
+  const { scrollRef, handleDragStart, handleDragEnd, handleThrottleDragMove } = useTouchScroll();
   const [viewImage, setViewImage] = useState([]);
 
   const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +38,13 @@ export const RegisterItemImg = ({ myImage, setMyImage }) => {
   };
 
   return (
-    <section className="base-layout overflow-x-auto scrollbar-hide flex items-start justify-center h-1/5">
+    <section
+      className="base-layout overflow-x-auto scrollbar-hide flex items-start justify-center h-1/5"
+      ref={scrollRef}
+      onMouseDown={handleDragStart}
+      onMouseUp={handleDragEnd}
+      onMouseLeave={handleDragEnd}
+      onMouseMove={handleThrottleDragMove}>
       <div className="flex px-2">
         <div onChange={handleAddImage}>
           <label htmlFor="input-file">
