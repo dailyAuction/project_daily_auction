@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import { ProductItemImg } from '../../_common/ProductItemImg/ProductItemImg';
@@ -8,6 +9,27 @@ export const ClosingProduct = () => {
   const { isLoading, error, data } = useQuery('closingProduct', () => mainPageAPI.getClosing(), {
     refetchOnMount: true,
   });
+
+  const scrollRef = useRef(null);
+  const [isDrag, setIsDrag] = useState(false);
+  const [currX, setCurrX] = useState(0);
+
+  const onDragStart = (e) => {
+    e.preventDefault();
+    setIsDrag(true);
+    setCurrX(e.pageX + scrollRef.current.scrollLeft);
+  };
+
+  const onDragEnd = () => {
+    setIsDrag(false);
+  };
+
+  const onDragMove = (e) => {
+    const { scrollWidth, clientWidth, scrollLeft } = scrollRef.current;
+    scrollRef.current.scrollLeft = currX - e.pageX;
+    if (scrollLeft === 0) setCurrX(e.pageX);
+    else if (scrollWidth <= clientWidth + scrollLeft) setCurrX(e.pageX + scrollLeft);
+  };
 
   return (
     <div className=" w-full my-4 px-2">
@@ -23,7 +45,13 @@ export const ClosingProduct = () => {
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
-      <div className="flex gap-2 overflow-x-auto scrollbar-hide w-full">
+      <div
+        className="flex gap-2 overflow-x-auto scrollbar-hide w-full"
+        ref={scrollRef}
+        onMouseDown={onDragStart}
+        onMouseUp={onDragEnd}
+        onMouseLeave={onDragEnd}
+        onMouseMove={onDragMove}>
         {isLoading && <Loading />}
         {error && <div>마감 임박 상품이 없습니다.</div>}
         {data?.items?.map((el) => {
