@@ -14,17 +14,17 @@ export const ClosingProduct = () => {
   const [isDrag, setIsDrag] = useState(false);
   const [currX, setCurrX] = useState(0);
 
-  const onDragStart = (e) => {
+  const handleDragStart = (e) => {
     e.preventDefault();
     setIsDrag(true);
     setCurrX(e.pageX + scrollRef.current.scrollLeft);
   };
 
-  const onDragEnd = () => {
+  const handleDragEnd = () => {
     setIsDrag(false);
   };
 
-  const onDragMove = (e) => {
+  const handleDragMove = (e) => {
     const { scrollWidth, clientWidth, scrollLeft } = scrollRef.current;
     scrollRef.current.scrollLeft = currX - e.pageX;
     if (scrollLeft === 0) setCurrX(e.pageX);
@@ -48,10 +48,10 @@ export const ClosingProduct = () => {
       <div
         className="flex gap-2 overflow-x-auto scrollbar-hide w-full"
         ref={scrollRef}
-        onMouseDown={onDragStart}
-        onMouseUp={onDragEnd}
-        onMouseLeave={onDragEnd}
-        onMouseMove={onDragMove}>
+        onMouseDown={handleDragStart}
+        onMouseUp={handleDragEnd}
+        onMouseLeave={handleDragEnd}
+        onMouseMove={handleDragMove}>
         {isLoading && <Loading />}
         {error && <div>마감 임박 상품이 없습니다.</div>}
         {data?.items?.map((el) => {
