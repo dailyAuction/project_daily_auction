@@ -31,6 +31,17 @@ export const ClosingProduct = () => {
     else if (scrollWidth <= clientWidth + scrollLeft) setCurrX(e.pageX + scrollLeft);
   };
 
+  const handleThrottleDragMove = (e) => {
+    let throttled = false;
+    if (!throttled) {
+      throttled = true;
+      setTimeout(() => {
+        handleDragMove(e);
+        throttled = false;
+      }, 20);
+    }
+  };
+
   return (
     <div className=" w-full my-4 px-2">
       <div className="flex items-center">
@@ -51,7 +62,7 @@ export const ClosingProduct = () => {
         onMouseDown={handleDragStart}
         onMouseUp={handleDragEnd}
         onMouseLeave={handleDragEnd}
-        onMouseMove={handleDragMove}>
+        onMouseMove={isDrag ? handleThrottleDragMove : null}>
         {isLoading && <Loading />}
         {error && <div>마감 임박 상품이 없습니다.</div>}
         {data?.items?.map((el) => {
