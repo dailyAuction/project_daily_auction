@@ -13,10 +13,12 @@ export const ClosingProduct = () => {
   const scrollRef = useRef(null);
   const [isDrag, setIsDrag] = useState(false);
   const [currX, setCurrX] = useState(0);
+  const [stopClick, setStopClick] = useState(false);
 
   const handleDragStart = (e) => {
     e.preventDefault();
     setIsDrag(true);
+    setStopClick(false);
     setCurrX(e.pageX + scrollRef.current.scrollLeft);
   };
 
@@ -32,14 +34,19 @@ export const ClosingProduct = () => {
   };
 
   const handleThrottleDragMove = (e) => {
+    setStopClick(true);
     let throttled = false;
-    if (!throttled) {
+    if (!throttled && isDrag) {
       throttled = true;
       setTimeout(() => {
         handleDragMove(e);
         throttled = false;
       }, 20);
     }
+  };
+
+  const handlePreventClick = (e) => {
+    if (stopClick) e.preventDefault();
   };
 
   return (
@@ -62,12 +69,12 @@ export const ClosingProduct = () => {
         onMouseDown={handleDragStart}
         onMouseUp={handleDragEnd}
         onMouseLeave={handleDragEnd}
-        onMouseMove={isDrag ? handleThrottleDragMove : null}>
+        onMouseMove={handleThrottleDragMove}>
         {isLoading && <Loading />}
         {error && <div>마감 임박 상품이 없습니다.</div>}
         {data?.items?.map((el) => {
           return (
-            <Link key={el.boardId} to={`/detail/${el.boardId}`}>
+            <Link key={el.boardId} to={`/detail/${el.boardId}`} onClick={handlePreventClick}>
               <div className="flex flex-col ml-2 min-w-[120px] w-[120px]">
                 <ProductItemImg thumbnail={el.thumbnail} statusId={el.statusId} finishedAt={el.finishedAt} />
                 <p className="text-xs line-clamp-1">{el.title}</p>
