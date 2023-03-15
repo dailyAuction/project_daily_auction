@@ -32,6 +32,7 @@ export const Bestproduct = () => {
         return nextPage <= totalPage && nextPage;
       },
       enabled: isClick,
+      refetchOnMount: true,
     }
   );
 
