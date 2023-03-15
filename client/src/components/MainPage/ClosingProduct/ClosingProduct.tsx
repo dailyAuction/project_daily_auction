@@ -1,49 +1,15 @@
-import { useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import { ProductItemImg } from '../../_common/ProductItemImg/ProductItemImg';
 import { mainPageAPI } from '../../../api/mainPageAPI';
 import { Loading } from '../../_common/Loading/Loading';
+import { useTouchScroll } from '../../../hooks/useTouchScroll';
 
 export const ClosingProduct = () => {
   const { isLoading, error, data } = useQuery('closingProduct', () => mainPageAPI.getClosing(), {
     refetchOnMount: true,
   });
-
-  const scrollRef = useRef(null);
-  const [isDrag, setIsDrag] = useState(false);
-  const [currX, setCurrX] = useState(0);
-  const [stopClick, setStopClick] = useState(false);
-
-  const handleDragStart = (e) => {
-    e.preventDefault();
-    setIsDrag(true);
-    setStopClick(false);
-    setCurrX(e.pageX + scrollRef.current.scrollLeft);
-  };
-
-  const handleDragEnd = () => {
-    setIsDrag(false);
-  };
-
-  const handleDragMove = (e) => {
-    const { scrollWidth, clientWidth, scrollLeft } = scrollRef.current;
-    scrollRef.current.scrollLeft = currX - e.pageX;
-    if (scrollLeft === 0) setCurrX(e.pageX);
-    else if (scrollWidth <= clientWidth + scrollLeft) setCurrX(e.pageX + scrollLeft);
-  };
-
-  const handleThrottleDragMove = (e) => {
-    setStopClick(true);
-    let throttled = false;
-    if (!throttled && isDrag) {
-      throttled = true;
-      setTimeout(() => {
-        handleDragMove(e);
-        throttled = false;
-      }, 20);
-    }
-  };
+  const { stopClick, scrollRef, handleDragStart, handleDragEnd, handleThrottleDragMove } = useTouchScroll();
 
   const handlePreventClick = (e) => {
     if (stopClick) e.preventDefault();
