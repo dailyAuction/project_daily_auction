@@ -7,7 +7,6 @@ import { Loading } from '../../_common/Loading/Loading';
 export const ClosingProduct = () => {
   const { isLoading, error, data } = useQuery('closingProduct', () => mainPageAPI.getClosing(), {
     refetchOnMount: true,
-    refetchOnWindowFocus: true,
   });
 
   return (
