@@ -9,10 +9,11 @@ export const ClosingProduct = () => {
   const { isLoading, error, data } = useQuery('closingProduct', () => mainPageAPI.getClosing(), {
     refetchOnMount: true,
   });
-  const { stopClick, scrollRef, handleDragStart, handleDragEnd, handleThrottleDragMove } = useTouchScroll();
+  const { scrollRef, handleDragStart, handleDragEnd, handleThrottleDragMove } = useTouchScroll();
 
   const handlePreventClick = (e) => {
-    if (stopClick) e.preventDefault();
+    const currTarget = e.target as HTMLDivElement;
+    if (currTarget.style.cursor === 'grab') e.preventDefault();
   };
 
   return (
