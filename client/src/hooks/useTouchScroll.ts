@@ -4,17 +4,19 @@ export const useTouchScroll = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isDrag, setIsDrag] = useState(false);
   const [currX, setCurrX] = useState(0);
+  const [startX, setStartX] = useState(0);
+  const [endX, setEndX] = useState(0);
 
   const handleDragStart = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDrag(true);
     setCurrX(e.pageX + scrollRef.current.scrollLeft);
-    const currTarget = e.target as HTMLDivElement;
-    currTarget.style.cursor = 'pointer';
+    setStartX(e.pageX);
   };
 
-  const handleDragEnd = () => {
+  const handleDragEnd = (e) => {
     setIsDrag(false);
+    setEndX(e.pageX);
   };
 
   const handleDragMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -33,11 +35,7 @@ export const useTouchScroll = () => {
         throttled = false;
       }, 20);
     }
-    if (isDrag) {
-      const currTarget = e.target as HTMLDivElement;
-      currTarget.style.cursor = 'grab';
-    }
   };
 
-  return { scrollRef, handleDragStart, handleDragEnd, handleThrottleDragMove };
+  return { scrollRef, startX, endX, handleDragStart, handleDragEnd, handleThrottleDragMove };
 };
