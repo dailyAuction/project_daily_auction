@@ -22,6 +22,7 @@ const { ChargePage } = lazyImport(() => import('../pages/ChargePage'), 'ChargePa
 const { MyAuctionList } = lazyImport(() => import('../components/MyPage/MyAuctionList/MyAuctionList'), 'MyAuctionList');
 const { SocialLogin } = lazyImport(() => import('../components/LoginPage/SocialLogin/SocialLogin'), 'SocialLogin');
 const { Loading } = lazyImport(() => import('../components/_common/Loading/Loading'), 'Loading');
+const { NotFoundPage } = lazyImport(() => import('../pages/NotFoundPage'), 'NotFoundPage');
 
 export const Router = () => {
   return (
@@ -44,6 +45,7 @@ export const Router = () => {
           <Route path="/categoryProduct/:id" element={<CategoryProductListPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/callback/*" element={<SocialLogin />} />
+          <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
