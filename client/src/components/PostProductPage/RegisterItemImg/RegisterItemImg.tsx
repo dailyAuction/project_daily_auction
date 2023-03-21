@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import imageCompression from 'browser-image-compression';
 import heic2any from 'heic2any';
+import { useTouchScroll } from '../../../hooks/useTouchScroll';
 
 export const RegisterItemImg = ({ myImage, setMyImage }) => {
+  const { scrollRef, handleDragStart, handleDragEnd, handleThrottleDragMove } = useTouchScroll();
   const [viewImage, setViewImage] = useState([]);
 
   const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,8 +28,23 @@ export const RegisterItemImg = ({ myImage, setMyImage }) => {
     setMyImage(nowImgURLList);
   };
 
+  const handleDelImage = (idx: number) => {
+    const copyView = [...viewImage];
+    const copyImg = [...myImage];
+    copyView.splice(idx, 1);
+    copyImg.splice(idx, 1);
+    setViewImage(copyView);
+    setMyImage(copyImg);
+  };
+
   return (
-    <section className="base-layout overflow-x-auto scrollbar-hide flex items-start justify-center h-1/5">
+    <section
+      className="base-layout overflow-x-auto scrollbar-hide flex items-start justify-center h-1/5"
+      ref={scrollRef}
+      onMouseDown={handleDragStart}
+      onMouseUp={handleDragEnd}
+      onMouseLeave={handleDragEnd}
+      onMouseMove={handleThrottleDragMove}>
       <div className="flex px-2">
         <div onChange={handleAddImage}>
           <label htmlFor="input-file">
@@ -55,12 +72,22 @@ export const RegisterItemImg = ({ myImage, setMyImage }) => {
 
         <div className="flex justify-start align-middle">
           {Array.isArray(viewImage) &&
-            viewImage.map((x) => {
+            viewImage.map((x, i) => {
               return (
                 <div
                   key={x}
-                  className="flex justify-center align-middle w-24 h-24 bg-white border-2 border-light-gray rounded-[10px] mr-3">
+                  className="flex justify-center align-middle w-24 h-24 bg-white border-2 border-light-gray rounded-[10px] mr-3 relative">
                   <img className="rounded-[10px]" src={x} alt="img" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2.5"
+                    stroke="currentColor"
+                    className="absolute right-1 top-1.5 w-3 h-3 cursor-pointer opacity-70"
+                    onClick={() => handleDelImage(i)}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
                 </div>
               );
             })}

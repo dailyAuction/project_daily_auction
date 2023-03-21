@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useInterval } from './useInterval';
 
 export const useGetTimeRemain = (finishedAt: string) => {
@@ -34,7 +34,7 @@ export const useGetTimeRemain = (finishedAt: string) => {
   useInterval(updateTime, 1000, shouldContinue);
 
   // 첫 렌더링에서 보여줄 시간을 계산한다.
-  useEffect(() => {
+  useLayoutEffect(() => {
     updateTime();
     setShouldContinue(true);
 
