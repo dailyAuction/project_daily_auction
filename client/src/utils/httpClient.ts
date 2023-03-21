@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { setLocalStorage, clearLocalStorage, getLocalStorage } from '../hooks/useLocalStorage';
 
 export const httpClient = axios.create({
   baseURL: process.env.REACT_APP_URL,
@@ -13,13 +14,13 @@ httpClient.interceptors.request.use(
     let token: string | null = null;
 
     if (config.url === '/members/refresh-token') {
-      token = localStorage.getItem('refresh');
+      token = getLocalStorage('refresh');
     } else {
-      token = localStorage.getItem('access');
+      token = getLocalStorage('access');
     }
 
     if (token !== null) {
-      config.headers.Authorization = JSON.parse(`${token}`);
+      config.headers.Authorization = token;
     }
     return config;
   },
@@ -30,7 +31,7 @@ httpClient.interceptors.request.use(
 
 // 기능 : 리프레시 토큰으로 엑세스 토큰 재발급
 const getAccessToken = async () => {
-  const refresh = JSON.parse(localStorage.getItem('refresh'));
+  const refresh = getLocalStorage('refresh');
   // 리프레시 토큰 있는 상태에서 엑세스 토큰 발급시 로직
   if (refresh)
     try {
@@ -46,7 +47,7 @@ const getAccessToken = async () => {
     } catch (error) {
       // 리프레시 토큰 만료 에러 핸들링
       console.log('리프레시 토큰 만료', error?.response?.status);
-      localStorage.clear();
+      clearLocalStorage();
       window.location.href = '/login';
     }
 };
@@ -66,7 +67,7 @@ httpClient.interceptors.response.use(
     // 리프레시 토큰으로 엑세스 토큰 재발급
     if (response.status === 401) {
       const accessToken = await getAccessToken();
-      localStorage.setItem('access', JSON.stringify(`Bearer ${accessToken}`));
+      setLocalStorage('access', `Bearer ${accessToken}`);
       config.headers.Authorization = `Bearer ${accessToken}`;
       return axios(config);
     }
