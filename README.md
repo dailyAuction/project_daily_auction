@@ -40,11 +40,11 @@
   - **2주차 ~ 4주차** : 코어타임을 준수하며 요구사항에 맞게 서비스를 개발했습니다. 
   - **5주차** : AWS S3 와 EC2를 통한 서비스 배포를 진행했습니다. 
 
-|<a href="https://www.figma.com/file/EruPDY4ljbba0H442rES6k/%EB%8D%B0%EC%9D%BC%EB%A6%AC-%EC%98%A5%EC%85%98?node-id=0%3A1&t=8JtZ8r5VgRGiS1cr-1">프로토 타입</a>|<a href="https://docs.google.com/spreadsheets/d/1eA0DrcsMQVfrVcueWP3xH4EueExcl0PKA2HXubzB63w/edit#gid=0">요구사항 정의서</a>|
+|**프로토 타입**|**요구사항 정의서**|
 |:-:|:-:|
-|<img src="https://daily-auction-bucket.s3.ap-northeast-2.amazonaws.com/banner/readme/readme1.png">|<img src="https://daily-auction-bucket.s3.ap-northeast-2.amazonaws.com/banner/readme/readme2.png">|
-|<a href="https://www.figma.com/file/EruPDY4ljbba0H442rES6k/%EB%8D%B0%EC%9D%BC%EB%A6%AC-%EC%98%A5%EC%85%98?node-id=0%3A1&t=8JtZ8r5VgRGiS1cr-1">**기획 과정**</a>|<a href="https://docs.google.com/spreadsheets/d/1eA0DrcsMQVfrVcueWP3xH4EueExcl0PKA2HXubzB63w/edit#gid=944558665">**API 명세서**</a>|
-<img src="https://daily-auction-bucket.s3.ap-northeast-2.amazonaws.com/banner/readme/readme3.png">|<img src="https://daily-auction-bucket.s3.ap-northeast-2.amazonaws.com/banner/readme/readme4.png">|
+|<a href="https://www.figma.com/file/EruPDY4ljbba0H442rES6k/%EB%8D%B0%EC%9D%BC%EB%A6%AC-%EC%98%A5%EC%85%98?node-id=0%3A1&t=8JtZ8r5VgRGiS1cr-1"><img src="https://daily-auction-bucket.s3.ap-northeast-2.amazonaws.com/banner/readme/readme1.png"></a>|<a href="https://docs.google.com/spreadsheets/d/1eA0DrcsMQVfrVcueWP3xH4EueExcl0PKA2HXubzB63w/edit#gid=0"><img src="https://daily-auction-bucket.s3.ap-northeast-2.amazonaws.com/banner/readme/readme2.png"></a>|
+|**기획 과정**|**API 명세서**|
+<a href="https://www.figma.com/file/FbSFvVjEm5yFrn3t3WwIFa/%EB%8D%B0%EC%9D%BC%EB%A6%AC-%EC%98%A5%EC%85%98-%ED%94%BC%EA%B7%B8%EC%9E%BC?node-id=0%3A1&t=a5UnXLQBpmphKGOg-1"><img src="https://daily-auction-bucket.s3.ap-northeast-2.amazonaws.com/banner/readme/readme3.png"></a>|<a href="https://docs.google.com/spreadsheets/d/1eA0DrcsMQVfrVcueWP3xH4EueExcl0PKA2HXubzB63w/edit#gid=944558665"><img src="https://daily-auction-bucket.s3.ap-northeast-2.amazonaws.com/banner/readme/readme4.png"></a>|
 |**ERD 설계**|**회의록**|
 <img src="https://daily-auction-bucket.s3.ap-northeast-2.amazonaws.com/banner/readme/readme5.png">|<img src="https://daily-auction-bucket.s3.ap-northeast-2.amazonaws.com/banner/readme/readme6.png">|
 
@@ -178,6 +178,7 @@
 |feat|새로운 기능 추가|
 |fix|버그 수정|
 |docs|문서|
+|design|컴포넌트 디자인|
 |style|(formatting, missing semi colons, …)|
 |refactor|코드 리팩토링|
 |test|테스트 관련|
