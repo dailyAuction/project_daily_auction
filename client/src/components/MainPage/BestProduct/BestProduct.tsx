@@ -9,8 +9,10 @@ import { CATEGORIES } from '../../../constants/constants';
 import { mainPageAPI } from '../../../api/mainPageAPI';
 import { Loading } from '../../_common/Loading/Loading';
 import { ToList } from '../ToList/ToList';
+import { useTouchScroll } from '../../../hooks/useTouchScroll';
 
 export const Bestproduct = () => {
+  const { scrollRef, handleDragStart, handleDragEnd, handleThrottleDragMove } = useTouchScroll();
   const [categoryId, setCategoryId] = useState(0);
   const [isClick, setIsClick] = useState(true);
   const path = categoryId ? `${categoryId}/popular-item` : 'all-popular-item';
@@ -32,6 +34,7 @@ export const Bestproduct = () => {
         return nextPage <= totalPage && nextPage;
       },
       enabled: isClick,
+      refetchOnMount: true,
     }
   );
 
@@ -67,8 +70,14 @@ export const Bestproduct = () => {
           />
         </svg>
       </div>
-      <div className="p-2 pb-4 overflow-x-scroll scrollbar-hide">
-        <section className="w-max space-x-3 pb-2 ">
+      <div
+        className="p-2 pb-4 overflow-x-scroll scrollbar-hide"
+        ref={scrollRef}
+        onMouseDown={handleDragStart}
+        onMouseUp={handleDragEnd}
+        onMouseLeave={handleDragEnd}
+        onMouseMove={handleThrottleDragMove}>
+        <section className="w-max space-x-3 pb-2">
           {CATEGORIES.map((el, i) => {
             return (
               <span key={el} onClick={() => handleClickCategory(i)}>

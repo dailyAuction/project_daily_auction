@@ -1,16 +1,18 @@
+import { setLocalStorage, removeLocalStorage, getLocalStorage } from '../hooks/useLocalStorage';
+
 export const localStorageEffect =
   (key: string) =>
   ({ setSelf, onSet }: any) => {
-    const savedValue = localStorage.getItem(key);
+    const savedValue = getLocalStorage(key);
     if (savedValue != null) {
-      setSelf(JSON.parse(savedValue));
+      setSelf(savedValue);
     }
 
     onSet((newValue: any, _: any, isReset: boolean) => {
       if (isReset) {
-        localStorage.removeItem(key);
+        removeLocalStorage(key);
       } else {
-        localStorage.setItem(key, JSON.stringify(newValue));
+        setLocalStorage(key, newValue);
       }
     });
   };
