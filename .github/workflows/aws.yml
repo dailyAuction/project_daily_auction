@@ -1,0 +1,31 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - BE-dev-server
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build application
+      run: npm run build
+
+    - name: Deploy to EC2 instance
+      run: |
+        echo "$SSH_PRIVATE_KEY" > key.pem
+        chmod 600 key.pem
+        ssh -i key.pem ec2-user@ec2-13-124-156-170.ap-northeast-2.compute.amazonaws.com 'bash -s' < deploy.sh
