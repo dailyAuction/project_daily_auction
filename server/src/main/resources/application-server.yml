@@ -1,8 +1,8 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://daily-auction-rds.cqig7mn7hzad.ap-northeast-2.rds.amazonaws.com:13306/dailyAuction?serverTimezone=UTC&characterEncoding=UTF-8
-    username: admin
+    url: jdbc:mysql://dailyauction-mysql.mysql.database.azure.com:3306/dailyAuction?serverTimezone=UTC&characterEncoding=UTF-8
+    username: casava840
     password: ${RDS_DB_PASSWORD}
   jpa:
     hibernate:
