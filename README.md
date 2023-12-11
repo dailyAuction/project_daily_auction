@@ -20,7 +20,8 @@
 
 당신의 경매가 진행되는 것을 **“실시간”** 으로 확인해보세요!
 
-#### 배포 링크👉 <a href="http://dailyauction.site">http://dailyauction.site</a>
+#### 배포 링크👉 ~~http://dailyauction.site~~
+배포 중지
 #### 테스트 계정 
 <p>ID : test@<hi>test.com</p>
 <p>PW : test1234@</p>
